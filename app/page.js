@@ -70,7 +70,9 @@ export default function Page() {
   const [step, setStep] = useState(1);
   const [courseKey, setCourseKey] = useState(null);
   const [info, setInfo] = useState({ name: '', age: '', phone: '' });
+  const [leadId, setLeadId] = useState(null);
   const [errs, setErrs] = useState({});
+  const [submitting, setSubmitting] = useState(false);
   const [showBar, setShowBar] = useState(false);
 
   // 모바일 하단 CTA 노출
@@ -85,12 +87,21 @@ export default function Page() {
   const openModal = () => {
     setCourseKey(null);
     setInfo({ name: '', age: '', phone: '' });
+    setLeadId(null);
     setErrs({});
     setStep(1);
     dialogRef.current?.showModal();
   };
   const closeModal = () => dialogRef.current?.close();
   const goto = (n) => setStep(n);
+
+  const [toastOn, setToastOn] = useState(false);
+  const toastTimerRef = useRef(null);
+  const showCalendarToast = () => {
+    setToastOn(true);
+    clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = setTimeout(() => setToastOn(false), 2000);
+  };
 
   useEffect(() => {
     if (bodyRef.current) bodyRef.current.scrollTop = 0;
@@ -114,7 +125,7 @@ export default function Page() {
     return () => io.disconnect();
   }, []);
 
-  const onSubmitInfo = (e) => {
+  const onSubmitInfo = async (e) => {
     e.preventDefault();
     const f = e.target;
     const name = f.name.value.trim();
@@ -129,24 +140,50 @@ export default function Page() {
     setErrs(next);
     if (Object.values(next).some(Boolean)) return;
 
-    setInfo({ name, age, phone });
-    // ponytail: 백엔드 미정 — 접수처(스프레드시트/DB/API) 정해지면 여기서 1차 전송
-    console.log('상담 신청 (1차 · 기본정보):', { name, age, phone });
-    setStep(2);
+    setSubmitting(true);
+    try {
+      const res = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, age: Number(age), phone }),
+      });
+      if (!res.ok) throw new Error('submit failed');
+      const { id } = await res.json();
+      setLeadId(id);
+      setInfo({ name, age, phone });
+      setStep(2);
+    } catch {
+      setErrs({ ...next, submit: true });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
-  const onSubmitSchedule = (e) => {
+  const onSubmitSchedule = async (e) => {
     e.preventDefault();
     const f = e.target;
     const times = [...f.querySelectorAll('input[name=time]:checked')].map((i) => i.value);
 
-    const next = { time: times.length === 0 };
-    setErrs((prev) => ({ ...prev, ...next }));
-    if (times.length === 0) return;
+    if (times.length === 0) {
+      setErrs((prev) => ({ ...prev, time: true }));
+      return;
+    }
 
-    // ponytail: 백엔드 미정 — 접수처(스프레드시트/DB/API) 정해지면 여기서 최종 전송
-    console.log('상담 신청 (최종):', { ...info, course: courseKey, times });
-    setStep(5);
+    setSubmitting(true);
+    try {
+      const res = await fetch(`/api/leads/${leadId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ course: courseKey, times }),
+      });
+      if (!res.ok) throw new Error('submit failed');
+      setErrs({});
+      setStep(5);
+    } catch {
+      setErrs({ time: false, submit: true });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -183,11 +220,6 @@ export default function Page() {
               <p className="sub" style={{ marginTop: 14 }}>
                 <strong>기획부터 디자인, 바이브코딩까지<br />직접 만들어보는 오프라인 실전 클래스</strong>
               </p>
-              <div className="cta-area">
-                <button className="btn btn-primary btn-lg btn-pulse" onClick={openModal}>상담 신청하기 →</button>
-                <p className="cap">최대 15명 소수 정예</p>
-                <p className="cap-sub">상담 신청은 결제가 아닙니다 · 24시간 내 연락드립니다</p>
-              </div>
             </div>
           </div>
         </section>
@@ -250,10 +282,9 @@ export default function Page() {
           <div className="wrap reveal">
             <span className="eyebrow eyebrow-lg">왜 4050인가?</span>
             <h2>이제 아이디어를 개발하는<br />장벽은 낮아졌습니다.</h2>
-            <p className="body">
+            <p className="body body-lg">
               대신, 무엇을 만들지 아는<br /><strong>경험과 전문성이 더 중요해졌습니다.</strong>
             </p>
-            <p className="ex-label">예시</p>
             <ul className="pain-list stagger">
               <li>건축 현장 30년, 반복되는 불편을 누구보다 잘 아는 분</li>
               <li>병원 근무 20년, 환자의 불편을 가까이서 지켜본 분</li>
@@ -391,6 +422,9 @@ export default function Page() {
         <div className="modal-body" ref={bodyRef}>
           {step === 1 && (
             <div>
+              <div className="modal-top-bar">
+                <button type="button" className="modal-close-x" onClick={closeModal} aria-label="닫기">×</button>
+              </div>
               <p className="modal-step-label">STEP 1 · 정보 입력</p>
               <h3>상담을 위해 몇 가지만 알려주세요</h3>
               <form onSubmit={onSubmitInfo} noValidate>
@@ -413,9 +447,9 @@ export default function Page() {
                   {errs.phone && <p className="f-error">휴대폰 번호를 정확히 입력해주세요.</p>}
                 </div>
                 <p className="consent-note">신청 시 개인정보 수집 및 이용에 동의한 것으로 간주합니다. 상담 및 안내 목적으로만 사용되며, 그 외의 용도로는 사용하지 않습니다.</p>
+                {errs.submit && <p className="f-error">일시적인 오류가 발생했습니다. 다시 시도해주세요.</p>}
                 <div className="modal-actions">
-                  <button type="submit" className="btn btn-primary">상담신청</button>
-                  <div className="row"><button type="button" className="btn btn-ghost" onClick={closeModal}>닫기</button></div>
+                  <button type="submit" className="btn btn-primary" disabled={submitting}>{submitting ? '처리 중…' : '상담신청'}</button>
                 </div>
               </form>
             </div>
@@ -423,8 +457,11 @@ export default function Page() {
 
           {step === 2 && (
             <div>
+              <div className="modal-top-bar">
+                <button type="button" className="modal-close-x" onClick={closeModal} aria-label="닫기">×</button>
+              </div>
               <p className="modal-step-label">STEP 2 · 코스 선택</p>
-              <p className="modal-lead">원활한 상담을 위해 몇 가지만 더 여쭤볼게요</p>
+              <p className="modal-lead modal-lead-lg">원활한 상담을 위해 몇 가지만 더 여쭤볼게요</p>
               <h3>어떤 일정이 더 잘 맞으시나요?</h3>
               {['A', 'B'].map((k) => {
                 const c = COURSES[k];
@@ -444,17 +481,15 @@ export default function Page() {
                   </button>
                 );
               })}
-              <div className="modal-actions">
-                <div className="row">
-                  <button className="btn btn-ghost" onClick={() => goto(1)}>이전</button>
-                  <button className="btn btn-ghost" onClick={closeModal}>닫기</button>
-                </div>
-              </div>
             </div>
           )}
 
           {step === 3 && course && (
             <div>
+              <div className="modal-top-bar">
+                <button type="button" className="modal-back" onClick={() => goto(2)}>← 이전</button>
+                <button type="button" className="modal-close-x" onClick={closeModal} aria-label="닫기">×</button>
+              </div>
               <p className="modal-step-label">STEP 3 · 가격 확인</p>
               <div className="price-box">
                 <p className="p-name">{course.name}</p>
@@ -465,22 +500,23 @@ export default function Page() {
               </div>
               <div className="modal-actions">
                 <button className="btn btn-primary" onClick={() => goto(4)}>다음</button>
-                <div className="row">
-                  <button className="btn btn-ghost" onClick={() => goto(2)}>이전</button>
-                  <button className="btn btn-ghost" onClick={closeModal}>닫기</button>
-                </div>
               </div>
             </div>
           )}
 
           {step === 4 && course && (
             <div>
+              <div className="modal-top-bar">
+                <button type="button" className="modal-back" onClick={() => goto(3)}>← 이전</button>
+                <button type="button" className="modal-close-x" onClick={closeModal} aria-label="닫기">×</button>
+              </div>
               <p className="modal-step-label">STEP 4 · 일정 선택</p>
               <h3>강의 진행 예정일을 확인해주세요</h3>
               <form onSubmit={onSubmitSchedule} noValidate>
                 <div className="form-field">
                   <span className="f-label">강의 진행 예정일</span>
-                  <div className="calendar">
+                  <p className="cal-dates">{course.days.map((d) => `9/${d}(${WEEKDAYS[(SEPT_FIRST_WEEKDAY + d - 1) % 7]})`).join(', ')}</p>
+                  <div className="calendar" onClick={showCalendarToast} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && showCalendarToast()}>
                     <p className="cal-title">2026년 9월</p>
                     <div className="cal-grid">
                       {WEEKDAYS.map((w) => <span key={w} className="cal-dow">{w}</span>)}
@@ -495,18 +531,15 @@ export default function Page() {
                   <span className="f-label">
                     선호 시간대 <span style={{ color: 'var(--primary)', fontSize: 14 }}>복수 선택 가능</span>
                   </span>
+                  <p className="f-hint-strong">가능한 시간대를 모두 선택해 주세요.</p>
                   <label className="time-opt"><input type="checkbox" name="time" value="오전반" />오전반<span className="t-range">09:00 ~ 12:00</span></label>
                   <label className="time-opt"><input type="checkbox" name="time" value="오후반" />오후반<span className="t-range">14:00 ~ 17:00</span></label>
                   <label className="time-opt"><input type="checkbox" name="time" value="저녁반" />저녁반<span className="t-range">19:00 ~ 22:00</span></label>
-                  <p className="f-hint">가능한 시간대를 모두 선택해주세요.</p>
                   {errs.time && <p className="f-error">시간대를 하나 이상 선택해주세요.</p>}
+                  {errs.submit && <p className="f-error">일시적인 오류가 발생했습니다. 다시 시도해주세요.</p>}
                 </div>
                 <div className="modal-actions">
-                  <button type="submit" className="btn btn-primary">완료</button>
-                  <div className="row">
-                    <button type="button" className="btn btn-ghost" onClick={() => goto(3)}>이전</button>
-                    <button type="button" className="btn btn-ghost" onClick={closeModal}>닫기</button>
-                  </div>
+                  <button type="submit" className="btn btn-primary" disabled={submitting}>{submitting ? '처리 중…' : '완료'}</button>
                 </div>
               </form>
             </div>
@@ -525,6 +558,7 @@ export default function Page() {
             </div>
           )}
         </div>
+        {toastOn && <div className="toast">강의 일정은 변경할 수 없습니다.</div>}
       </dialog>
     </>
   );

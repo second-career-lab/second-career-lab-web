@@ -138,7 +138,7 @@ mark{
   margin-bottom:6px;
 }
 .eyebrow-lg{
-  font-size:clamp(20px,3vw,26px);
+  font-size:clamp(30px,4.5vw,39px);
   font-weight:900;
 }
 .hero h1{
@@ -158,13 +158,6 @@ mark{
 }
 .hero .sub{font-size:clamp(17px,2.2vw,20px);color:var(--ink-soft)}
 .hero .sub strong{color:var(--ink);font-weight:700}
-.hero .cta-area{margin-top:38px}
-.hero .cap{
-  margin-top:16px;
-  font-size:16px;font-weight:700;color:var(--primary-deep);
-}
-.hero .cap::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--primary);margin-right:8px;vertical-align:2px}
-.hero .cap-sub{margin-top:6px;font-size:14.5px;color:var(--ink-soft)}
 
 /* CTA 펄스 */
 .btn-pulse{position:relative;animation:ctaPulse 2.6s ease-in-out infinite}
@@ -271,7 +264,8 @@ mark{
 .why h2{line-height:1.5}
 .why .body{margin-top:32px;font-size:clamp(18px,2.6vw,22px);color:var(--ink-soft)}
 .why .body strong{color:var(--primary-deep)}
-.why .ex-label{margin-top:40px;font-weight:800;color:var(--primary-deep)}
+.why .body-lg{font-size:clamp(22px,3.4vw,28px);font-weight:700}
+.why .body-lg strong{font-weight:900}
 .why .pain-list{margin-top:16px}
 .why .punch{
   margin-top:52px;
@@ -409,6 +403,26 @@ dialog{
 }
 dialog::backdrop{background:rgba(14,48,44,.55);backdrop-filter:blur(3px)}
 .modal-body{padding:40px 36px 32px;overflow-y:auto;max-height:calc(100dvh - 48px)}
+.modal-top-bar{display:flex;align-items:center;justify-content:flex-end;margin-bottom:8px}
+.modal-close-x{
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:transparent;border:none;cursor:pointer;
+  font-size:28px;line-height:1;color:var(--ink-soft);
+  transition:background .15s ease,color .15s ease;
+}
+.modal-close-x:hover{background:var(--tint);color:var(--ink)}
+.modal-close-x:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
+.modal-back{
+  margin-right:auto;
+  display:flex;align-items:center;gap:4px;
+  background:transparent;border:none;cursor:pointer;
+  font-size:15px;font-weight:700;color:var(--ink-soft);
+  padding:8px 10px;margin-left:-10px;border-radius:8px;
+  transition:background .15s ease,color .15s ease;
+}
+.modal-back:hover{background:var(--tint);color:var(--ink)}
+.modal-back:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
 .modal-step-label{
   font-size:14px;font-weight:800;color:var(--primary);
   letter-spacing:.14em;margin-bottom:10px;
@@ -419,6 +433,7 @@ dialog::backdrop{background:rgba(14,48,44,.55);backdrop-filter:blur(3px)}
   margin-bottom:24px;
 }
 .modal-lead{font-size:14.5px;color:var(--ink-soft);margin-bottom:8px}
+.modal-lead-lg{font-size:18px;font-weight:800;color:var(--ink)}
 .course-card{
   display:block;width:100%;
   text-align:left;
@@ -487,7 +502,8 @@ dialog::backdrop{background:rgba(14,48,44,.55);backdrop-filter:blur(3px)}
   font-weight:700;color:var(--ink-soft);
 }
 .consent-note{font-size:13px;color:var(--ink-soft);line-height:1.5;margin-bottom:14px}
-.calendar{background:var(--tint);border-radius:12px;padding:18px 16px}
+.cal-dates{font-size:15px;font-weight:700;color:var(--primary-deep);margin-bottom:10px}
+.calendar{background:var(--tint);border-radius:12px;padding:18px 16px;cursor:not-allowed}
 .cal-title{font-size:15px;font-weight:800;color:var(--primary-deep);text-align:center;margin-bottom:12px}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
 .cal-dow{font-size:13px;font-weight:700;color:var(--ink-soft);padding-bottom:4px}
@@ -505,8 +521,20 @@ dialog::backdrop{background:rgba(14,48,44,.55);backdrop-filter:blur(3px)}
 .time-opt:has(input:checked){border-color:var(--primary);background:var(--tint)}
 .time-opt input{width:20px;height:20px;accent-color:var(--primary);flex:none}
 .time-opt .t-range{margin-left:auto;color:var(--ink-soft);font-weight:500;font-size:15.5px}
-.f-hint{font-size:14.5px;color:var(--ink-soft);margin-top:6px}
+.f-hint-strong{font-size:16px;font-weight:800;color:var(--primary-deep);margin-bottom:12px}
 .f-error{font-size:14.5px;color:#C94F2E;font-weight:700;margin-top:6px}
+
+.toast{
+  position:absolute;left:50%;bottom:20px;transform:translateX(-50%);
+  max-width:85%;
+  background:rgba(22,48,44,.92);color:#fff;
+  font-size:14.5px;font-weight:600;text-align:center;
+  padding:12px 18px;border-radius:14px;
+  box-shadow:0 8px 24px rgba(10,40,36,.3);
+  z-index:10;pointer-events:none;
+  animation:toastIn .2s ease both;
+}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
 
 .done-box{text-align:center;padding:20px 0 8px}
 .done-box .d-ico{
@@ -525,12 +553,8 @@ dialog::backdrop{background:rgba(14,48,44,.55);backdrop-filter:blur(3px)}
   margin-top:26px;
 }
 .modal-actions .btn{width:100%}
-.modal-actions .row{display:flex;justify-content:center;gap:4px}
 
 /* ── 반응형 ── */
-@media (max-width:980px){
-  .hero .cta-area .btn{width:100%;max-width:400px}
-}
 @media (max-width:720px){
   body{font-size:17px}
   section{padding:72px 0}
@@ -547,4 +571,34 @@ dialog::backdrop{background:rgba(14,48,44,.55);backdrop-filter:blur(3px)}
   .header-inner{height:60px}
   .logo img{height:28px}
   .modal-body{padding:30px 22px 24px}
+}
+
+/* ── 어드민 ── */
+.admin-login-wrap{
+  min-height:100dvh;display:flex;align-items:center;justify-content:center;
+  background:var(--tint);padding:24px;
+}
+.admin-login-form{
+  width:min(360px, 100%);
+  background:var(--paper);border:1px solid var(--line);border-radius:16px;
+  padding:36px 32px;display:flex;flex-direction:column;gap:14px;
+}
+.admin-login-form h1{font-family:var(--serif);font-size:22px;font-weight:800;margin-bottom:6px}
+.admin-login-form input{
+  font-family:var(--sans);font-size:16px;
+  padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:#fff;
+}
+.admin-login-form input:focus{outline:none;border-color:var(--primary)}
+
+.admin-wrap{max-width:1100px;margin:0 auto;padding:48px 24px}
+.admin-wrap h1{font-family:var(--serif);font-size:26px;font-weight:800;margin-bottom:24px}
+.admin-empty{color:var(--ink-soft)}
+.admin-table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+.admin-table{width:100%;border-collapse:collapse;font-size:15px;white-space:nowrap}
+.admin-table th,.admin-table td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--line)}
+.admin-table th{background:var(--tint);font-weight:700;color:var(--ink-soft)}
+.admin-table tr:last-child td{border-bottom:none}
+.admin-status-select{
+  font-family:var(--sans);font-size:14.5px;font-weight:700;
+  padding:7px 10px;border:1.5px solid var(--line);border-radius:8px;background:#fff;cursor:pointer;
 }
