@@ -8,16 +8,21 @@ const COURSES = {
     old: '900,000원',
     now: '720,000원',
     meta: '하루 3시간 · 총 6회 · 2주 과정',
-    dates: ['9/7(월) · 9/9(수) · 9/11(금)', '9/14(월) · 9/16(수) · 9/18(금)'],
+    days: [7, 9, 11, 14, 16, 18],
   },
   B: {
     name: 'B. 여유로운 완성 코스',
     old: '1,200,000원',
     now: '960,000원',
     meta: '하루 3시간 · 총 8회 · 4주 과정',
-    dates: ['9/7(월) · 9/9(수) · 9/14(월) · 9/16(수)', '9/21(월) · 9/22(화) · 9/28(월) · 9/30(수)'],
+    days: [7, 9, 14, 16, 21, 22, 28, 30],
   },
 };
+
+// 2026년 9월 캘린더 — 9/1이 화요일(일=0 기준 index 2)
+const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
+const SEPT_FIRST_WEEKDAY = 2;
+const SEPT_DAYS = 30;
 
 const SITE = 'https://secondcareerlab.vercel.app';
 
@@ -56,69 +61,20 @@ const JSON_LD = {
         },
       ],
     },
-    {
-      '@type': 'FAQPage',
-      mainEntity: [
-        {
-          '@type': 'Question',
-          name: 'IT 지식이나 코딩 경험이 전혀 없어도 수강할 수 있나요?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: '네. 이 클래스는 IT 지식과 코딩 경험이 없는 40·50대 예비 창업가를 위해 설계됐습니다. AI와 대화하며 만드는 바이브코딩 방식으로, 기획부터 디자인·제작·배포까지 강사가 옆에서 함께 진행합니다.',
-          },
-        },
-        {
-          '@type': 'Question',
-          name: '수강료는 얼마인가요?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'A. 빠른 완성 코스(2주, 총 6회)는 900,000원에서 20% 할인된 720,000원, B. 여유로운 완성 코스(4주, 총 8회)는 1,200,000원에서 20% 할인된 960,000원입니다. 두 코스 모두 하루 3시간 오프라인 수업입니다.',
-          },
-        },
-        {
-          '@type': 'Question',
-          name: '온라인으로도 수강할 수 있나요?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: '아니요, 오프라인 전용입니다. 보고 끝나는 강의가 아니라 내 사업 아이템으로 직접 실습하고, 막히는 부분을 현장에서 바로 해결하기 위해 최대 15명 소수 정예 오프라인으로만 진행합니다.',
-          },
-        },
-        {
-          '@type': 'Question',
-          name: '수업이 끝나면 무엇을 가져가게 되나요?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: '세 가지입니다. 첫째, 내 사업 아이디어로 만든 실제 서비스 결과물(배포 포함). 둘째, 다음 아이디어도 직접 수정하고 다시 만들 수 있는 능력. 셋째, 아이템 검증·PMF·피봇·마케팅·운영까지 스타트업 기본기입니다.',
-          },
-        },
-        {
-          '@type': 'Question',
-          name: '상담 신청을 하면 바로 결제해야 하나요?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: '아니요, 상담 신청은 결제가 아닙니다. 이름·연락처·선호 시간대를 남기시면 담당자가 24시간 이내에 연락드려 일정과 커리큘럼을 안내해드립니다.',
-          },
-        },
-      ],
-    },
   ],
 };
-
-const FAQS = JSON_LD['@graph'][2].mainEntity;
 
 export default function Page() {
   const dialogRef = useRef(null);
   const bodyRef = useRef(null);
   const [step, setStep] = useState(1);
   const [courseKey, setCourseKey] = useState(null);
+  const [info, setInfo] = useState({ name: '', age: '', phone: '' });
   const [errs, setErrs] = useState({});
-  const [dday, setDday] = useState(null);
   const [showBar, setShowBar] = useState(false);
 
-  // 개강 D-day + 모바일 하단 CTA 노출
+  // 모바일 하단 CTA 노출
   useEffect(() => {
-    const d = Math.ceil((new Date('2026-09-07T00:00:00+09:00') - Date.now()) / 86400000);
-    setDday(d);
     const onScroll = () => setShowBar(window.scrollY > 600);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -128,6 +84,7 @@ export default function Page() {
 
   const openModal = () => {
     setCourseKey(null);
+    setInfo({ name: '', age: '', phone: '' });
     setErrs({});
     setStep(1);
     dialogRef.current?.showModal();
@@ -157,26 +114,39 @@ export default function Page() {
     return () => io.disconnect();
   }, []);
 
-  const onSubmit = (e) => {
+  const onSubmitInfo = (e) => {
     e.preventDefault();
     const f = e.target;
     const name = f.name.value.trim();
+    const age = f.age.value.trim();
     const phone = f.phone.value.trim();
-    const times = [...f.querySelectorAll('input[name=time]:checked')].map((i) => i.value);
 
     const next = {
       name: !name,
+      age: !/^\d{1,3}$/.test(age),
       phone: !/^01[016789][-\s]?\d{3,4}[-\s]?\d{4}$/.test(phone),
-      time: times.length === 0,
     };
     setErrs(next);
     if (Object.values(next).some(Boolean)) return;
 
-    // ponytail: 백엔드 미정 — 접수처(스프레드시트/DB/API) 정해지면 여기서 전송
-    console.log('상담 신청:', { course: courseKey, name, phone, times });
+    setInfo({ name, age, phone });
+    // ponytail: 백엔드 미정 — 접수처(스프레드시트/DB/API) 정해지면 여기서 1차 전송
+    console.log('상담 신청 (1차 · 기본정보):', { name, age, phone });
+    setStep(2);
+  };
 
-    f.reset();
-    setStep(4);
+  const onSubmitSchedule = (e) => {
+    e.preventDefault();
+    const f = e.target;
+    const times = [...f.querySelectorAll('input[name=time]:checked')].map((i) => i.value);
+
+    const next = { time: times.length === 0 };
+    setErrs((prev) => ({ ...prev, ...next }));
+    if (times.length === 0) return;
+
+    // ponytail: 백엔드 미정 — 접수처(스프레드시트/DB/API) 정해지면 여기서 최종 전송
+    console.log('상담 신청 (최종):', { ...info, course: courseKey, times });
+    setStep(5);
   };
 
   return (
@@ -199,10 +169,7 @@ export default function Page() {
         <section className="hero" id="top">
           <div className="wrap hero-grid">
             <div className="hero-copy">
-              <span className="live-badge">
-                <span className="dot" />9월 기수 모집 중{dday > 0 && <> · 개강 D-{dday}</>}
-              </span>
-              <span className="eyebrow">40·50대 창업가를 위한</span>
+              <span className="eyebrow eyebrow-lg">40·50대 대표님들을 위한</span>
               <h1>
                 AI로 내 온라인 서비스<br />
                 <span className="u">
@@ -221,27 +188,6 @@ export default function Page() {
                 <p className="cap">최대 15명 소수 정예</p>
                 <p className="cap-sub">상담 신청은 결제가 아닙니다 · 24시간 내 연락드립니다</p>
               </div>
-            </div>
-
-            {/* AI 데모: 대화 → 화면 생성 */}
-            <div className="demo-card" aria-hidden="true">
-              <div className="chat">
-                <div className="bubble user b1">사장님, 예약 받을 수 있는<br />홈페이지 하나 만들어줘</div>
-                <div className="bubble ai b2">네, 바로 만들어드릴게요 ✨</div>
-              </div>
-              <div className="mini-site">
-                <div className="mini-chrome">
-                  <span /><span /><span />
-                  <div className="mini-url">내-서비스.com</div>
-                </div>
-                <div className="mini-body">
-                  <div className="mini-nav el e1"><i /><b /></div>
-                  <div className="mini-hero el e2"><i /><i className="short" /></div>
-                  <div className="mini-cards el e3"><span /><span /><span /></div>
-                  <div className="mini-btn el e4">예약하기</div>
-                </div>
-              </div>
-              <p className="demo-cap">AI와 대화하면, 화면이 이렇게 만들어집니다</p>
             </div>
           </div>
         </section>
@@ -302,14 +248,18 @@ export default function Page() {
         {/* 5. 왜 4050인가? */}
         <section className="why center">
           <div className="wrap reveal">
-            <span className="eyebrow">왜 4050인가?</span>
-            <h2>경험은 이미 있습니다.<br />이제 만드는 장벽이 낮아졌습니다.</h2>
-            <div className="chips">
-              <span>업무 경험</span><span>사업 경험</span><span>전문지식</span>
-            </div>
+            <span className="eyebrow eyebrow-lg">왜 4050인가?</span>
+            <h2>이제 아이디어를 개발하는<br />장벽은 낮아졌습니다.</h2>
             <p className="body">
-              지금까지 쌓아온 경험을<br /><strong>AI와 함께 온라인 비즈니스로 만들어보세요.</strong>
+              대신, 무엇을 만들지 아는<br /><strong>경험과 전문성이 더 중요해졌습니다.</strong>
             </p>
+            <p className="ex-label">예시</p>
+            <ul className="pain-list stagger">
+              <li>건축 현장 30년, 반복되는 불편을 누구보다 잘 아는 분</li>
+              <li>병원 근무 20년, 환자의 불편을 가까이서 지켜본 분</li>
+              <li>자녀를 대학까지 키우며 현실적인 교육 문제를 겪어본 분</li>
+            </ul>
+            <p className="punch">지금까지 쌓아온 경험과 지식이<br />하나의 서비스가 될 수 있습니다.</p>
           </div>
         </section>
 
@@ -346,8 +296,8 @@ export default function Page() {
               </div>
               <div className="take-card">
                 <div className="no">03</div>
-                <h3>스타트업 기본기</h3>
-                <p>아이템 검증 · PMF · 피봇 · 마케팅 · 운영까지 <strong>사업에 필요한 기본기를 함께 배웁니다.</strong></p>
+                <h3>스타트업 기초 전략</h3>
+                <p>아이디어 검증 방법부터 운영까지 <strong>스타트업 기초 전략도 함께 배웁니다.</strong></p>
               </div>
             </div>
           </div>
@@ -383,7 +333,7 @@ export default function Page() {
                 <div className="part">PART 4<br />오픈 이후</div>
                 <div>
                   <h3>만들고 끝이 아닙니다.</h3>
-                  <p>전환율 · 퍼널 · 리텐션 · PMF · 피봇 · 초기 마케팅</p>
+                  <p>오픈 후 어떻게 아이디어를 검증할지도 함께 배웁니다.</p>
                 </div>
               </div>
             </div>
@@ -396,7 +346,7 @@ export default function Page() {
             <span className="eyebrow">이런 분에게 추천합니다</span>
             <h2>이 클래스가 꼭 맞는 분</h2>
             <ul className="pain-list stagger">
-              <li>40~50대 예비 창업가</li>
+              <li>40~50대 예비 대표님</li>
               <li>온라인 비즈니스를 시작하고 싶은 분</li>
               <li>외주개발 비용이 부담되는 분</li>
               <li>내 경험을 서비스로 만들고 싶은 분</li>
@@ -414,43 +364,12 @@ export default function Page() {
           </div>
         </section>
 
-        {/* FAQ */}
-        <section className="faq center" id="faq">
-          <div className="wrap reveal">
-            <span className="eyebrow">자주 묻는 질문</span>
-            <h2>궁금한 점을 확인하세요</h2>
-            <div className="faq-list">
-              {FAQS.map((f) => (
-                <details key={f.name}>
-                  <summary>{f.name}</summary>
-                  <p>{f.acceptedAnswer.text}</p>
-                </details>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* 11. 모집 안내 */}
         <section className="recruit center">
           <div className="wrap reveal">
             <span className="eyebrow">모집 안내 · 밀착 실습을 위해</span>
             <h2>최대 15명만 모집합니다.</h2>
             <p className="lead">내 머릿속 아이디어를<br />이번에는 실제 서비스로 만들어보세요.</p>
-
-            <div className="plan-grid">
-              {['A', 'B'].map((k) => {
-                const c = COURSES[k];
-                return (
-                  <button key={k} className="plan" onClick={() => { setCourseKey(k); setStep(2); dialogRef.current?.showModal(); }}>
-                    <span className="pl-tag">{k === 'A' ? '2주 완성' : '4주 완성'}</span>
-                    <span className="pl-name">{c.name}</span>
-                    <span className="pl-meta">{c.meta}</span>
-                    <span className="pl-price"><s>{c.old}</s><b>{c.now}</b></span>
-                    <span className="pl-go">자세히 보고 신청 →</span>
-                  </button>
-                );
-              })}
-            </div>
 
             <div className="cta-area">
               <button className="btn btn-primary btn-lg btn-pulse" onClick={openModal}>상담 신청하기 →</button>
@@ -472,14 +391,49 @@ export default function Page() {
         <div className="modal-body" ref={bodyRef}>
           {step === 1 && (
             <div>
-              <p className="modal-step-label">STEP 1 · 코스 선택</p>
+              <p className="modal-step-label">STEP 1 · 정보 입력</p>
+              <h3>상담을 위해 몇 가지만 알려주세요</h3>
+              <form onSubmit={onSubmitInfo} noValidate>
+                <div className="form-field">
+                  <label htmlFor="fName">이름</label>
+                  <input type="text" id="fName" name="name" autoComplete="name" defaultValue={info.name} required />
+                  {errs.name && <p className="f-error">이름을 입력해주세요.</p>}
+                </div>
+                <div className="form-field">
+                  <label htmlFor="fAge">나이</label>
+                  <div className="input-suffix">
+                    <input type="text" id="fAge" name="age" inputMode="numeric" placeholder="50" defaultValue={info.age} required />
+                    <span className="suffix">세</span>
+                  </div>
+                  {errs.age && <p className="f-error">나이를 정확히 입력해주세요.</p>}
+                </div>
+                <div className="form-field">
+                  <label htmlFor="fPhone">휴대폰 번호</label>
+                  <input type="tel" id="fPhone" name="phone" autoComplete="tel" inputMode="numeric" placeholder="01012345678" defaultValue={info.phone} required />
+                  {errs.phone && <p className="f-error">휴대폰 번호를 정확히 입력해주세요.</p>}
+                </div>
+                <p className="consent-note">신청 시 개인정보 수집 및 이용에 동의한 것으로 간주합니다. 상담 및 안내 목적으로만 사용되며, 그 외의 용도로는 사용하지 않습니다.</p>
+                <div className="modal-actions">
+                  <button type="submit" className="btn btn-primary">상담신청</button>
+                  <div className="row"><button type="button" className="btn btn-ghost" onClick={closeModal}>닫기</button></div>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {step === 2 && (
+            <div>
+              <p className="modal-step-label">STEP 2 · 코스 선택</p>
+              <p className="modal-lead">원활한 상담을 위해 몇 가지만 더 여쭤볼게요</p>
               <h3>어떤 일정이 더 잘 맞으시나요?</h3>
               {['A', 'B'].map((k) => {
                 const c = COURSES[k];
                 return (
-                  <button key={k} className="course-card" onClick={() => { setCourseKey(k); setStep(2); }}>
+                  <button key={k} className="course-card" onClick={() => { setCourseKey(k); setStep(3); }}>
                     <span className="c-name">{c.name}</span>
-                    <p className="c-meta">{k === 'A' ? '하루 3시간 · 총 6회 · 월/수/금' : '하루 3시간 · 총 8회 · 월/목'}</p>
+                    <p className="c-meta">
+                      하루 3시간 · <span className="c-count">{k === 'A' ? '총 6회' : '총 8회'}</span> · {k === 'A' ? '월/수/금' : '월/목'}
+                    </p>
                     <span className="c-big">{k === 'A' ? '2주 만에 완성' : '4주 만에 완성'}</span>
                     <p className="c-desc">
                       {k === 'A'
@@ -491,23 +445,6 @@ export default function Page() {
                 );
               })}
               <div className="modal-actions">
-                <div className="row"><button className="btn btn-ghost" onClick={closeModal}>닫기</button></div>
-              </div>
-            </div>
-          )}
-
-          {step === 2 && course && (
-            <div>
-              <p className="modal-step-label">STEP 2 · 가격 확인</p>
-              <div className="price-box">
-                <p className="p-name">{course.name}</p>
-                <p className="p-old">{course.old}</p>
-                <p className="p-now">{course.now}<span className="p-badge">20% 할인</span></p>
-                <p className="p-meta">{course.meta}</p>
-                <p className="p-note">지금 결제하는 단계가 아닙니다.<br /><strong>가격 확인 후 상담 신청을 이어가주세요.</strong></p>
-              </div>
-              <div className="modal-actions">
-                <button className="btn btn-primary" onClick={() => goto(3)}>이어서 신청하기</button>
                 <div className="row">
                   <button className="btn btn-ghost" onClick={() => goto(1)}>이전</button>
                   <button className="btn btn-ghost" onClick={closeModal}>닫기</button>
@@ -518,25 +455,41 @@ export default function Page() {
 
           {step === 3 && course && (
             <div>
-              <p className="modal-step-label">STEP 3 · 정보 입력</p>
-              <h3>상담 정보를 남겨주세요</h3>
-              <form onSubmit={onSubmit} noValidate>
-                <div className="form-field">
-                  <label htmlFor="fName">이름</label>
-                  <input type="text" id="fName" name="name" autoComplete="name" required />
-                  {errs.name && <p className="f-error">이름을 입력해주세요.</p>}
+              <p className="modal-step-label">STEP 3 · 가격 확인</p>
+              <div className="price-box">
+                <p className="p-name">{course.name}</p>
+                <p className="p-old">{course.old}</p>
+                <p className="p-now">{course.now}<span className="p-badge">20% 할인</span></p>
+                <p className="p-meta">{course.meta}</p>
+                <p className="p-note">결제는 상담 이후 진행돼요</p>
+              </div>
+              <div className="modal-actions">
+                <button className="btn btn-primary" onClick={() => goto(4)}>다음</button>
+                <div className="row">
+                  <button className="btn btn-ghost" onClick={() => goto(2)}>이전</button>
+                  <button className="btn btn-ghost" onClick={closeModal}>닫기</button>
                 </div>
-                <div className="form-field">
-                  <label htmlFor="fPhone">휴대폰 번호</label>
-                  <input type="tel" id="fPhone" name="phone" autoComplete="tel" inputMode="numeric" placeholder="010-0000-0000" required />
-                  {errs.phone && <p className="f-error">휴대폰 번호를 정확히 입력해주세요.</p>}
-                </div>
+              </div>
+            </div>
+          )}
+
+          {step === 4 && course && (
+            <div>
+              <p className="modal-step-label">STEP 4 · 일정 선택</p>
+              <h3>강의 진행 예정일을 확인해주세요</h3>
+              <form onSubmit={onSubmitSchedule} noValidate>
                 <div className="form-field">
                   <span className="f-label">강의 진행 예정일</span>
-                  <div className="sched-box">
-                    {course.dates.map((line) => <div key={line}>{line}</div>)}
+                  <div className="calendar">
+                    <p className="cal-title">2026년 9월</p>
+                    <div className="cal-grid">
+                      {WEEKDAYS.map((w) => <span key={w} className="cal-dow">{w}</span>)}
+                      {Array.from({ length: SEPT_FIRST_WEEKDAY }).map((_, i) => <span key={`b${i}`} />)}
+                      {Array.from({ length: SEPT_DAYS }, (_, i) => i + 1).map((d) => (
+                        <span key={d} className={`cal-day${course.days.includes(d) ? ' on' : ''}`}>{d}</span>
+                      ))}
+                    </div>
                   </div>
-                  <p className="sched-note">※ 날짜는 일정 안내용으로만 노출됩니다.</p>
                 </div>
                 <div className="form-field">
                   <span className="f-label">
@@ -549,9 +502,9 @@ export default function Page() {
                   {errs.time && <p className="f-error">시간대를 하나 이상 선택해주세요.</p>}
                 </div>
                 <div className="modal-actions">
-                  <button type="submit" className="btn btn-primary">상담 신청 완료</button>
+                  <button type="submit" className="btn btn-primary">완료</button>
                   <div className="row">
-                    <button type="button" className="btn btn-ghost" onClick={() => goto(2)}>이전</button>
+                    <button type="button" className="btn btn-ghost" onClick={() => goto(3)}>이전</button>
                     <button type="button" className="btn btn-ghost" onClick={closeModal}>닫기</button>
                   </div>
                 </div>
@@ -559,7 +512,7 @@ export default function Page() {
             </div>
           )}
 
-          {step === 4 && (
+          {step === 5 && (
             <div>
               <div className="done-box">
                 <div className="d-ico">✓</div>

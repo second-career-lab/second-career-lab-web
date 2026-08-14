@@ -1,3 +1,4 @@
+import Script from 'next/script';
 import './globals.css';
 
 const SITE = 'https://secondcareerlab.vercel.app';
@@ -39,6 +40,16 @@ export default function RootLayout({ children }) {
         <link rel="preload" href="/fonts/Pretendard-900.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
       </head>
       <body>{children}</body>
+      <Script id="amplitude-init" strategy="afterInteractive">
+        {`
+          var s = document.createElement('script');
+          s.src = 'https://cdn.amplitude.com/libs/analytics-browser-2.11.9-min.js.gz';
+          s.onload = function () {
+            amplitude.init('${process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY}', { autocapture: true });
+          };
+          document.head.appendChild(s);
+        `}
+      </Script>
     </html>
   );
 }

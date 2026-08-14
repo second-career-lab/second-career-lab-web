@@ -125,34 +125,21 @@ mark{
   overflow:hidden;
 }
 .hero-grid{
-  display:grid;grid-template-columns:1.05fr .95fr;
+  display:grid;grid-template-columns:1fr;
+  justify-items:center;text-align:center;
   gap:56px;align-items:center;
 }
-.hero-copy{animation:riseIn .7s ease both}
+.hero-copy{animation:riseIn .7s ease both;max-width:640px}
 @keyframes riseIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 
-.live-badge{
-  display:inline-flex;align-items:center;gap:9px;
-  background:rgba(20,125,114,.1);
-  color:var(--primary-deep);
-  font-size:15px;font-weight:800;
-  border-radius:999px;padding:8px 18px;
-  margin-bottom:20px;
-}
-.live-badge .dot{
-  width:8px;height:8px;border-radius:50%;background:#E2574C;
-  box-shadow:0 0 0 0 rgba(226,87,76,.6);
-  animation:blip 2s infinite;
-}
-@keyframes blip{
-  0%{box-shadow:0 0 0 0 rgba(226,87,76,.55)}
-  70%{box-shadow:0 0 0 9px rgba(226,87,76,0)}
-  100%{box-shadow:0 0 0 0 rgba(226,87,76,0)}
-}
 .hero .eyebrow{
   display:block;
   font-size:17px;
   margin-bottom:6px;
+}
+.eyebrow-lg{
+  font-size:clamp(20px,3vw,26px);
+  font-weight:900;
 }
 .hero h1{
   font-size:clamp(34px,5.2vw,56px);
@@ -188,81 +175,8 @@ mark{
 .btn-pulse:hover{animation:none}
 @media (prefers-reduced-motion:reduce){.btn-pulse{animation:none}}
 
-/* ── 히어로 데모 카드 ── */
-.demo-card{
-  background:var(--white);
-  border:1px solid var(--line);
-  border-radius:22px;
-  padding:24px 24px 20px;
-  box-shadow:0 20px 60px rgba(14,59,54,.13);
-  animation:riseIn .8s .1s ease both;
-}
-.demo-card .chat{display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
-.demo-card .bubble{
-  max-width:88%;
-  font-size:14.5px;font-weight:600;line-height:1.55;
-  padding:11px 15px;border-radius:14px;
-  opacity:0;
-}
-.demo-card .bubble.user{
-  align-self:flex-end;
-  background:var(--primary);color:#fff;
-  border-bottom-right-radius:5px;
-}
-.demo-card .bubble.ai{
-  align-self:flex-start;
-  background:var(--tint);color:var(--primary-deep);
-  border-bottom-left-radius:5px;
-}
-.demo-card .b1{animation:pop .45s .3s ease both}
-.demo-card .b2{animation:pop .45s 1.3s ease both}
-@keyframes pop{from{opacity:0;transform:translateY(9px) scale(.96)}to{opacity:1;transform:none}}
-
-.mini-site{
-  border:1px solid var(--line);border-radius:12px;
-  overflow:hidden;background:var(--paper);
-}
-.mini-chrome{
-  display:flex;align-items:center;gap:5px;
-  padding:9px 12px;background:#EFF3F2;border-bottom:1px solid var(--line);
-}
-.mini-chrome > span{width:8px;height:8px;border-radius:50%;background:#CBD6D3}
-.mini-url{
-  margin-left:8px;flex:1;
-  background:#fff;border-radius:5px;
-  font-size:11px;color:#9AA8A5;
-  padding:3px 9px;
-}
-.mini-body{padding:14px;display:flex;flex-direction:column;gap:11px;min-height:190px}
-.mini-body .el{opacity:0;animation:buildIn .5s ease both}
-.mini-body .e1{animation-delay:2.0s}
-.mini-body .e2{animation-delay:2.4s}
-.mini-body .e3{animation-delay:2.8s}
-.mini-body .e4{animation-delay:3.2s}
-@keyframes buildIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-
-.mini-nav{display:flex;align-items:center;justify-content:space-between}
-.mini-nav i{width:62px;height:11px;border-radius:4px;background:var(--primary);display:block}
-.mini-nav b{width:44px;height:9px;border-radius:4px;background:#DCE5E3;display:block}
-.mini-hero{display:flex;flex-direction:column;gap:7px;padding:14px 0 4px}
-.mini-hero i{height:15px;border-radius:5px;background:#C6D8D4;display:block}
-.mini-hero i.short{width:62%;height:10px;background:#DFE8E6}
-.mini-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.mini-cards span{height:44px;border-radius:8px;background:var(--tint);border:1px solid #DCE9E6}
-.mini-btn{
-  align-self:flex-start;
-  background:var(--primary);color:#fff;
-  font-size:12.5px;font-weight:800;
-  border-radius:8px;padding:9px 20px;
-  margin-top:2px;
-}
-.demo-cap{
-  margin-top:14px;text-align:center;
-  font-size:13.5px;font-weight:700;color:var(--ink-soft);
-}
 @media (prefers-reduced-motion:reduce){
-  .hero-copy,.demo-card,.demo-card .bubble,.mini-body .el{animation:none;opacity:1}
-  .live-badge .dot{animation:none}
+  .hero-copy{animation:none;opacity:1}
 }
 
 /* ── 핵심 스펙 바 ── */
@@ -357,10 +271,14 @@ mark{
 .why h2{line-height:1.5}
 .why .body{margin-top:32px;font-size:clamp(18px,2.6vw,22px);color:var(--ink-soft)}
 .why .body strong{color:var(--primary-deep)}
-.why .chips{margin-top:28px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
-.why .chips span{
-  background:var(--white);border:1px solid var(--line);border-radius:999px;
-  padding:10px 22px;font-weight:700;font-size:16px;color:var(--primary-deep);
+.why .ex-label{margin-top:40px;font-weight:800;color:var(--primary-deep)}
+.why .pain-list{margin-top:16px}
+.why .punch{
+  margin-top:52px;
+  font-family:var(--serif);
+  font-size:clamp(24px,4vw,34px);
+  font-weight:900;
+  color:var(--primary-deep);
 }
 
 /* ── 6. 오프라인 ── */
@@ -453,38 +371,6 @@ mark{
   line-height:1.45;
 }
 
-/* ── FAQ ── */
-.faq{background:var(--tint)}
-.faq-list{max-width:680px;margin:40px auto 0;text-align:left}
-.faq-list details{
-  background:var(--white);
-  border:1px solid var(--line);
-  border-radius:14px;
-  margin-bottom:12px;
-  overflow:hidden;
-}
-.faq-list summary{
-  cursor:pointer;
-  list-style:none;
-  padding:20px 24px;
-  font-size:17.5px;font-weight:700;
-  display:flex;justify-content:space-between;align-items:center;gap:16px;
-}
-.faq-list summary::-webkit-details-marker{display:none}
-.faq-list summary::after{
-  content:"+";
-  flex:none;
-  font-size:24px;font-weight:400;color:var(--primary);
-  transition:transform .2s ease;
-}
-.faq-list details[open] summary::after{transform:rotate(45deg)}
-.faq-list details p{
-  padding:0 24px 22px;
-  color:var(--ink-soft);font-size:16.5px;
-}
-.faq-list details p strong{color:var(--primary-deep)}
-.faq-list summary:focus-visible{outline:3px solid var(--primary);outline-offset:-3px}
-
 /* ── 11. 모집 ── */
 .recruit{background:var(--primary-dark);color:#fff;padding:120px 0}
 .recruit .eyebrow{color:#7ED4C8}
@@ -494,36 +380,6 @@ mark{
 .recruit .btn-primary{background:#fff;color:var(--primary-deep);box-shadow:0 6px 24px rgba(0,0,0,.25)}
 .recruit .btn-primary:hover{background:var(--tint)}
 .recruit .note{margin-top:18px;font-size:15.5px;color:rgba(255,255,255,.65)}
-
-/* 모집 섹션 — 코스 가격 카드 */
-.plan-grid{
-  margin:44px auto 0;max-width:720px;
-  display:grid;grid-template-columns:1fr 1fr;gap:16px;
-}
-.plan{
-  display:flex;flex-direction:column;align-items:flex-start;gap:6px;
-  background:rgba(255,255,255,.07);
-  border:1.5px solid rgba(255,255,255,.16);
-  border-radius:18px;
-  padding:26px 24px;
-  cursor:pointer;
-  font-family:var(--sans);
-  text-align:left;
-  transition:background .15s ease,border-color .15s ease,transform .15s ease;
-}
-.plan:hover{background:rgba(255,255,255,.13);border-color:#7ED4C8;transform:translateY(-3px)}
-.plan:focus-visible{outline:3px solid #7ED4C8;outline-offset:3px}
-.pl-tag{
-  background:#7ED4C8;color:var(--primary-dark);
-  font-size:13px;font-weight:900;
-  border-radius:999px;padding:4px 12px;margin-bottom:6px;
-}
-.pl-name{font-size:17px;font-weight:800;color:#fff}
-.pl-meta{font-size:14px;color:rgba(255,255,255,.62)}
-.pl-price{display:flex;align-items:baseline;gap:9px;margin-top:8px}
-.pl-price s{font-size:15px;color:rgba(255,255,255,.45)}
-.pl-price b{font-size:26px;font-weight:900;color:#fff}
-.pl-go{margin-top:12px;font-size:14.5px;font-weight:700;color:#7ED4C8}
 
 footer{padding:36px 0 100px;text-align:center;font-size:14px;color:#9AA8A5}
 
@@ -562,6 +418,7 @@ dialog::backdrop{background:rgba(14,48,44,.55);backdrop-filter:blur(3px)}
   font-size:25px;font-weight:700;line-height:1.4;
   margin-bottom:24px;
 }
+.modal-lead{font-size:14.5px;color:var(--ink-soft);margin-bottom:8px}
 .course-card{
   display:block;width:100%;
   text-align:left;
@@ -578,6 +435,7 @@ dialog::backdrop{background:rgba(14,48,44,.55);backdrop-filter:blur(3px)}
 .course-card:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
 .course-card .c-name{font-size:19px;font-weight:800;color:var(--ink)}
 .course-card .c-meta{font-size:15.5px;color:var(--ink-soft);margin:6px 0 10px}
+.course-card .c-count{color:var(--primary-deep);font-weight:800}
 .course-card .c-big{font-family:var(--serif);font-size:24px;font-weight:900;color:var(--primary-deep)}
 .course-card .c-desc{font-size:15.5px;color:var(--ink-soft);margin-top:10px}
 .course-card .c-go{
@@ -622,13 +480,19 @@ dialog::backdrop{background:rgba(14,48,44,.55);backdrop-filter:blur(3px)}
   background:var(--paper);
 }
 .form-field input:focus{outline:none;border-color:var(--primary);background:#fff}
-.sched-box{
-  background:var(--tint);border-radius:12px;
-  padding:16px 20px;
-  font-size:16px;font-weight:600;color:var(--primary-deep);
-  line-height:1.9;
+.input-suffix{position:relative}
+.input-suffix input{padding-right:44px}
+.input-suffix .suffix{
+  position:absolute;right:16px;top:50%;transform:translateY(-50%);
+  font-weight:700;color:var(--ink-soft);
 }
-.sched-note{font-size:14px;color:var(--ink-soft);margin-top:8px}
+.consent-note{font-size:13px;color:var(--ink-soft);line-height:1.5;margin-bottom:14px}
+.calendar{background:var(--tint);border-radius:12px;padding:18px 16px}
+.cal-title{font-size:15px;font-weight:800;color:var(--primary-deep);text-align:center;margin-bottom:12px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
+.cal-dow{font-size:13px;font-weight:700;color:var(--ink-soft);padding-bottom:4px}
+.cal-day{font-size:15px;font-weight:600;color:var(--ink-soft);padding:8px 0;border-radius:8px}
+.cal-day.on{background:var(--primary);color:#fff;font-weight:800}
 /* .form-field label(display:block) 규칙보다 뒤에 위치 + 동급 특이도로 flex 복원 */
 .form-field .time-opt{
   display:flex;align-items:center;gap:12px;
@@ -665,9 +529,7 @@ dialog::backdrop{background:rgba(14,48,44,.55);backdrop-filter:blur(3px)}
 
 /* ── 반응형 ── */
 @media (max-width:980px){
-  .hero-grid{grid-template-columns:1fr;gap:40px;text-align:center}
   .hero .cta-area .btn{width:100%;max-width:400px}
-  .demo-card{max-width:440px;margin:0 auto}
 }
 @media (max-width:720px){
   body{font-size:17px}
