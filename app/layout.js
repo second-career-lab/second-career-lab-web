@@ -42,12 +42,18 @@ export default function RootLayout({ children }) {
       <body>{children}</body>
       <Script id="amplitude-init" strategy="afterInteractive">
         {`
-          var s = document.createElement('script');
-          s.src = 'https://cdn.amplitude.com/libs/analytics-browser-2.11.9-min.js.gz';
-          s.onload = function () {
-            amplitude.init('${process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY}', { autocapture: true });
+          var core = document.createElement('script');
+          core.src = 'https://cdn.amplitude.com/libs/analytics-browser-2.45.6-min.js.gz';
+          core.onload = function () {
+            var replay = document.createElement('script');
+            replay.src = 'https://cdn.amplitude.com/libs/plugin-session-replay-browser-1.33.8-min.js.gz';
+            replay.onload = function () {
+              amplitude.add(sessionReplay.plugin({ sampleRate: 1 }));
+              amplitude.init('${process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY}', { autocapture: true });
+            };
+            document.head.appendChild(replay);
           };
-          document.head.appendChild(s);
+          document.head.appendChild(core);
         `}
       </Script>
     </html>

@@ -26,6 +26,8 @@ const SEPT_DAYS = 30;
 
 const SITE = 'https://secondcareerlab.vercel.app';
 
+const track = (name, props) => window.amplitude?.track(name, props);
+
 const JSON_LD = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -84,7 +86,9 @@ export default function Page() {
 
   const course = courseKey ? COURSES[courseKey] : null;
 
-  const openModal = () => {
+  const openModal = (location) => {
+    track('상담신청클릭', { location });
+    track('신청1진입');
     setCourseKey(null);
     setInfo({ name: '', age: '', phone: '' });
     setLeadId(null);
@@ -151,6 +155,7 @@ export default function Page() {
       const { id } = await res.json();
       setLeadId(id);
       setInfo({ name, age, phone });
+      track('신청2진입', { name, phone, age });
       setStep(2);
     } catch {
       setErrs({ ...next, submit: true });
@@ -178,6 +183,14 @@ export default function Page() {
       });
       if (!res.ok) throw new Error('submit failed');
       setErrs({});
+      const TIME_CODE = { 오전반: 'mo', 오후반: 'af', 저녁반: 'ni' };
+      track('신청완료', {
+        name: info.name,
+        phone: info.phone,
+        age: info.age,
+        type: courseKey === 'A' ? 'a' : 'b',
+        time: times.map((t) => TIME_CODE[t]).join(','),
+      });
       setStep(5);
     } catch {
       setErrs({ time: false, submit: true });
@@ -197,7 +210,7 @@ export default function Page() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.png" alt="세컨드커리어랩" />
           </a>
-          <button className="btn btn-primary" onClick={openModal}>상담 신청하기</button>
+          <button className="btn btn-primary" onClick={() => openModal('up')}>상담 신청하기</button>
         </div>
       </header>
 
@@ -403,7 +416,7 @@ export default function Page() {
             <p className="lead">내 머릿속 아이디어를<br />이번에는 실제 서비스로 만들어보세요.</p>
 
             <div className="cta-area">
-              <button className="btn btn-primary btn-lg btn-pulse" onClick={openModal}>상담 신청하기 →</button>
+              <button className="btn btn-primary btn-lg btn-pulse" onClick={() => openModal('bottom')}>상담 신청하기 →</button>
               <p className="note">상담 신청은 결제가 아닙니다 · 24시간 내 연락드립니다</p>
             </div>
           </div>
@@ -414,7 +427,7 @@ export default function Page() {
 
       {/* 모바일 하단 고정 CTA */}
       <div className={`mobile-cta${showBar ? ' show' : ''}`}>
-        <button className="btn btn-primary" onClick={openModal}>상담 신청하기 · 최대 15명</button>
+        <button className="btn btn-primary" onClick={() => openModal('flo')}>상담 신청하기 · 최대 15명</button>
       </div>
 
       {/* 상담 신청 팝업 */}
@@ -466,7 +479,15 @@ export default function Page() {
               {['A', 'B'].map((k) => {
                 const c = COURSES[k];
                 return (
-                  <button key={k} className="course-card" onClick={() => { setCourseKey(k); setStep(3); }}>
+                  <button
+                    key={k}
+                    className="course-card"
+                    onClick={() => {
+                      track('신청3진입', { name: info.name, phone: info.phone, age: info.age, type: k === 'A' ? 'a' : 'b' });
+                      setCourseKey(k);
+                      setStep(3);
+                    }}
+                  >
                     <span className="c-name">{c.name}</span>
                     <p className="c-meta">
                       하루 3시간 · <span className="c-count">{k === 'A' ? '총 6회' : '총 8회'}</span> · {k === 'A' ? '월/수/금' : '월/목'}
@@ -499,7 +520,13 @@ export default function Page() {
                 <p className="p-note">결제는 상담 이후 진행돼요</p>
               </div>
               <div className="modal-actions">
-                <button className="btn btn-primary" onClick={() => goto(4)}>다음</button>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    track('신청4진입', { name: info.name, phone: info.phone, age: info.age, type: courseKey === 'A' ? 'a' : 'b' });
+                    goto(4);
+                  }}
+                >다음</button>
               </div>
             </div>
           )}
