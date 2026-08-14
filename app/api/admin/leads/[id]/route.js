@@ -4,6 +4,7 @@ import { getSupabaseAdmin } from '../../../../../lib/supabase-admin';
 import { isValidSession, ADMIN_COOKIE_NAME } from '../../../../../lib/admin-auth';
 
 const STATUSES = ['대기', '완료'];
+const MEMO_MAX = 5000;
 
 export async function PATCH(req, { params }) {
   const cookieStore = await cookies();
@@ -13,14 +14,26 @@ export async function PATCH(req, { params }) {
   }
 
   const { id } = await params;
-  const { status } = await req.json();
-  if (!STATUSES.includes(status)) {
-    return NextResponse.json({ error: 'invalid status' }, { status: 400 });
+  const body = await req.json();
+  const update = {};
+
+  if (body.status !== undefined) {
+    if (!STATUSES.includes(body.status)) {
+      return NextResponse.json({ error: 'invalid status' }, { status: 400 });
+    }
+    update.status = body.status;
   }
+  if (body.memo !== undefined) {
+    update.memo = String(body.memo).slice(0, MEMO_MAX);
+  }
+  if (Object.keys(update).length === 0) {
+    return NextResponse.json({ error: 'nothing to update' }, { status: 400 });
+  }
+  update.updated_at = new Date().toISOString();
 
   const { error } = await getSupabaseAdmin()
     .from('leads')
-    .update({ status, updated_at: new Date().toISOString() })
+    .update(update)
     .eq('id', id);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

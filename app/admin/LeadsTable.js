@@ -9,6 +9,7 @@ const STATUSES = ['대기', '완료'];
 export default function LeadsTable({ leads }) {
   const router = useRouter();
   const [pendingId, setPendingId] = useState(null);
+  const [savingMemoId, setSavingMemoId] = useState(null);
 
   const changeStatus = async (id, status) => {
     setPendingId(id);
@@ -18,6 +19,17 @@ export default function LeadsTable({ leads }) {
       body: JSON.stringify({ status }),
     });
     setPendingId(null);
+    router.refresh();
+  };
+
+  const saveMemo = async (id, memo) => {
+    setSavingMemoId(id);
+    await fetch(`/api/admin/leads/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ memo }),
+    });
+    setSavingMemoId(null);
     router.refresh();
   };
 
@@ -37,6 +49,7 @@ export default function LeadsTable({ leads }) {
             <th>코스</th>
             <th>선호시간대</th>
             <th>상태</th>
+            <th>메모</th>
           </tr>
         </thead>
         <tbody>
@@ -59,6 +72,19 @@ export default function LeadsTable({ leads }) {
                     <option key={s} value={s}>{s}</option>
                   ))}
                 </select>
+              </td>
+              <td>
+                <textarea
+                  className="admin-memo"
+                  defaultValue={l.memo || ''}
+                  placeholder="상담 메모, 링크 등을 입력하세요"
+                  disabled={savingMemoId === l.id}
+                  onBlur={(e) => {
+                    const value = e.target.value;
+                    if (value !== (l.memo || '')) saveMemo(l.id, value);
+                  }}
+                />
+                {savingMemoId === l.id && <p className="admin-memo-saving">저장 중…</p>}
               </td>
             </tr>
           ))}

@@ -49,7 +49,7 @@ export default function RootLayout({ children }) {
             replay.src = 'https://cdn.amplitude.com/libs/plugin-session-replay-browser-1.33.8-min.js.gz';
             replay.onload = function () {
               amplitude.add(sessionReplay.plugin({ sampleRate: 1 }));
-              amplitude.init('${process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY}', { autocapture: true });
+              amplitude.init('${process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY}', { autocapture: false });
             };
             document.head.appendChild(replay);
           };
