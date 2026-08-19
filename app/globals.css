@@ -70,7 +70,7 @@ img{max-width:100%}
   border-radius:999px;
   padding:clamp(13px,1.5vw,18px) clamp(32px,4vw,47px);
   font-family:var(--display);font-weight:700;
-  font-size:clamp(19px,3.2vw,40px);line-height:1.35;
+  font-size:clamp(23px,3.2vw,40px);line-height:1.35;
   box-shadow:0 10px 30px rgba(0,0,0,.22);
   transition:transform .15s ease, box-shadow .15s ease;
 }
@@ -97,14 +97,14 @@ header{
 }
 .logo{display:flex;align-items:center}
 .logo img{height:34px;width:auto;display:block}
-.header-inner .btn{font-size:16px;padding:10px 22px;border-radius:999px}
+.header-inner .btn{font-size:17px;padding:11px 24px;border-radius:999px}
 
 /* ── 섹션 공통 ── */
 section{padding:clamp(60px,8vw,120px) 0}
 .center{text-align:center}
 .eyebrow{
   display:block;
-  font-size:clamp(15px,2.4vw,30px);
+  font-size:clamp(19px,2.4vw,30px);
   font-weight:600;
   line-height:1.5;
   color:var(--primary);
@@ -121,10 +121,10 @@ section{padding:clamp(60px,8vw,120px) 0}
   -webkit-text-emphasis-position:over;
 }
 h1,h2{font-family:var(--display);font-weight:700;letter-spacing:-.02em;line-height:1.27}
-h2{font-size:clamp(26px,5.4vw,60px);color:var(--ink)}
+h2{font-size:clamp(30px,5.4vw,60px);color:var(--ink)}
 .sec-sub{
   margin-top:clamp(16px,2.4vw,32px);
-  font-size:clamp(15px,2vw,24px);
+  font-size:clamp(18px,2vw,24px);
   line-height:1.5;
   color:var(--ink-soft);
 }
@@ -175,18 +175,18 @@ mark{
   border-radius:999px;
   padding:clamp(5px,.8vw,8px) clamp(18px,2.4vw,34px);
   font-weight:400;
-  font-size:clamp(14px,2.2vw,28px);
+  font-size:clamp(17px,2.2vw,28px);
   line-height:1.4;
   color:var(--ink);
 }
 .hero-over b{font-weight:700}
 .hero h1{
   margin-top:clamp(10px,1.4vw,20px);
-  font-size:clamp(30px,6vw,60px);
+  font-size:clamp(34px,6vw,60px);
 }
 .hero-sub{
   margin-top:clamp(18px,2.8vw,40px);
-  font-size:clamp(14px,1.9vw,24px);
+  font-size:clamp(17px,1.9vw,24px);
   line-height:1.5;
   color:var(--ink-soft);
 }
@@ -199,13 +199,13 @@ mark{
 .stats .stat + .stat{border-left:2px solid rgba(255,255,255,.16)}
 .stats .stat span{
   display:block;
-  font-size:clamp(11px,1.5vw,18px);font-weight:500;
+  font-size:clamp(14px,1.5vw,18px);font-weight:500;
   color:rgba(255,255,255,.8);
 }
 .stats .stat b{
   display:block;margin-top:2px;
   font-family:var(--display);font-weight:700;
-  font-size:clamp(19px,3.4vw,40px);line-height:1.3;
+  font-size:clamp(26px,3.4vw,40px);line-height:1.3;
   color:#fff;
 }
 
@@ -219,13 +219,13 @@ mark{
 .icard{
   background:#fff;border-radius:20px;
   box-shadow:var(--card-shadow);
-  padding:clamp(16px,2.2vw,30px) clamp(10px,1.6vw,22px);
+  padding:clamp(20px,2.2vw,30px) clamp(14px,1.6vw,22px);
   display:flex;flex-direction:column;align-items:center;
   gap:clamp(10px,1.6vw,22px);
 }
 .icard img{display:block;width:auto;height:clamp(80px,11vw,150px);object-fit:contain}
 .icard p{
-  font-size:clamp(13px,1.7vw,22px);
+  font-size:clamp(17px,1.7vw,22px);
   line-height:1.45;font-weight:500;
   color:var(--ink-soft);
 }
@@ -236,7 +236,7 @@ mark{
 .punch{
   margin-top:clamp(32px,5vw,72px);
   font-family:var(--display);font-weight:700;
-  font-size:clamp(20px,4.2vw,46px);
+  font-size:clamp(24px,4.2vw,46px);
   line-height:1.35;letter-spacing:-.02em;
 }
 
@@ -256,7 +256,7 @@ mark{
   background:var(--teal);color:#fff;
   border-radius:0 0 12px 12px;
   padding:clamp(5px,.7vw,10px) clamp(10px,1.2vw,16px);
-  font-size:clamp(11px,1.2vw,18px);font-weight:600;
+  font-size:clamp(14px,1.2vw,18px);font-weight:600;
 }
 .flow-new .flow-tag{top:-2px;font-weight:700}
 .flow{
@@ -266,13 +266,13 @@ mark{
 .flow .step{
   border-radius:999px;
   padding:clamp(7px,1.3vw,20px) clamp(12px,1.8vw,26px);
-  font-size:clamp(12px,2vw,30px);font-weight:400;
+  font-size:clamp(17px,2vw,30px);font-weight:400;
   white-space:nowrap;
 }
 .flow-old .step{background:#C8C9C9;color:#3D4343}
 .flow-new .step{background:var(--teal);color:#FAFBFB}
 .flow-new .step.hot{background:var(--mint);color:#3D4343;font-weight:700}
-.flow .arw{color:#B4C0BE;font-size:clamp(12px,1.4vw,18px)}
+.flow .arw{color:#B4C0BE;font-size:clamp(16px,1.4vw,18px)}
 .flow-mascot{
   display:block;margin:clamp(8px,1.4vw,18px) auto 0;
   width:clamp(80px,14vw,190px);height:auto;
@@ -300,7 +300,7 @@ mark{
   padding:5px 20px;
   background:linear-gradient(56deg,var(--g1),var(--g2));
   color:#fff;font-family:var(--display);font-weight:700;
-  font-size:clamp(11px,1.2vw,18px);
+  font-size:clamp(14px,1.2vw,18px);
 }
 
 /* ── 7. 수료 후 3가지 ── */
@@ -328,7 +328,7 @@ mark{
 .rlabel span{
   transform:rotate(-90deg);
   white-space:nowrap;
-  font-size:clamp(10px,1.1vw,18px);font-weight:700;
+  font-size:clamp(12px,1.1vw,18px);font-weight:700;
   letter-spacing:.6em;text-indent:.6em;color:#4D5A59;
 }
 .rimg{padding:clamp(12px,1.8vw,24px)}
@@ -337,15 +337,15 @@ mark{
   border-radius:16px;object-fit:cover;
 }
 .rbody{padding:clamp(6px,1.6vw,24px) clamp(16px,2.4vw,34px) clamp(14px,1.6vw,24px) clamp(4px,1vw,20px)}
-.rno{font-size:clamp(11px,1.2vw,18px);font-weight:600;color:#4D5A59}
+.rno{font-size:clamp(14px,1.2vw,18px);font-weight:600;color:#4D5A59}
 .rbody h3{
   margin-top:4px;
   font-family:var(--display);font-weight:700;
-  font-size:clamp(18px,3vw,40px);line-height:1.15;letter-spacing:-.02em;
+  font-size:clamp(23px,3vw,40px);line-height:1.15;letter-spacing:-.02em;
 }
 .rbody p{
   margin-top:clamp(6px,1.2vw,18px);
-  font-size:clamp(12px,1.8vw,24px);line-height:1.45;
+  font-size:clamp(17px,1.8vw,24px);line-height:1.45;
   font-weight:500;color:var(--ink-soft);
 }
 .rbody p b{font-weight:700;color:var(--ink)}
@@ -370,15 +370,15 @@ mark{
   display:flex;flex-direction:column;justify-content:center;
   padding:clamp(16px,2.4vw,40px) clamp(10px,1.4vw,20px);
 }
-.cpart b,.cpart span{font-weight:600;font-size:clamp(13px,1.6vw,30px);line-height:1.3}
-.cbody{padding:clamp(16px,2.4vw,32px) clamp(16px,2.4vw,36px)}
+.cpart b,.cpart span{font-weight:600;font-size:clamp(17px,1.6vw,30px);line-height:1.3}
+.cbody{padding:clamp(18px,2.4vw,32px) clamp(18px,2.4vw,36px)}
 .cbody h3{
   font-family:var(--display);font-weight:700;
-  font-size:clamp(15px,2.4vw,36px);line-height:1.2;letter-spacing:-.02em;
+  font-size:clamp(19px,2.4vw,36px);line-height:1.2;letter-spacing:-.02em;
 }
 .cbody p{
   margin-top:clamp(5px,.9vw,14px);
-  font-size:clamp(12px,1.7vw,26px);line-height:1.45;color:var(--ink-soft);
+  font-size:clamp(16px,1.7vw,26px);line-height:1.45;color:var(--ink-soft);
 }
 .cbody p b{font-weight:700;color:var(--ink)}
 
@@ -399,7 +399,7 @@ mark{
 }
 .fit-grid p{
   margin-top:clamp(10px,1.6vw,22px);
-  font-size:clamp(13px,1.8vw,24px);line-height:1.45;color:var(--ink-soft);
+  font-size:clamp(17px,1.8vw,24px);line-height:1.45;color:var(--ink-soft);
 }
 
 /* ── 10. 최종 CTA ── */
@@ -408,18 +408,18 @@ mark{
 .cta .eyebrow{color:var(--mint)}
 .cta-sub{
   margin-top:clamp(18px,3vw,44px);
-  font-size:clamp(13px,1.8vw,24px);line-height:1.5;
+  font-size:clamp(17px,1.8vw,24px);line-height:1.5;
   color:rgba(255,255,255,.9);
 }
 .cta-sub b{font-weight:700;color:#fff}
 .cta .btn-pill{margin-top:clamp(22px,3.4vw,48px)}
 .cta-note{
   margin-top:clamp(12px,1.6vw,24px);
-  font-size:clamp(11px,1.2vw,18px);font-weight:500;
+  font-size:clamp(14px,1.2vw,18px);font-weight:500;
   color:rgba(255,255,255,.75);
 }
 
-footer{padding:36px 0 100px;text-align:center;font-size:14px;color:#9AA8A5}
+footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
 .footer-links{margin-top:8px}
 .footer-links a{color:#9AA8A5;text-decoration:underline;text-underline-offset:2px}
 .footer-links a:hover{color:var(--ink-soft)}
@@ -436,7 +436,7 @@ footer{padding:36px 0 100px;text-align:center;font-size:14px;color:#9AA8A5}
   transition:transform .3s ease;
 }
 .mobile-cta.show{transform:none}
-.mobile-cta .btn{width:100%;font-size:17px;padding:15px 20px}
+.mobile-cta .btn{width:100%;font-size:19px;padding:17px 20px}
 @media (min-width:861px){.mobile-cta{display:none}}
 @media (prefers-reduced-motion:reduce){.mobile-cta{transition:none}}
 
@@ -446,30 +446,30 @@ footer{padding:36px 0 100px;text-align:center;font-size:14px;color:#9AA8A5}
   .card-grid-3{grid-template-columns:1fr}
   /* 경험 카드는 모바일에서 이미지 좌 / 카피 우 가로 배치 */
   .why .icard{flex-direction:row;align-items:center;text-align:left}
-  .why .icard img{width:42%;flex:none;height:clamp(100px,24vw,150px)}
+  .why .icard img{width:40%;flex:none;height:clamp(112px,26vw,160px)}
   .reward-head{flex-direction:column;align-items:center;text-align:center}
   .reward-mascot{align-self:center;width:clamp(150px,42vw,240px);margin:0 auto}
   /* 라벨은 좌측 세로줄, 이미지·본문은 우측 한 칸에 세로로 쌓임 */
-  .rrow{grid-template-columns:36px 1fr}
+  .rrow{grid-template-columns:42px 1fr}
   .rlabel{grid-row:1 / 3}
   .rimg,.rbody{grid-column:2}
-  .rimg{padding:14px 14px 0}
+  .rimg{padding:16px 16px 0}
   .rimg img{height:clamp(130px,32vw,200px)}
-  .rbody{padding:12px 16px 18px}
+  .rbody{padding:14px 20px 22px}
 }
 @media (max-width:640px){
-  body{font-size:17px}
-  .wrap{padding:0 20px}
-  .header-inner{height:60px;padding:0 20px}
-  .logo img{height:26px}
-  .header-inner .btn{font-size:14px;padding:9px 16px}
-  .stats .wrap{grid-template-columns:repeat(2,1fr);gap:14px 0;padding:0 12px}
+  body{font-size:18px}
+  .wrap{padding:0 18px}
+  .header-inner{height:64px;padding:0 18px}
+  .logo img{height:28px}
+  .header-inner .btn{font-size:15px;padding:10px 18px}
+  .stats .wrap{grid-template-columns:repeat(2,1fr);gap:18px 0;padding:0 12px}
   .stats .stat:nth-child(odd){border-left:none}
   .stats .stat:nth-child(n+3){border-top:2px solid rgba(255,255,255,.16);padding-top:12px}
   /* 칩이 줄바꿈되며 화살표가 줄 끝에 남지 않게 세로 흐름으로 */
   .flow{flex-direction:column}
   .flow .arw{transform:rotate(90deg)}
-  .flow .step{padding:7px 16px}
+  .flow .step{padding:11px 22px}
   /* PART 라벨이 가로 바로 바뀌므로 컬럼 그라데이션 대신 바마다 개별 적용 */
   .curr-card{background:#fff}
   .crow{grid-template-columns:1fr}
@@ -477,7 +477,7 @@ footer{padding:36px 0 100px;text-align:center;font-size:14px;color:#9AA8A5}
   .cpart{
     background:linear-gradient(90deg,var(--g1),var(--g2));
     flex-direction:row;align-items:baseline;justify-content:center;
-    gap:8px;padding:11px 18px;
+    gap:10px;padding:13px 18px;
   }
   .fit-grid{max-width:400px}
 }
