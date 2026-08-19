@@ -324,7 +324,7 @@ mark{
 .reward .eyebrow{color:var(--mint)}
 .reward-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
 /* 마스코트 아랫변이 첫 카드 윗변에 딱 붙도록 — 아래 정렬 + 카드 목록 여백 0 */
-.reward-mascot{flex:none;align-self:flex-end;width:min(452px,38%);height:auto;display:block}
+.reward-mascot{flex:none;align-self:flex-end;width:min(395px,33%);height:auto;display:block}
 .reward-rows{
   display:flex;flex-direction:column;gap:clamp(12px,2.2vw,28px);
 }
@@ -507,7 +507,7 @@ dialog{
   margin:auto;
 }
 dialog::backdrop{background:rgba(14,48,44,.55);backdrop-filter:blur(3px)}
-.modal-body{padding:40px 36px 32px;overflow-y:auto;max-height:calc(100dvh - 48px)}
+.modal-body{padding:40px 36px 0;overflow-y:auto;max-height:calc(100dvh - 48px)}
 .modal-top-bar{display:flex;align-items:center;justify-content:flex-end;margin-bottom:8px}
 .modal-close-x{
   width:40px;height:40px;border-radius:50%;
@@ -653,11 +653,38 @@ dialog::backdrop{background:rgba(14,48,44,.55);backdrop-filter:blur(3px)}
 .done-box p{color:var(--ink-soft);font-size:17px}
 .done-box p strong{color:var(--ink)}
 
+/* 스크롤 중에도 다음/완료 버튼이 항상 보이도록 하단 고정 */
 .modal-actions{
   display:flex;flex-direction:column;gap:8px;
-  margin-top:26px;
+  position:sticky;bottom:0;z-index:5;
+  background:#fff;
+  margin:26px -36px 0;
+  padding:12px 36px 24px;
+  box-shadow:0 -10px 14px -12px rgba(10,40,36,.2);
 }
 .modal-actions .btn{width:100%}
+
+/* 안내용 캘린더 접기 토글 — 모바일에서만 노출 */
+.cal-toggle{
+  display:none;
+  background:none;border:none;cursor:pointer;
+  font-family:var(--sans);
+  font-size:15px;font-weight:700;color:var(--primary);
+  padding:4px 0;margin-bottom:8px;
+  text-decoration:underline;text-underline-offset:3px;
+}
+
+/* 모바일: 팝업을 풀스크린으로 — 좁은 박스 내부 스크롤 대신 페이지처럼 스크롤 */
+@media (max-width:640px){
+  dialog{width:100vw;height:100dvh;max-height:none;border-radius:0}
+  .modal-body{max-height:none;height:100dvh;padding:24px 20px 0}
+  .modal-actions{
+    margin:26px -20px 0;
+    padding:12px 20px calc(16px + env(safe-area-inset-bottom));
+  }
+  .cal-toggle{display:inline-block}
+  .calendar.closed{display:none}
+}
 
 
 /* ── 어드민 ── */

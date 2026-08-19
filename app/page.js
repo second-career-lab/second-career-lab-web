@@ -174,12 +174,14 @@ export default function Page() {
     setInfo({ name: '', age: '', phone: '' });
     setLeadId(null);
     setErrs({});
+    setCalOpen(false);
     setStep(1);
     dialogRef.current?.showModal();
   };
   const closeModal = () => dialogRef.current?.close();
   const goto = (n) => setStep(n);
 
+  const [calOpen, setCalOpen] = useState(false);
   const [toastOn, setToastOn] = useState(false);
   const toastTimerRef = useRef(null);
   const showCalendarToast = () => {
@@ -422,7 +424,7 @@ export default function Page() {
                 <span className="eyebrow">수료 후</span>
                 <h2>이 과정을 마친 뒤<br />3가지를 가져갑니다</h2>
               </div>
-              <Image className="reward-mascot" src={`${IMG}/reward-mascot.png`} alt="" width={452} height={320} />
+              <Image className="reward-mascot" src={`${IMG}/reward-mascot.png`} alt="" width={395} height={320} />
             </div>
             <div className="reward-rows stagger">
               {REWARDS.map((r) => (
@@ -621,7 +623,10 @@ export default function Page() {
                 <div className="form-field">
                   <span className="f-label">강의 진행 예정일</span>
                   <p className="cal-dates">{course.days.map((d) => `9/${d}(${WEEKDAYS[(SEPT_FIRST_WEEKDAY + d - 1) % 7]})`).join(', ')}</p>
-                  <div className="calendar" onClick={showCalendarToast} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && showCalendarToast()}>
+                  <button type="button" className="cal-toggle" onClick={() => setCalOpen((v) => !v)}>
+                    {calOpen ? '달력 접기 ▲' : '달력으로 보기 ▼'}
+                  </button>
+                  <div className={`calendar${calOpen ? '' : ' closed'}`} onClick={showCalendarToast} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && showCalendarToast()}>
                     <p className="cal-title">2026년 9월</p>
                     <div className="cal-grid">
                       {WEEKDAYS.map((w) => <span key={w} className="cal-dow">{w}</span>)}
