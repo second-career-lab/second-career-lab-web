@@ -423,7 +423,14 @@ export default function Page() {
         </section>
       </main>
 
-      <footer>© 2026 세컨드커리어랩</footer>
+      <footer>
+        <p>© 2026 세컨드커리어랩</p>
+        <p className="footer-links">
+          <a href="https://lacy-jasmine-edf.notion.site/3c1b3600bb79802cb357d43d52106435?source=copy_link" target="_blank" rel="noopener noreferrer">서비스 이용약관</a>
+          <span className="footer-divider">·</span>
+          <a href="https://lacy-jasmine-edf.notion.site/3c1b3600bb79806eac5ff53af5337b1d?source=copy_link" target="_blank" rel="noopener noreferrer">개인정보 처리방침</a>
+        </p>
+      </footer>
 
       {/* 모바일 하단 고정 CTA */}
       <div className={`mobile-cta${showBar ? ' show' : ''}`}>

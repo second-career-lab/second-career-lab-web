@@ -376,6 +376,10 @@ mark{
 .recruit .note{margin-top:18px;font-size:15.5px;color:rgba(255,255,255,.65)}
 
 footer{padding:36px 0 100px;text-align:center;font-size:14px;color:#9AA8A5}
+.footer-links{margin-top:8px}
+.footer-links a{color:#9AA8A5;text-decoration:underline;text-underline-offset:2px}
+.footer-links a:hover{color:var(--ink-soft)}
+.footer-divider{margin:0 8px}
 
 /* ── 모바일 하단 고정 CTA ── */
 .mobile-cta{
