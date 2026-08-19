@@ -1,6 +1,81 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
+
+const IMG = '/images/landing';
+
+// 3. 고민 4카드
+const PAINS = [
+  { img: 'card-cost-concern', text: ['외주개발 비용이', '너무 부담된다.'] },
+  { img: 'card-developer-concern', text: ['개발자를 구하기도', '어렵고 비싸다.'] },
+  { img: 'card-ai-confusion', text: ['AI, 어디서부터 할지', '모르겠다.'] },
+  { img: 'card-tutorial-fail', text: ['유튜브를 따라 해도', '잘 안 만들어진다.'] },
+];
+
+// 5. 왜 40·50인가 — 경험 3카드
+const EXPERIENCES = [
+  { img: 'experience-construction', text: ['건축 현장 30년,', '반복되는 불편을 누구보다', '잘 아는 분'] },
+  { img: 'experience-hospital', text: ['병원 근무 20년,', '환자의 불편을 가까이서', '지켜본 분'] },
+  { img: 'experience-education', text: ['자녀를 대학까지 키우며', '현실적인 교육 문제를', '겪어본 분'] },
+];
+
+// 6. 오프라인 차별점 4포인트
+const POINTS = [
+  { img: 'point-small-group', head: ['최대 ', '15명', ' 소수 정예로'], tail: '밀착케어' },
+  { img: 'point-hands-on', head: ['내 사업 아이템으로'], tail: '직접 실습' },
+  { img: 'point-onsite-help', head: ['막히는 부분'], tail: '현장에서 해결' },
+  { img: 'point-deploy', head: ['실제 서비스'], tail: '제작 및 배포까지' },
+];
+
+// 7. 수료 후 3가지
+const REWARDS = [
+  {
+    label: '첫번째', no: '01', img: 'reward-01-service',
+    title: '실제 서비스 결과물',
+    lead: '내 사업 아이디어를 ', bold: '직접 서비스 형태로 만들어봅니다.',
+  },
+  {
+    label: '두번째', no: '02', img: 'reward-02-skill',
+    title: '스스로 만드는 능력',
+    lead: '다음 아이디어가 생겨도 ', bold: '직접 수정하고 다시 만들 수 있습니다.',
+  },
+  {
+    label: '세번째', no: '03', img: 'reward-03-strategy',
+    title: '스타트업 기초 전략',
+    lead: '아이디어 검증부터 운영까지 ', bold: '스타트업 전략도 함께 배웁니다.',
+  },
+];
+
+// 8. 커리큘럼
+const CURRICULUM = [
+  { part: 'PART 1', step: '기획', title: '무엇을 만들지 명확하게 정리', desc: '시장 · 타깃 · 문제 · 솔루션 · 회원 유형 · 메뉴 · 주요 프로세스' },
+  { part: 'PART 2', step: '디자인', title: 'AI에게 원하는 화면을 정확하게 요청하는 방법', desc: '화면 구성 · 레이아웃 · 컬러 · 톤&매너 · 컴포넌트' },
+  { part: 'PART 3', step: '바이브 코딩', title: '기획과 디자인을 바탕으로 실제 서비스 제작', desc: '다른 사람도 접속할 수 있도록 ', descBold: '배포까지 진행합니다.' },
+  { part: 'PART 4', step: '오픈 이후', title: '만들고 끝이 아닙니다.', desc: '오픈 후 어떻게 아이디어를 검증할지도 함께 배웁니다.' },
+];
+
+// 9. 추천 대상 (3 + 2 배치)
+const FITS = [
+  { img: 'fit-preceo', text: ['40~50대 예비 대표님'] },
+  { img: 'fit-online-biz', text: ['온라인 비즈니스를', '시작하고 싶은 분'] },
+  { img: 'fit-outsourcing-cost', text: ['외주개발 비용이', '부담되는 분'] },
+  { img: 'fit-own-experience', text: ['내 경험을 서비스로', '만들고 싶은 분'] },
+  { img: 'fit-learn-ai-alone', text: ['AI를 혼자 배우기', '어려웠던 분'] },
+];
+
+const STATS = [
+  ['정원', '15명'],
+  ['1회 수업', '3시간'],
+  ['완성 기간', '2~4주'],
+  ['오프라인 실습 비중', '100%'],
+];
+
+const OLD_FLOW = ['아이디어', '개발사', '수천만 원', '수개월 개발'];
+const NEW_FLOW = ['아이디어', 'AI에게 요청', '직접 제작', '빠르게 검증'];
+
+// 줄바꿈 배열을 <br/>로 이어 붙임
+const lines = (arr) => arr.map((t, i) => (i === 0 ? t : [<br key={i} />, t]));
 
 const COURSES = {
   A: {
@@ -217,33 +292,29 @@ export default function Page() {
       <main>
         {/* 2. 첫 화면 */}
         <section className="hero" id="top">
-          <div className="wrap hero-grid">
-            <div className="hero-copy">
-              <span className="eyebrow eyebrow-lg">40·50대 대표님들을 위한</span>
-              <h1>
-                AI로 내 온라인 서비스<br />
-                <span className="u">
-                  직접 만들기
-                  <svg viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true">
-                    <path d="M3 9 C 60 3, 140 3, 197 8" stroke="#147D72" strokeWidth="5" fill="none" strokeLinecap="round" opacity=".45" />
-                  </svg>
-                </span>
-              </h1>
-              <p className="sub">IT 지식 없이도, 비싼 외주개발 없이도.</p>
-              <p className="sub" style={{ marginTop: 14 }}>
-                <strong>기획부터 디자인, 바이브코딩까지<br />직접 만들어보는 오프라인 실전 클래스</strong>
-              </p>
-            </div>
+          <div className="wrap hero-inner">
+            <p><span className="hero-over"><b>40·50대</b> 대표님들을 위한</span></p>
+            <h1>
+              AI로 내 온라인 서비스<br />
+              <span className="grad">직접 만들어보세요</span>
+            </h1>
+            <p className="hero-sub">
+              IT 지식도, 비싼 외주도 필요 없습니다.<br />
+              기획·디자인·바이브코딩까지, 전문가와 함께 완성하는<br />
+              <strong>오프라인 실전 클래스.</strong>
+            </p>
           </div>
         </section>
 
         {/* 핵심 스펙 바 */}
-        <div className="spec-bar">
+        <div className="stats">
           <div className="wrap">
-            <div className="spec"><b>15명</b><span>정원</span></div>
-            <div className="spec"><b>3시간</b><span>1회 수업</span></div>
-            <div className="spec"><b>2~4주</b><span>완성 기간</span></div>
-            <div className="spec"><b>100%</b><span>오프라인 실습</span></div>
+            {STATS.map(([label, value]) => (
+              <div className="stat" key={label}>
+                <span>{label}</span>
+                <b>{value}</b>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -252,58 +323,68 @@ export default function Page() {
           <div className="wrap reveal">
             <span className="eyebrow">이런 고민 있으셨나요?</span>
             <h2>아이디어는 있는데,<br />만드는 단계에서 막혔다면</h2>
-            <ul className="pain-list stagger">
-              <li>외주개발 비용이 너무 부담된다.</li>
-              <li>개발자를 구하기도 어렵고 비싸다.</li>
-              <li>AI로 만든다는데 어디서부터 해야 할지 모르겠다.</li>
-              <li>유튜브를 따라 해봐도 내 서비스는 잘 안 만들어진다.</li>
-            </ul>
-            <p className="punch">그래서 직접 만들 수 있게 도와드립니다.</p>
+            <div className="card-grid-4 stagger">
+              {PAINS.map((p) => (
+                <div className="icard" key={p.img}>
+                  <Image src={`${IMG}/${p.img}.png`} alt="" width={520} height={520} />
+                  <p>{lines(p.text)}</p>
+                </div>
+              ))}
+            </div>
+            <p className="punch">
+              그래서 <span className="grad">직접 만들 수 있게 도와드립니다.</span>
+            </p>
           </div>
         </section>
 
         {/* 4. 지금은 개발 방식이 달라졌습니다 */}
-        <section className="center">
+        <section className="shift center">
           <div className="wrap reveal">
             <span className="eyebrow">지금은 개발 방식이 달라졌습니다</span>
-            <div className="shift-rows">
-              <div className="shift-row shift-old">
-                <div className="tag">예전에는</div>
-                <div className="shift-flow">
-                  <span className="step">아이디어</span><span className="arr">→</span>
-                  <span className="step">개발사</span><span className="arr">→</span>
-                  <span className="step hurt">수천만 원</span><span className="arr">→</span>
-                  <span className="step hurt">수개월 개발</span>
-                </div>
-              </div>
-              <div className="shift-row shift-new">
-                <div className="tag">지금은</div>
-                <div className="shift-flow">
-                  <span className="step">아이디어</span><span className="arr">→</span>
-                  <span className="step">AI와 대화</span><span className="arr">→</span>
-                  <span className="step hot">직접 제작</span><span className="arr">→</span>
-                  <span className="step hot">빠르게 검증</span>
-                </div>
+            <h2>개발자가 아니어도<br /><mark>서비스를 만들 수 있는 시대</mark>입니다.</h2>
+            <div className="flow-box flow-old">
+              <span className="flow-tag">예전에는</span>
+              <div className="flow">
+                {OLD_FLOW.map((s, i) => (
+                  <span key={s} style={{ display: 'contents' }}>
+                    {i > 0 && <span className="arw" aria-hidden="true">→</span>}
+                    <span className="step">{s}</span>
+                  </span>
+                ))}
               </div>
             </div>
-            <p className="shift-punch">개발자가 아니어도<br /><mark>서비스를 만들 수 있는 시대</mark>입니다.</p>
+            <Image className="flow-mascot" src={`${IMG}/shift-mascot.png`} alt="" width={560} height={373} />
+            <div className="flow-box flow-new">
+              <span className="flow-tag">지금은</span>
+              <div className="flow">
+                {NEW_FLOW.map((s, i) => (
+                  <span key={s} style={{ display: 'contents' }}>
+                    {i > 0 && <span className="arw" aria-hidden="true">→</span>}
+                    <span className="step">{s}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* 5. 왜 4050인가? */}
+        {/* 5. 왜 40·50인가? */}
         <section className="why center">
           <div className="wrap reveal">
-            <span className="eyebrow eyebrow-lg">왜 4050인가?</span>
+            <span className="eyebrow">왜 <em className="dots">40·50</em>인가?</span>
             <h2>이제 아이디어를 개발하는<br />장벽은 낮아졌습니다.</h2>
-            <p className="body body-lg">
-              대신, 무엇을 만들지 아는<br /><strong>경험과 전문성이 더 중요해졌습니다.</strong>
+            <p className="sec-sub">
+              대신, ‘무엇을 만들지’ 아는 경험이 더 중요해졌습니다.<br />
+              <mark><b>당신이 쌓아온 경험이 곧 하나의 서비스가 됩니다.</b></mark>
             </p>
-            <ul className="pain-list stagger">
-              <li>건축 현장 30년, 반복되는 불편을 누구보다 잘 아는 분</li>
-              <li>병원 근무 20년, 환자의 불편을 가까이서 지켜본 분</li>
-              <li>자녀를 대학까지 키우며 현실적인 교육 문제를 겪어본 분</li>
-            </ul>
-            <p className="punch">지금까지 쌓아온 경험과 지식이<br />하나의 서비스가 될 수 있습니다.</p>
+            <div className="card-grid-3 stagger">
+              {EXPERIENCES.map((e) => (
+                <div className="icard" key={e.img}>
+                  <Image src={`${IMG}/${e.img}.png`} alt="" width={700} height={501} />
+                  <p>{lines(e.text)}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -311,114 +392,98 @@ export default function Page() {
         <section className="offline center">
           <div className="wrap reveal">
             <span className="eyebrow">온라인이 아니라 오프라인으로 합니다</span>
-            <h2>보고 끝나는 강의가 아닙니다.</h2>
-            <p className="punch">옆에서 같이 만듭니다.</p>
-            <div className="feature-grid stagger">
-              <div className="card"><span className="ico">👥</span>최대 15명 소수 정예</div>
-              <div className="card"><span className="ico">💡</span>내 사업 아이템으로 직접 실습</div>
-              <div className="card"><span className="ico">🙋</span>막히는 부분 현장에서 해결</div>
-              <div className="card"><span className="ico">🚀</span>실제 서비스 제작 및 배포까지</div>
+            <h2>보고 끝나는 강의가 아닙니다.<br /><span className="grad">옆에서 함께 만듭니다.</span></h2>
+            <div className="card-grid-4 stagger">
+              {POINTS.map((p, i) => (
+                <div className="icard" key={p.img}>
+                  <span className="pill">POINT {i + 1}</span>
+                  <Image src={`${IMG}/${p.img}.png`} alt="" width={440} height={440} />
+                  <p>
+                    {p.head.map((t, j) => (j === 1 ? <b key={j}>{t}</b> : t))}<br />
+                    <b>{p.tail}</b>
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* 7. 3가지를 가져갑니다 */}
-        <section className="takeaway center">
+        {/* 7. 수료 후 3가지 */}
+        <section className="reward">
           <div className="wrap reveal">
-            <span className="eyebrow">수료 후</span>
-            <h2>3가지를 가져갑니다</h2>
-            <div className="take-grid stagger">
-              <div className="take-card">
-                <div className="no">01</div>
-                <h3>실제 서비스 결과물</h3>
-                <p>내 사업 아이디어를 <strong>직접 서비스 형태로 만들어봅니다.</strong></p>
+            <div className="reward-head">
+              <div>
+                <span className="eyebrow">수료 후</span>
+                <h2>이 과정을 마친 뒤<br />3가지를 가져갑니다</h2>
               </div>
-              <div className="take-card">
-                <div className="no">02</div>
-                <h3>스스로 만드는 능력</h3>
-                <p>다음 아이디어가 생겨도 <strong>직접 수정하고 다시 만들 수 있습니다.</strong></p>
-              </div>
-              <div className="take-card">
-                <div className="no">03</div>
-                <h3>스타트업 기초 전략</h3>
-                <p>아이디어 검증 방법부터 운영까지 <strong>스타트업 기초 전략도 함께 배웁니다.</strong></p>
-              </div>
+              <Image className="reward-mascot" src={`${IMG}/reward-mascot.png`} alt="" width={452} height={320} />
+            </div>
+            <div className="reward-rows stagger">
+              {REWARDS.map((r) => (
+                <div className="rrow" key={r.no}>
+                  <div className="rlabel"><span>{r.label}</span></div>
+                  <div className="rimg">
+                    <Image src={`${IMG}/${r.img}.png`} alt="" width={700} height={467} />
+                  </div>
+                  <div className="rbody">
+                    <p className="rno">{r.no}</p>
+                    <h3 className="grad">{r.title}</h3>
+                    <p>{r.lead}<b>{r.bold}</b></p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
         {/* 8. 커리큘럼 */}
-        <section className="center">
+        <section className="curr center">
           <div className="wrap reveal">
             <span className="eyebrow">커리큘럼</span>
-            <h2>기획부터 오픈 이후까지</h2>
-            <div className="curriculum-list stagger">
-              <div className="curr-item">
-                <div className="part">PART 1<br />기획</div>
-                <div>
-                  <h3>무엇을 만들지 명확하게 정리</h3>
-                  <p>시장 · 타깃 · 문제 · 솔루션 · 회원 유형 · 메뉴 · 주요 프로세스</p>
+            <h2><mark>기획부터 오픈 이후까지</mark></h2>
+            <div className="curr-card stagger">
+              {CURRICULUM.map((c) => (
+                <div className="crow" key={c.part}>
+                  <div className="cpart"><b>{c.part}</b><span>{c.step}</span></div>
+                  <div className="cbody">
+                    <h3>{c.title}</h3>
+                    <p>{c.desc}{c.descBold && <b>{c.descBold}</b>}</p>
+                  </div>
                 </div>
-              </div>
-              <div className="curr-item">
-                <div className="part">PART 2<br />디자인</div>
-                <div>
-                  <h3>AI에게 원하는 화면을 정확하게 요청하는 방법</h3>
-                </div>
-              </div>
-              <div className="curr-item">
-                <div className="part">PART 3<br />바이브코딩</div>
-                <div>
-                  <h3>기획과 디자인을 바탕으로 실제 서비스 제작</h3>
-                  <p>다른 사람도 접속할 수 있도록 <strong>배포까지 진행합니다.</strong></p>
-                </div>
-              </div>
-              <div className="curr-item">
-                <div className="part">PART 4<br />오픈 이후</div>
-                <div>
-                  <h3>만들고 끝이 아닙니다.</h3>
-                  <p>오픈 후 어떻게 아이디어를 검증할지도 함께 배웁니다.</p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </section>
 
         {/* 9. 이런 분에게 추천합니다 */}
-        <section className="for-whom center">
+        <section className="fit center">
           <div className="wrap reveal">
             <span className="eyebrow">이런 분에게 추천합니다</span>
             <h2>이 클래스가 꼭 맞는 분</h2>
-            <ul className="pain-list stagger">
-              <li>40~50대 예비 대표님</li>
-              <li>온라인 비즈니스를 시작하고 싶은 분</li>
-              <li>외주개발 비용이 부담되는 분</li>
-              <li>내 경험을 서비스로 만들고 싶은 분</li>
-              <li>AI를 혼자 배우기 어려웠던 분</li>
+            <ul className="fit-grid stagger">
+              {FITS.map((f) => (
+                <li key={f.img}>
+                  <Image src={`${IMG}/${f.img}.png`} alt="" width={460} height={460} />
+                  <p>{lines(f.text)}</p>
+                </li>
+              ))}
             </ul>
           </div>
         </section>
 
-        {/* 10. 이번 강의의 목표 */}
-        <section className="goal center">
+        {/* 10. 최종 CTA */}
+        <section className="cta center">
           <div className="wrap reveal">
-            <span className="eyebrow">이번 강의의 목표</span>
-            <p className="deny">AI를 배우는 것이 목표가 아닙니다.</p>
-            <p className="affirm">내 아이디어를<br />직접 만들고 검증할 수 있는<br />사람이 되는 것.</p>
-          </div>
-        </section>
-
-        {/* 11. 모집 안내 */}
-        <section className="recruit center">
-          <div className="wrap reveal">
-            <span className="eyebrow">모집 안내 · 밀착 실습을 위해</span>
-            <h2>최대 15명만 모집합니다.</h2>
-            <p className="lead">내 머릿속 아이디어를<br />이번에는 실제 서비스로 만들어보세요.</p>
-
-            <div className="cta-area">
-              <button className="btn btn-primary btn-lg btn-pulse" onClick={() => openModal('bottom')}>상담 신청하기 →</button>
-              <p className="note">상담 신청은 결제가 아닙니다 · 24시간 내 연락드립니다</p>
-            </div>
+            <span className="eyebrow">세컨드커리어랩의 목표</span>
+            <h2>내 아이디어를 직접 만들고<br />검증하는 사람이 되는 것</h2>
+            <p className="cta-sub">
+              그래서, <b>최대 15명만</b> 모집합니다.<br />
+              내 머릿속 아이디어를 실제 서비스로 만들어보세요.
+            </p>
+            <button className="btn-pill" onClick={() => openModal('bottom')}>
+              <span className="grad">상담 신청하기</span>
+            </button>
+            <p className="cta-note">상담 신청은 결제가 아닙니다 · 24시간 내 연락드립니다.</p>
           </div>
         </section>
       </main>
