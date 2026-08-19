@@ -89,7 +89,7 @@ const COURSES = {
     old: '900,000원',
     now: '720,000원',
     meta: '하루 3시간 · 총 6회 · 2주 과정',
-    days: [7, 9, 11, 14, 16, 18],
+    days: [7, 9, 10, 14, 16, 17],
   },
   B: {
     name: 'B. 여유로운 완성 코스',
@@ -131,7 +131,7 @@ const JSON_LD = {
           name: 'A. 빠른 완성 코스',
           courseMode: 'Onsite',
           courseWorkload: 'PT18H',
-          description: '하루 3시간 · 총 6회 · 월/수/금 · 2주 완성',
+          description: '하루 3시간 · 총 6회 · 월/수/목 · 2주 완성',
           offers: { '@type': 'Offer', price: '720000', priceCurrency: 'KRW', availability: 'https://schema.org/LimitedAvailability' },
         },
         {
@@ -568,7 +568,7 @@ export default function Page() {
                   >
                     <span className="c-name">{c.name}</span>
                     <p className="c-meta">
-                      하루 3시간 · <span className="c-count">{k === 'A' ? '총 6회' : '총 8회'}</span> · {k === 'A' ? '월/수/금' : '월/목'}
+                      하루 3시간 · <span className="c-count">{k === 'A' ? '총 6회' : '총 8회'}</span> · {k === 'A' ? '월/수/목' : '월/목'}
                     </p>
                     <span className="c-big">{k === 'A' ? '2주 만에 완성' : '4주 만에 완성'}</span>
                     <p className="c-desc">
