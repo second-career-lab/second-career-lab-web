@@ -20,6 +20,7 @@
   --line:#D8E4E1;
   --white:#FFFFFF;
   --mint:#81FFBE;
+  --teal:#0FA596;
   --g1:#185A9D;
   --g2:#43CEA2;
   --card-shadow:2px 4px 14px rgba(44,64,62,.10);
@@ -82,7 +83,13 @@ header{
   background:rgba(250,251,251,.92);
   backdrop-filter:blur(10px);
   border-bottom:1px solid var(--line);
+  transition:transform .3s ease;
 }
+/* 하단 고정 CTA가 뜨는 구간에서는 상단바를 숨김 — CTA가 둘 다 보이지 않게 */
+@media (max-width:860px){
+  header.tucked{transform:translateY(-100%)}
+}
+@media (prefers-reduced-motion:reduce){header{transition:none}}
 .header-inner{
   max-width:1200px;margin:0 auto;padding:0 24px;
   height:71px;
@@ -241,27 +248,30 @@ mark{
   border-radius:20px;
   padding:clamp(44px,4.6vw,64px) clamp(14px,2.4vw,34px) clamp(20px,2.6vw,36px);
 }
-.flow-old{background:#F2F4F4}
-.flow-new{background:#fff;border:1.5px solid var(--g2);box-shadow:var(--card-shadow)}
+.flow-old{background:#F3F3F3;box-shadow:var(--card-shadow)}
+.flow-new{background:#fff;border:2px solid var(--teal);box-shadow:var(--card-shadow)}
+/* 라벨은 박스 윗변에 붙는 탭 형태 */
 .flow-tag{
-  position:absolute;top:clamp(14px,1.6vw,22px);left:clamp(14px,2.4vw,34px);
-  border-radius:999px;padding:5px 14px;
-  font-size:clamp(11px,1.1vw,15px);font-weight:700;color:#fff;
+  position:absolute;top:0;left:clamp(14px,2.4vw,37px);
+  background:var(--teal);color:#fff;
+  border-radius:0 0 12px 12px;
+  padding:clamp(5px,.7vw,10px) clamp(10px,1.2vw,16px);
+  font-size:clamp(11px,1.2vw,18px);font-weight:600;
 }
-.flow-old .flow-tag{background:#9AA8A5}
-.flow-new .flow-tag{background:linear-gradient(90deg,var(--g1),var(--g2))}
+.flow-new .flow-tag{top:-2px;font-weight:700}
 .flow{
   display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
   gap:clamp(6px,1vw,14px);
 }
 .flow .step{
   border-radius:999px;
-  padding:clamp(7px,1vw,16px) clamp(12px,2vw,30px);
-  font-size:clamp(12px,1.6vw,20px);font-weight:600;
+  padding:clamp(7px,1.3vw,20px) clamp(12px,1.8vw,26px);
+  font-size:clamp(12px,2vw,30px);font-weight:400;
   white-space:nowrap;
 }
-.flow-old .step{background:#fff;color:#6D7A78}
-.flow-new .step{background:linear-gradient(90deg,var(--g1),var(--g2));color:#fff}
+.flow-old .step{background:#C8C9C9;color:#3D4343}
+.flow-new .step{background:var(--teal);color:#FAFBFB}
+.flow-new .step.hot{background:var(--mint);color:#3D4343;font-weight:700}
 .flow .arw{color:#B4C0BE;font-size:clamp(12px,1.4vw,18px)}
 .flow-mascot{
   display:block;margin:clamp(8px,1.4vw,18px) auto 0;

@@ -71,8 +71,14 @@ const STATS = [
   ['오프라인 실습 비중', '100%'],
 ];
 
-const OLD_FLOW = ['아이디어', '개발사', '수천만 원', '수개월 개발'];
-const NEW_FLOW = ['아이디어', 'AI에게 요청', '직접 제작', '빠르게 검증'];
+// hot = 민트로 강조되는 칩
+const OLD_FLOW = [{ t: '아이디어' }, { t: '개발사' }, { t: '수천만 원' }, { t: '수개월 개발' }];
+const NEW_FLOW = [
+  { t: '아이디어' },
+  { t: 'AI에게 요청' },
+  { t: '직접 제작', hot: true },
+  { t: '빠르게 검증', hot: true },
+];
 
 // 줄바꿈 배열을 <br/>로 이어 붙임
 const lines = (arr) => arr.map((t, i) => (i === 0 ? t : [<br key={i} />, t]));
@@ -279,7 +285,7 @@ export default function Page() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
 
       {/* 1. 상단 고정 헤더 */}
-      <header>
+      <header className={showBar ? 'tucked' : ''}>
         <div className="header-inner">
           <a className="logo" href="#top">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -346,9 +352,9 @@ export default function Page() {
               <span className="flow-tag">예전에는</span>
               <div className="flow">
                 {OLD_FLOW.map((s, i) => (
-                  <span key={s} style={{ display: 'contents' }}>
+                  <span key={s.t} style={{ display: 'contents' }}>
                     {i > 0 && <span className="arw" aria-hidden="true">→</span>}
-                    <span className="step">{s}</span>
+                    <span className="step">{s.t}</span>
                   </span>
                 ))}
               </div>
@@ -358,9 +364,9 @@ export default function Page() {
               <span className="flow-tag">지금은</span>
               <div className="flow">
                 {NEW_FLOW.map((s, i) => (
-                  <span key={s} style={{ display: 'contents' }}>
+                  <span key={s.t} style={{ display: 'contents' }}>
                     {i > 0 && <span className="arw" aria-hidden="true">→</span>}
-                    <span className="step">{s}</span>
+                    <span className={`step${s.hot ? ' hot' : ''}`}>{s.t}</span>
                   </span>
                 ))}
               </div>
