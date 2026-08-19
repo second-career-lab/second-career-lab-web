@@ -274,7 +274,7 @@ export default function Page() {
         type: courseKey === 'A' ? 'a' : 'b',
         time: times.map((t) => TIME_CODE[t]).join(','),
       });
-      setStep(5);
+      setStep(6);
     } catch {
       setErrs({ time: false, submit: true });
     } finally {
@@ -617,26 +617,40 @@ export default function Page() {
                 <button type="button" className="modal-back" onClick={() => goto(3)}>← 이전</button>
                 <button type="button" className="modal-close-x" onClick={closeModal} aria-label="닫기">×</button>
               </div>
-              <p className="modal-step-label">STEP 4 · 일정 선택</p>
+              <p className="modal-step-label">STEP 4 · 일정 확인</p>
               <h3>강의 진행 예정일을 확인해주세요</h3>
-              <form onSubmit={onSubmitSchedule} noValidate>
-                <div className="form-field">
-                  <span className="f-label">강의 진행 예정일</span>
-                  <p className="cal-dates">{course.days.map((d) => `9/${d}(${WEEKDAYS[(SEPT_FIRST_WEEKDAY + d - 1) % 7]})`).join(', ')}</p>
-                  <button type="button" className="cal-toggle" onClick={() => setCalOpen((v) => !v)}>
-                    {calOpen ? '달력 접기 ▲' : '달력으로 보기 ▼'}
-                  </button>
-                  <div className={`calendar${calOpen ? '' : ' closed'}`} onClick={showCalendarToast} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && showCalendarToast()}>
-                    <p className="cal-title">2026년 9월</p>
-                    <div className="cal-grid">
-                      {WEEKDAYS.map((w) => <span key={w} className="cal-dow">{w}</span>)}
-                      {Array.from({ length: SEPT_FIRST_WEEKDAY }).map((_, i) => <span key={`b${i}`} />)}
-                      {Array.from({ length: SEPT_DAYS }, (_, i) => i + 1).map((d) => (
-                        <span key={d} className={`cal-day${course.days.includes(d) ? ' on' : ''}`}>{d}</span>
-                      ))}
-                    </div>
+              <div className="form-field">
+                <span className="f-label">강의 진행 예정일</span>
+                <p className="cal-dates">{course.days.map((d) => `9/${d}(${WEEKDAYS[(SEPT_FIRST_WEEKDAY + d - 1) % 7]})`).join(', ')}</p>
+                <button type="button" className="cal-toggle" onClick={() => setCalOpen((v) => !v)}>
+                  {calOpen ? '달력 접기 ▲' : '달력으로 보기 ▼'}
+                </button>
+                <div className={`calendar${calOpen ? '' : ' closed'}`} onClick={showCalendarToast} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && showCalendarToast()}>
+                  <p className="cal-title">2026년 9월</p>
+                  <div className="cal-grid">
+                    {WEEKDAYS.map((w) => <span key={w} className="cal-dow">{w}</span>)}
+                    {Array.from({ length: SEPT_FIRST_WEEKDAY }).map((_, i) => <span key={`b${i}`} />)}
+                    {Array.from({ length: SEPT_DAYS }, (_, i) => i + 1).map((d) => (
+                      <span key={d} className={`cal-day${course.days.includes(d) ? ' on' : ''}`}>{d}</span>
+                    ))}
                   </div>
                 </div>
+              </div>
+              <div className="modal-actions">
+                <button className="btn btn-primary" onClick={() => goto(5)}>다음</button>
+              </div>
+            </div>
+          )}
+
+          {step === 5 && course && (
+            <div>
+              <div className="modal-top-bar">
+                <button type="button" className="modal-back" onClick={() => goto(4)}>← 이전</button>
+                <button type="button" className="modal-close-x" onClick={closeModal} aria-label="닫기">×</button>
+              </div>
+              <p className="modal-step-label">STEP 5 · 시간대 선택</p>
+              <h3>선호하는 시간대를 선택해주세요</h3>
+              <form onSubmit={onSubmitSchedule} noValidate>
                 <div className="form-field">
                   <span className="f-label">
                     선호 시간대 <span style={{ color: 'var(--primary)', fontSize: 14 }}>복수 선택 가능</span>
@@ -655,7 +669,7 @@ export default function Page() {
             </div>
           )}
 
-          {step === 5 && (
+          {step === 6 && (
             <div>
               <div className="done-box">
                 <div className="d-ico">✓</div>
