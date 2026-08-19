@@ -338,7 +338,7 @@ export default function Page() {
               ))}
             </div>
             <p className="punch">
-              그래서 <span className="grad">직접 만들 수 있게 도와드립니다.</span>
+              <span className="grad"><em className="dots">그래서</em> 직접 만들 수 있게 도와드립니다.</span>
             </p>
           </div>
         </section>
