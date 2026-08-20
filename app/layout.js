@@ -52,7 +52,7 @@ export default function RootLayout({ children }) {
           />
         </noscript>
       </body>
-      <Script id="amplitude-init" strategy="afterInteractive">
+      {process.env.NODE_ENV === 'production' && <Script id="amplitude-init" strategy="afterInteractive">
         {`
           var core = document.createElement('script');
           core.src = 'https://cdn.amplitude.com/libs/analytics-browser-2.45.6-min.js.gz';
@@ -67,7 +67,7 @@ export default function RootLayout({ children }) {
           };
           document.head.appendChild(core);
         `}
-      </Script>
+      </Script>}
       <Script id="meta-pixel-init" strategy="afterInteractive">
         {`
           !function(f,b,e,v,n,t,s)

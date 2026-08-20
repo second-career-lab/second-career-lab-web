@@ -6,6 +6,7 @@
 @font-face{font-family:'Pretendard';font-weight:800;font-style:normal;font-display:swap;src:url('/fonts/Pretendard-800.woff2') format('woff2')}
 @font-face{font-family:'Pretendard';font-weight:900;font-style:normal;font-display:swap;src:url('/fonts/Pretendard-900.woff2') format('woff2')}
 /* Paperlogy 셀프호스팅 (타이틀) */
+@font-face{font-family:'Paperlogy';font-weight:600;font-style:normal;font-display:swap;src:url('/fonts/Paperlogy-600.woff2') format('woff2')}
 @font-face{font-family:'Paperlogy';font-weight:700;font-style:normal;font-display:swap;src:url('/fonts/Paperlogy-700.woff2') format('woff2')}
 @font-face{font-family:'Paperlogy';font-weight:900;font-style:normal;font-display:swap;src:url('/fonts/Paperlogy-900.woff2') format('woff2')}
 
@@ -165,7 +166,6 @@ mark{
 .hero{
   padding:clamp(130px,14vw,190px) 0 clamp(80px,12vw,150px);
   background:
-    linear-gradient(rgba(233,246,245,.35),rgba(233,246,245,.35)),
     url('/images/landing/hero-bg.png') center/cover no-repeat,
     #DCEEEC;
 }
@@ -193,7 +193,7 @@ mark{
   line-height:1.5;
   color:var(--ink-soft);
 }
-.hero-sub strong{font-weight:700;color:var(--ink)}
+.hero-sub strong{font-weight:700;color:inherit}
 
 /* ── 스펙 바 ── */
 .stats{background:var(--primary-dark);padding:clamp(18px,2.4vw,32px) 0}
@@ -226,7 +226,7 @@ mark{
   display:flex;flex-direction:column;align-items:center;
   gap:clamp(10px,1.6vw,22px);
 }
-.icard img{display:block;width:auto;height:clamp(80px,11vw,150px);object-fit:contain}
+.icard img{display:block;width:auto;height:clamp(104px,14.3vw,195px);object-fit:contain}
 .icard p{
   font-size:clamp(17px,1.7vw,22px);
   line-height:1.45;font-weight:500;
@@ -278,6 +278,7 @@ mark{
   border-radius:999px;
   padding:clamp(7px,1.3vw,20px) clamp(12px,1.8vw,26px);
   font-size:clamp(17px,2vw,30px);font-weight:400;
+  line-height:19px;
   white-space:nowrap;
 }
 .flow-old .step{background:#C8C9C9;color:#3D4343}
@@ -287,8 +288,8 @@ mark{
 .flow-old .arw{color:#C7C9C9}
 .flow-new .arw{color:#A0D0CC}
 .flow-mascot{
-  display:block;margin:clamp(8px,1.4vw,18px) auto 0;
-  width:clamp(80px,14vw,190px);height:auto;
+  display:block;margin:0 auto;
+  width:clamp(104px,18.2vw,247px);height:auto;
 }
 
 /* ── 5. 왜 40·50인가 ── */
@@ -314,7 +315,7 @@ mark{
   border-radius:999px;
   padding:5px 20px;
   background:linear-gradient(56deg,var(--g1),var(--g2));
-  color:#fff;font-family:var(--display);font-weight:700;
+  color:#fff;font-family:var(--display);font-weight:600;
   font-size:clamp(14px,1.2vw,18px);
 }
 
@@ -351,7 +352,8 @@ mark{
   display:block;width:100%;height:clamp(120px,17vw,220px);
   border-radius:16px;object-fit:cover;
 }
-.rbody{padding:clamp(6px,1.6vw,24px) clamp(16px,2.4vw,34px) clamp(14px,1.6vw,24px) clamp(4px,1vw,20px)}
+/* 텍스트 블록이 카드 세로 중앙에 오도록 위·아래 여백 동일 */
+.rbody{padding:clamp(14px,1.6vw,24px) clamp(16px,2.4vw,34px) clamp(14px,1.6vw,24px) clamp(4px,1vw,20px)}
 .rno{font-size:clamp(14px,1.2vw,18px);font-weight:600;color:#4D5A59}
 .rbody h3{
   margin-top:4px;
@@ -386,9 +388,10 @@ mark{
   padding:clamp(16px,2.4vw,40px) clamp(10px,1.4vw,20px);
 }
 .cpart b,.cpart span{font-weight:600;font-size:clamp(17px,1.6vw,30px);line-height:1.3}
+.cpart span{font-weight:500}
 .cbody{padding:clamp(18px,2.4vw,32px) clamp(18px,2.4vw,36px)}
 .cbody h3{
-  font-family:var(--display);font-weight:700;
+  font-family:var(--display);font-weight:600;color:var(--ink);
   font-size:clamp(19px,2.4vw,36px);line-height:1.2;letter-spacing:-.02em;
 }
 .cbody p{
@@ -459,42 +462,70 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
 @media (max-width:860px){
   .card-grid-4{grid-template-columns:repeat(2,1fr)}
   .card-grid-3{grid-template-columns:1fr}
-  /* 경험 카드는 모바일에서 이미지 좌 / 카피 우 가로 배치 */
-  .why .icard{flex-direction:row;align-items:center;text-align:left}
-  .why .icard img{width:40%;flex:none;height:clamp(112px,26vw,160px)}
+  /* 경험 카드는 모바일에서 이미지 상단 / 카피 하단 세로 배치 */
+  .why .icard{flex-direction:column;padding:0;gap:0;overflow:hidden;text-align:center}
+  .why .icard img{width:100%;flex:none;height:auto;aspect-ratio:338/242;border-radius:0;object-fit:cover}
+  .why .icard p{padding:20px 16px;font-size:clamp(20px,7.4vw,28px);line-height:1.5}
   .reward-head{flex-direction:column;align-items:center;text-align:center}
   .reward-mascot{align-self:center;width:clamp(150px,42vw,240px);margin:0 auto}
-  /* 라벨은 좌측 세로줄, 이미지·본문은 우측 한 칸에 세로로 쌓임 */
+  /* 라벨은 좌측 세로줄, 우측 한 칸에 텍스트(상단)·이미지(하단) 순서로 쌓임 */
   .rrow{grid-template-columns:42px 1fr}
   .rlabel{grid-row:1 / 3}
   .rimg,.rbody{grid-column:2}
-  .rimg{padding:16px 16px 0}
+  .rbody{grid-row:1;padding:22px 20px 0}
+  .rimg{grid-row:2;padding:14px 16px 16px}
   .rimg img{height:clamp(130px,32vw,200px)}
-  .rbody{padding:14px 20px 22px}
 }
 @media (max-width:640px){
   body{font-size:18px}
   .wrap{padding:0 18px}
   .header-inner{height:64px;padding:0 18px}
   .logo img{height:28px}
-  .header-inner .btn{font-size:15px;padding:10px 18px}
-  .stats .wrap{grid-template-columns:repeat(2,1fr);gap:18px 0;padding:0 12px}
-  .stats .stat:nth-child(odd){border-left:none}
-  .stats .stat:nth-child(n+3){border-top:2px solid rgba(255,255,255,.16);padding-top:12px}
-  /* 칩이 줄바꿈되며 화살표가 줄 끝에 남지 않게 세로 흐름으로 */
-  .flow{flex-direction:column}
+  /* 상단 바의 상담 신청 버튼은 앱에서 제거 */
+  .header-inner .btn{display:none}
+  /* 히어로 배경을 모바일 전용 3D 일러스트로 교체 — 이미지(9:16) 전체가 보이도록 섹션 높이 고정, 텍스트는 상단 여백에 배치 */
+  .hero{
+    background:url('/images/hero-mobile.png') center bottom/cover no-repeat,#DCEEEC;
+    min-height:178vw;
+    padding:96px 0 0;
+  }
+  /* 스펙 바 → 다크그린 4분할 카드 */
+  .stats{padding:20px 0}
+  .stats .wrap{grid-template-columns:repeat(2,1fr);gap:12px;padding:0 20px}
+  .stats .stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:16px 8px}
+  .stats .stat + .stat{border-left:1px solid rgba(255,255,255,.2)}
+  .stats .stat span{font-size:13px;font-weight:700}
+  .stats .stat b{margin-top:8px;font-size:22px}
+  /* 하단 punch 문구를 섹션 타이틀과 같은 크기로 */
+  .punch{font-size:clamp(30px,5.4vw,60px)}
+  /* 칩은 카드 좌우 여백 20px만 남기고 full 폭으로 */
+  .flow-box{padding-left:20px;padding-right:20px}
+  .flow{flex-direction:column;gap:12px}
   .flow .arw{transform:rotate(90deg)}
-  .flow .step{padding:11px 22px}
-  /* PART 라벨이 가로 바로 바뀌므로 컬럼 그라데이션 대신 바마다 개별 적용 */
-  .curr-card{background:#fff}
-  .crow{grid-template-columns:1fr}
+  .flow .step{width:100%;padding:20px 26px;font-size:24px}
+  /* POINT 라벨 축소 */
+  .pill{font-size:12px;padding:4px 16px}
+  /* 커리큘럼: PART별 개별 카드로 분리 */
+  .curr-card{background:transparent;box-shadow:none;overflow:visible;display:flex;flex-direction:column;gap:16px}
+  .crow{grid-template-columns:1fr;background:#fff;border-radius:20px;box-shadow:var(--card-shadow);overflow:hidden}
   .crow + .crow .cbody{border-top:none}
   .cpart{
     background:linear-gradient(90deg,var(--g1),var(--g2));
-    flex-direction:row;align-items:baseline;justify-content:center;
-    gap:10px;padding:13px 18px;
+    flex-direction:row;align-items:baseline;justify-content:flex-start;
+    gap:14px;padding:10px 20px;
   }
+  .cpart b,.cpart span{font-size:24px;font-weight:600}
+  .cbody{padding:24px 20px 28px}
+  .cbody h3{font-size:clamp(28px,9.6vw,36px);line-height:1.4}
+  .cbody p{margin-top:8px;font-size:clamp(18px,6.4vw,24px);line-height:1.25}
   .fit-grid{max-width:400px}
+  /* 하단 고정 CTA를 그라데이션 알약 버튼으로 */
+  .mobile-cta .btn{
+    background:linear-gradient(83deg,var(--g1),var(--g2));
+    border-radius:999px;
+    font-family:var(--display);font-weight:600;
+    font-size:clamp(20px,6.9vw,26px);padding:16px 10px;
+  }
 }
 
 /* ── 팝업 ── */
