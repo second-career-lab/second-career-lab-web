@@ -148,8 +148,10 @@ const JSON_LD = {
 };
 
 export default function Page() {
+  // 세션 리플레이(rrweb)가 top layer의 <dialog>를 안정적으로 녹화하지 못해 일반 div 오버레이로 구현
   const dialogRef = useRef(null);
   const bodyRef = useRef(null);
+  const [modalOpen, setModalOpen] = useState(false);
   const [step, setStep] = useState(1);
   const [courseKey, setCourseKey] = useState(null);
   const [info, setInfo] = useState({ name: '', age: '', phone: '' });
@@ -175,10 +177,39 @@ export default function Page() {
     setLeadId(null);
     setErrs({});
     setStep(1);
-    dialogRef.current?.showModal();
+    setModalOpen(true);
   };
-  const closeModal = () => dialogRef.current?.close();
+  const closeModal = () => setModalOpen(false);
   const goto = (n) => setStep(n);
+
+  // <dialog>가 기본 제공하던 동작 재현: 배경 스크롤 잠금 · ESC로 닫기 · 첫 포커스
+  useEffect(() => {
+    if (!modalOpen) return;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e) => e.key === 'Escape' && closeModal();
+    document.addEventListener('keydown', onKey);
+    dialogRef.current?.querySelector('button, input')?.focus();
+    return () => {
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [modalOpen]);
+
+  // 포커스 트랩: 탭 키가 팝업 밖으로 나가지 않게
+  const trapFocus = (e) => {
+    if (e.key !== 'Tab' || !dialogRef.current) return;
+    const f = dialogRef.current.querySelectorAll('button, input, a[href]');
+    if (!f.length) return;
+    const first = f[0];
+    const last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  };
 
   const [toastOn, setToastOn] = useState(false);
   const toastTimerRef = useRef(null);
@@ -509,7 +540,9 @@ export default function Page() {
       </div>
 
       {/* 상담 신청 팝업 */}
-      <dialog ref={dialogRef} aria-label="상담 신청">
+      {modalOpen && (
+      <div className="modal-overlay">
+      <div className="modal-box" role="dialog" aria-modal="true" aria-label="상담 신청" ref={dialogRef} onKeyDown={trapFocus}>
         <div className="modal-body" ref={bodyRef}>
           {step === 1 && (
             <div>
@@ -664,7 +697,9 @@ export default function Page() {
           )}
         </div>
         {toastOn && <div className="toast">강의 일정은 변경할 수 없습니다.</div>}
-      </dialog>
+      </div>
+      </div>
+      )}
     </>
   );
 }
