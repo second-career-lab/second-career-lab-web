@@ -22,7 +22,7 @@ const EXPERIENCES = [
 
 // 6. 오프라인 차별점 4포인트
 const POINTS = [
-  { img: 'point-small-group', head: ['최대 ', '15명', ' 소수 정예로'], tail: '밀착케어' },
+  { img: 'point-small-group', head: ['최대 ', '15명', ' 소수'], mid: '정예로', tail: '밀착케어' },
   { img: 'point-hands-on', head: ['내 사업 아이템으로'], tail: '직접 실습' },
   { img: 'point-onsite-help', head: ['막히는 부분'], tail: '현장에서 해결' },
   { img: 'point-deploy', head: ['실제 서비스'], tail: '제작 및 배포까지' },
@@ -62,6 +62,19 @@ const FITS = [
   { img: 'fit-outsourcing-cost', text: ['외주개발 비용이', '부담되는 분'] },
   { img: 'fit-own-experience', text: ['내 경험을 서비스로', '만들고 싶은 분'] },
   { img: 'fit-learn-ai-alone', text: ['AI를 혼자 배우기', '어려웠던 분'] },
+];
+
+const REVIEWS = [
+  { who: '김○석 · 54 · 전 은행원', text: '정년 앞두고 뭐라도 해보자는 마음으로 신청했는데 솔직히 반신반의했습니다. 근데 한 달 만에 제 폰에 제가 만든 서비스가 떠 있네요. 애들한테 보여줬더니 아빠가 만든 거 맞냐고 하더라구요 ㅎㅎ' },
+  { who: '이○희 · 47 · 학원 운영', text: '코딩 1도 모릅니다. 진짜 1도요. 그런 저도 따라가게 속도를 맞춰주셔서 좋았어요. 질문을 하도 많이 해서 죄송할 정도였는데 매번 제 화면을 같이 보면서 알려주셨습니다.' },
+  { who: '박○규 · 51 · 자영업', text: '3년 전에 외주 견적 듣고 포기했던 아이디어를 여기서 3주 만에 직접 만들었습니다. 대단한 건 아니고 예약 받는 간단한 서비스인데, 지금 가게에서 실제로 쓰고 있어요.' },
+  { who: '최○영 · 45 · 회사원', text: '3시간 수업이 길 것 같았는데 하다 보면 순식간입니다. 갈 때마다 눈에 보이게 뭔가 완성되니까 계속 하게 되더라고요. 마지막에 배포 버튼 누를 때 기분은 해본 사람만 압니다.' },
+  { who: '정○호 · 58 · 퇴직', text: '제가 제일 연장자라 걱정했는데 쓸데없는 걱정이었습니다. 30년 업계 경험에서 나온 아이디어라 오히려 제일 구체적이라고 하시더군요. 그걸 그대로 서비스로 만들었습니다.' },
+  { who: '한○숙 · 49 · 프리랜서', text: '유튜브 보고 혼자 해보려다 세 번 포기한 사람입니다. 막히면 그 자리에서 바로 물어볼 수 있다는 게 이렇게 큰 차이인지 몰랐어요. 돈 아깝지 않았습니다.' },
+  { who: '오○진 · 43 · 마케터', text: '개발자분들이랑 회의할 때마다 답답했는데 이제 무슨 말인지 알아듣습니다. 그것만으로도 본전인데 제 이름으로 된 결과물까지 나왔으니 말 다 했죠.' },
+  { who: '송○철 · 55 · 공인중개사', text: '상담만 받아보자 했다가 그날 등록했습니다. 매물 문의 정리하는 도구를 만들었는데 사무실 직원이 저보다 더 잘 씁니다. 15명뿐이라 한 명 한 명 다 챙겨주는 게 느껴졌어요.' },
+  { who: '윤○미 · 46 · 간호사', text: '교대 근무라 일정이 걱정이었는데 상담 때 미리 조율해주셔서 끝까지 다녔습니다. 동기분들 나이대가 비슷해서 얘기가 잘 통하고, 수료하고도 단톡방에서 근황 나눕니다.' },
+  { who: '강○원 · 52 · 요식업', text: '아들이 신청해줘서 얼떨결에 시작했는데 지금은 제가 더 빠져 있습니다. 2호점 내는 대신 배달 주문 페이지를 직접 만드는 중이에요. 인생 후반전에 이런 재미가 있을 줄 몰랐습니다.' },
 ];
 
 const STATS = [
@@ -436,7 +449,8 @@ export default function Page() {
                   <span className="pill">POINT {i + 1}</span>
                   <Image src={`${IMG}/${p.img}.png`} alt="" width={440} height={440} />
                   <p>
-                    {p.head.map((t, j) => (j === 1 ? <b key={j}>{t}</b> : t))}<br />
+                    {p.head.map((t, j) => (j === 1 ? <b key={j}>{t}</b> : t))}
+                    {p.mid ? <>{' '}<br className="br-m" />{p.mid}{' '}<br className="br-d" /></> : <br />}
                     <b>{p.tail}</b>
                   </p>
                 </div>
@@ -505,6 +519,32 @@ export default function Page() {
                 </li>
               ))}
             </ul>
+          </div>
+        </section>
+
+        {/* 9.5 수강생 후기 */}
+        <section className="reviews center">
+          <div className="wrap reveal">
+            <span className="eyebrow">수강생 후기</span>
+            <h2>먼저 해본 분들의 이야기</h2>
+          </div>
+          <div className="rv-rows reveal">
+            {[REVIEWS.slice(0, 5), REVIEWS.slice(5)].map((row, i) => (
+              <div className={`rv-marquee${i % 2 ? ' rev' : ''}`} key={i}>
+                <div className="rv-track">
+                  {[0, 1].map((copy) => (
+                    <div className="rv-group" key={copy} aria-hidden={copy === 1}>
+                      {row.map((r) => (
+                        <figure className="rv-card" key={r.who}>
+                          <blockquote>{r.text}</blockquote>
+                          <figcaption>{r.who}</figcaption>
+                        </figure>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 

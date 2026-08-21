@@ -1,0 +1,53 @@
+<!-- public/og.png 원본. 수정 후 재생성:
+     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --allow-file-access-from-files \
+       --window-size=1200,630 --screenshot=public/og.png --virtual-time-budget=4000 og.source.html -->
+<meta charset="utf-8">
+<style>
+@font-face{font-family:'Paperlogy';font-weight:700;src:url('./public/fonts/Paperlogy-700.woff2') format('woff2')}
+@font-face{font-family:'Paperlogy';font-weight:900;src:url('./public/fonts/Paperlogy-900.woff2') format('woff2')}
+@font-face{font-family:'Pretendard';font-weight:500;src:url('./public/fonts/Pretendard-500.woff2') format('woff2')}
+@font-face{font-family:'Pretendard';font-weight:700;src:url('./public/fonts/Pretendard-700.woff2') format('woff2')}
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1200px;height:630px;overflow:hidden;
+  background:radial-gradient(120% 140% at 88% 12%, #1AA294 0%, #147D72 42%, #0B5A52 100%);
+  color:#fff;font-family:'Pretendard',sans-serif;position:relative}
+/* 은은한 그리드 */
+body::before{content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px);
+  background-size:60px 60px;
+  -webkit-mask-image:radial-gradient(90% 90% at 30% 40%,#000 35%,transparent 100%)}
+/* 민트 글로우 */
+body::after{content:'';position:absolute;width:760px;height:760px;right:-190px;bottom:-330px;
+  background:radial-gradient(circle,rgba(129,255,190,.34) 0%,rgba(129,255,190,0) 62%)}
+.pad{position:absolute;inset:0;padding:66px 72px;display:flex;align-items:center;z-index:2}
+.left{width:700px}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:30px}
+.dot{width:11px;height:11px;border-radius:50%;background:#81FFBE;box-shadow:0 0 16px #81FFBE}
+.brand span{font-weight:700;font-size:24px;letter-spacing:.14em;color:#CFF3EE}
+h1{font-family:'Paperlogy',sans-serif;font-weight:900;font-size:76px;line-height:1.2;
+   letter-spacing:-.02em;word-break:keep-all;text-shadow:0 6px 26px rgba(0,0,0,.22)}
+h1 em{font-style:normal;color:#81FFBE}
+p{margin-top:26px;font-size:27px;line-height:1.5;font-weight:500;color:#D9EFEB;word-break:keep-all}
+.chips{margin-top:36px;display:flex;gap:10px}
+.chip{font-size:21px;font-weight:700;padding:11px 22px;border-radius:999px;
+  background:rgba(255,255,255,.13);border:1.5px solid rgba(255,255,255,.28);color:#EAFFF8}
+.mascot{position:absolute;right:34px;bottom:-6px;width:452px;z-index:3;
+  filter:drop-shadow(0 26px 44px rgba(0,0,0,.30))}
+.bar{position:absolute;left:0;right:0;bottom:0;height:10px;z-index:4;
+  background:linear-gradient(90deg,#185A9D,#43CEA2 55%,#00D693)}
+</style>
+<div class="pad">
+  <div class="left">
+    <div class="brand"><i class="dot"></i><span>SECOND CAREER LAB</span></div>
+    <h1>AI로 내 온라인 서비스<br><em>직접</em> 만들기</h1>
+    <p>IT 지식 없이, 외주개발 없이.<br>40·50대를 위한 소수정예 오프라인 실전 클래스</p>
+    <div class="chips">
+      <div class="chip">기획 · 디자인</div>
+      <div class="chip">바이브코딩</div>
+      <div class="chip">배포까지</div>
+    </div>
+  </div>
+</div>
+<img class="mascot" src="./public/images/landing/reward-mascot.png">
+<div class="bar"></div>

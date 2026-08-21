@@ -353,14 +353,15 @@ mark{
   border-radius:16px;object-fit:cover;
 }
 /* 텍스트 블록이 카드 세로 중앙에 오도록 위·아래 여백 동일 */
-.rbody{padding:clamp(14px,1.6vw,24px) clamp(16px,2.4vw,34px) clamp(14px,1.6vw,24px) clamp(4px,1vw,20px)}
+.rbody{align-self:center;padding:clamp(14px,1.6vw,24px) clamp(16px,2.4vw,34px) clamp(14px,1.6vw,24px) clamp(4px,1vw,20px)}
 .rno{font-size:clamp(14px,1.2vw,18px);font-weight:600;color:#4D5A59}
 .rbody h3{
   margin-top:4px;
   font-family:var(--display);font-weight:700;
   font-size:clamp(23px,3vw,40px);line-height:1.15;letter-spacing:-.02em;
 }
-.rbody p{
+/* .rno도 <p>라 여기 걸리면 위 여백이 커져 세로 중앙이 틀어진다 */
+.rbody p:not(.rno){
   margin-top:clamp(6px,1.2vw,18px);
   font-size:clamp(17px,1.8vw,24px);line-height:1.45;
   font-weight:500;color:var(--ink-soft);
@@ -388,7 +389,7 @@ mark{
   padding:clamp(16px,2.4vw,40px) clamp(10px,1.4vw,20px);
 }
 .cpart b,.cpart span{font-weight:600;font-size:clamp(17px,1.6vw,30px);line-height:1.3}
-.cpart span{font-weight:500}
+.cpart span{font-weight:500;font-size:clamp(16px,1.5vw,28px)}
 .cbody{padding:clamp(18px,2.4vw,32px) clamp(18px,2.4vw,36px)}
 .cbody h3{
   font-family:var(--display);font-weight:600;color:var(--ink);
@@ -419,6 +420,35 @@ mark{
   margin-top:clamp(10px,1.6vw,22px);
   font-size:clamp(17px,1.8vw,24px);line-height:1.45;color:var(--ink-soft);
 }
+
+
+/* ── 9.5 수강생 후기 ── */
+.reviews{background:var(--paper);overflow:hidden}
+.rv-rows{margin-top:clamp(32px,4.5vw,60px);display:grid;gap:clamp(16px,2vw,26px)}
+.rv-marquee{
+  overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+}
+.rv-track{display:flex;width:max-content;animation:rv-scroll 55s linear infinite}
+.rv-marquee.rev .rv-track{animation-direction:reverse}
+.rv-marquee:hover .rv-track{animation-play-state:paused}
+.rv-group{display:flex;gap:clamp(16px,2vw,26px);padding-right:clamp(16px,2vw,26px)}
+@keyframes rv-scroll{to{transform:translateX(-50%)}}
+.rv-card{
+  width:min(460px,84vw);
+  margin:0;
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:clamp(18px,2vw,26px) clamp(20px,2.2vw,28px);
+  text-align:left;
+  box-shadow:var(--card-shadow);
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.rv-card blockquote{margin:0;font-size:clamp(17px,1.7vw,22px);line-height:1.6;color:var(--ink-soft)}
+.rv-card figcaption{margin-top:14px;font-size:clamp(13px,1.2vw,15px);font-weight:600;color:var(--primary)}
+@media (prefers-reduced-motion:reduce){.rv-track{animation:none}}
 
 /* ── 10. 최종 CTA ── */
 .cta{background:var(--primary-dark)}
@@ -458,6 +488,9 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
 @media (min-width:861px){.mobile-cta{display:none}}
 @media (prefers-reduced-motion:reduce){.mobile-cta{transition:none}}
 
+/* 반응형 줄바꿈: br-d는 데스크톱 전용, br-m은 모바일(≤640) 전용 */
+.br-m{display:none}
+
 /* ── 반응형 ── */
 @media (max-width:860px){
   .card-grid-4{grid-template-columns:repeat(2,1fr)}
@@ -465,7 +498,7 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
   /* 경험 카드는 모바일에서 이미지 상단 / 카피 하단 세로 배치 */
   .why .icard{flex-direction:column;padding:0;gap:0;overflow:hidden;text-align:center}
   .why .icard img{width:100%;flex:none;height:auto;aspect-ratio:338/242;border-radius:0;object-fit:cover}
-  .why .icard p{padding:20px 16px;font-size:clamp(20px,7.4vw,28px);line-height:1.5}
+  .why .icard p{padding:20px 16px;font-size:20px;line-height:1.5}
   .reward-head{flex-direction:column;align-items:center;text-align:center}
   .reward-mascot{align-self:center;width:clamp(150px,42vw,240px);margin:0 auto}
   /* 라벨은 좌측 세로줄, 우측 한 칸에 텍스트(상단)·이미지(하단) 순서로 쌓임 */
@@ -502,7 +535,9 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
   .flow-box{padding-left:20px;padding-right:20px}
   .flow{flex-direction:column;gap:12px}
   .flow .arw{transform:rotate(90deg)}
-  .flow .step{width:100%;padding:20px 26px;font-size:24px}
+  .flow .step{width:100%;padding:20px 26px;font-size:20px}
+  .br-m{display:inline}
+  .br-d{display:none}
   /* POINT 라벨 축소 */
   .pill{font-size:12px;padding:4px 16px}
   /* 커리큘럼: PART별 개별 카드로 분리 */
@@ -512,12 +547,12 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
   .cpart{
     background:linear-gradient(90deg,var(--g1),var(--g2));
     flex-direction:row;align-items:baseline;justify-content:flex-start;
-    gap:14px;padding:10px 20px;
+    gap:14px;padding:8px 20px;
   }
-  .cpart b,.cpart span{font-size:24px;font-weight:600}
-  .cbody{padding:24px 20px 28px}
-  .cbody h3{font-size:clamp(28px,9.6vw,36px);line-height:1.4}
-  .cbody p{margin-top:8px;font-size:clamp(18px,6.4vw,24px);line-height:1.25}
+  .cpart b,.cpart span{font-size:22px;font-weight:600;line-height:42px}
+  .cbody{padding:22px 20px}
+  .cbody h3{font-size:22px;line-height:30px}
+  .cbody p{margin-top:8px;font-size:20px;line-height:26px}
   .fit-grid{max-width:400px}
   /* 하단 고정 CTA를 그라데이션 알약 버튼으로 */
   .mobile-cta .btn{

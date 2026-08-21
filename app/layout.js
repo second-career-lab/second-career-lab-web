@@ -18,7 +18,7 @@ export const metadata = {
     description:
       'IT 지식 없이, 외주개발 없이. 기획부터 배포까지 직접 만드는 최대 15명 소수 정예 오프라인 실전 클래스.',
     url: '/',
-    images: ['/og.png'],
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'AI로 내 온라인 서비스 직접 만들기 — 세컨드커리어랩 오프라인 클래스' }],
   },
   twitter: {
     card: 'summary_large_image',
