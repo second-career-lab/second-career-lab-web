@@ -17,4 +17,4 @@
 ## 신청 방법
 
 상담 신청(무료, 결제 아님) → 담당자가 24시간 이내 연락 → 일정 확정.
-신청: https://secondcareerlab.vercel.app/
+신청: https://www.secondcareerlab.kr/

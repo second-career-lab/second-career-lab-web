@@ -1,7 +1,7 @@
 import Script from 'next/script';
 import './globals.css';
 
-const SITE = 'https://secondcareerlab.vercel.app';
+const SITE = 'https://www.secondcareerlab.kr';
 
 export const metadata = {
   metadataBase: new URL(SITE),

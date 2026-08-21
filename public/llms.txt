@@ -18,5 +18,5 @@
 
 ## 페이지
 
-- [메인 랜딩페이지](https://secondcareerlab.vercel.app/): 클래스 소개, 커리큘럼, 코스별 가격, 상담 신청
-- [가격 정보](https://secondcareerlab.vercel.app/pricing.md): 코스별 가격 상세
+- [메인 랜딩페이지](https://www.secondcareerlab.kr/): 클래스 소개, 커리큘럼, 코스별 가격, 상담 신청
+- [가격 정보](https://www.secondcareerlab.kr/pricing.md): 코스별 가격 상세

@@ -118,7 +118,7 @@ const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 const SEPT_FIRST_WEEKDAY = 2;
 const SEPT_DAYS = 30;
 
-const SITE = 'https://secondcareerlab.vercel.app';
+const SITE = 'https://www.secondcareerlab.kr';
 
 const track = (name, props) => window.amplitude?.track(name, props);
 
