@@ -530,7 +530,7 @@ export default function Page() {
 
       {/* 모바일 하단 고정 CTA */}
       <div className={`mobile-cta${showBar ? ' show' : ''}`}>
-        <button className="btn btn-primary" onClick={() => openModal('flo')}>첫 강의 무료신청 · 최대 15명</button>
+        <button className="btn btn-primary" onClick={() => openModal('flo')}>첫 강의 무료 신청</button>
       </div>
 
       {/* 상담 신청 팝업 */}
