@@ -265,10 +265,10 @@ export default function Page() {
             <img src="/logo.png" alt="세컨드커리어랩" />
           </a>
           <nav className="gnb" aria-label="섹션 이동">
-            <a href="#rewards">얻는것</a>
-            <a href="#price">비용</a>
-            <a href="#curriculum">커리큘럼</a>
-            <a href="#info">강의정보</a>
+            <a href="#rewards" onClick={() => track('상단바클릭', { menu: '얻는것' })}>얻는것</a>
+            <a href="#price" onClick={() => track('상단바클릭', { menu: '비용' })}>비용</a>
+            <a href="#curriculum" onClick={() => track('상단바클릭', { menu: '커리큘럼' })}>커리큘럼</a>
+            <a href="#info" onClick={() => track('상단바클릭', { menu: '강의정보' })}>강의정보</a>
           </nav>
           <button className="btn btn-primary" onClick={() => openModal('up')}>첫 강의 무료신청</button>
         </div>
