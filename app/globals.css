@@ -88,8 +88,9 @@ header{
   border-bottom:1px solid var(--line);
   transition:transform .3s ease;
 }
-/* 하단 고정 CTA가 뜨는 구간에서는 상단바를 숨김 — CTA가 둘 다 보이지 않게 */
-@media (max-width:860px){
+/* 하단 고정 CTA가 뜨는 구간에서는 상단바를 숨김 — CTA가 둘 다 보이지 않게.
+   ≤640은 상단바 버튼이 없으므로(내비만 있음) 항상 sticky 유지 */
+@media (min-width:641px) and (max-width:860px){
   header.tucked{transform:translateY(-100%)}
 }
 @media (prefers-reduced-motion:reduce){header{transition:none}}
@@ -102,6 +103,16 @@ header{
 .logo img{height:34px;width:auto;display:block}
 .header-inner .btn{font-size:17px;padding:11px 24px;border-radius:999px;background:linear-gradient(90deg,var(--g1),var(--g2))}
 .header-inner .btn:hover{background:linear-gradient(90deg,var(--g1),var(--g2));filter:brightness(1.08)}
+/* 상단 내비게이션 */
+.gnb{display:flex;gap:clamp(14px,2.6vw,34px)}
+.gnb a{
+  font-size:clamp(14px,1.4vw,17px);font-weight:600;
+  color:var(--ink-soft);text-decoration:none;
+  padding:6px 2px;
+}
+.gnb a:hover{color:var(--primary)}
+/* 고정 헤더에 가려지지 않게 앵커 이동 여백 확보 */
+#rewards,#curriculum,#price,#info{scroll-margin-top:84px}
 
 /* ── 섹션 공통 ── */
 section{padding:clamp(60px,8vw,120px) 0}
@@ -194,6 +205,39 @@ mark{
   color:var(--ink-soft);
 }
 .hero-sub strong{font-weight:700;color:inherit}
+
+/* ── 결제 안내 문구 — hero-sub와 같은 크기 ── */
+.pay-note{
+  margin-top:clamp(18px,2.8vw,32px);
+  font-weight:700;
+  font-size:clamp(17px,1.9vw,24px);
+  line-height:1.5;
+  color:var(--ink);
+}
+/* 히어로에서는 아래 문구와 붙임 */
+.pay-note + .hero-sub{margin-top:0}
+
+/* ── 강의 일정 · 가격 ── */
+.info{background:var(--tint)}
+.info-grid{
+  margin-top:clamp(32px,4.5vw,60px);
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,2.2vw,28px);
+}
+.info-card{
+  background:#fff;border-radius:20px;box-shadow:var(--card-shadow);
+  padding:clamp(22px,2.6vw,36px) clamp(18px,2.2vw,30px);
+  text-align:center;
+}
+.info-card > h3{
+  font-family:var(--display);font-weight:700;
+  font-size:clamp(19px,1.9vw,25px);
+  margin-bottom:clamp(12px,1.6vw,20px);
+}
+.info .calendar{cursor:default;background:var(--paper)}
+.info-card.wide{grid-column:1/-1}
+.info .supply{font-size:clamp(22px,2.6vw,30px);font-weight:800}
+.info .supply-wit{margin-top:8px;font-size:clamp(15px,1.7vw,20px);color:var(--ink-soft)}
+@media (max-width:860px){.info-grid{grid-template-columns:1fr}}
 
 /* ── 스펙 바 ── */
 .stats{background:var(--primary-dark);padding:clamp(18px,2.4vw,32px) 0}
@@ -401,26 +445,6 @@ mark{
 }
 .cbody p b{font-weight:700;color:var(--ink)}
 
-/* ── 9. 추천 대상 ── */
-.fit{background:var(--tint)}
-.fit-grid{
-  list-style:none;
-  margin:clamp(32px,4.5vw,60px) auto 0;max-width:773px;
-  display:flex;flex-wrap:wrap;justify-content:center;
-  gap:clamp(20px,3vw,34px);
-}
-.fit-grid li{width:min(235px, calc(50% - 17px))}
-/* 소스 PNG는 원 바깥이 불투명 검정 — 이미지 경계(50%)에 딱 맞춰 자르면
-   안티에일리어싱된 검은 테두리가 남는다. 디자인의 마스크 비율(220/230)대로 안쪽에서 클립 */
-.fit-grid img{
-  display:block;width:100%;height:auto;aspect-ratio:1;
-  clip-path:circle(47%);object-fit:cover;
-}
-.fit-grid p{
-  margin-top:clamp(10px,1.6vw,22px);
-  font-size:clamp(17px,1.8vw,24px);line-height:1.45;color:var(--ink-soft);
-}
-
 
 /* ── 9.5 수강생 후기 ── */
 .reviews{background:var(--paper);overflow:hidden}
@@ -513,9 +537,11 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
   body{font-size:18px}
   .wrap{padding:0 18px}
   .header-inner{height:64px;padding:0 18px}
-  .logo img{height:28px}
+  .logo img{height:24px}
   /* 상단 바의 상담 신청 버튼은 앱에서 제거 */
   .header-inner .btn{display:none}
+  .gnb{gap:12px}
+  .gnb a{font-size:13px}
   /* 히어로 배경을 모바일 전용 3D 일러스트로 교체 — 이미지(9:16) 전체가 보이도록 섹션 높이 고정, 텍스트는 상단 여백에 배치 */
   .hero{
     background:url('/images/hero-mobile.png') center bottom/cover no-repeat,#DCEEEC;
@@ -553,7 +579,6 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
   .cbody{padding:22px 20px}
   .cbody h3{font-size:22px;line-height:30px}
   .cbody p{margin-top:8px;font-size:20px;line-height:26px}
-  .fit-grid{max-width:400px}
   /* 하단 고정 CTA를 그라데이션 알약 버튼으로 */
   .mobile-cta .btn{
     background:linear-gradient(83deg,var(--g1),var(--g2));

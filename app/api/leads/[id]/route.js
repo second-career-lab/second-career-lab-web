@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '../../../../lib/supabase-admin';
 
 const COURSES = ['A', 'B'];
-const TIMES = ['오전반', '오후반', '저녁반'];
+const TIMES = ['오전반', '오후반', '심야반'];
 
 export async function PATCH(req, { params }) {
   const { id } = await params;

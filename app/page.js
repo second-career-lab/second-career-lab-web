@@ -55,15 +55,6 @@ const CURRICULUM = [
   { part: 'PART 4', step: '오픈 이후', title: '만들고 끝이 아닙니다.', desc: '오픈 후 어떻게 아이디어를 검증할지도 함께 배웁니다.' },
 ];
 
-// 9. 추천 대상 (3 + 2 배치)
-const FITS = [
-  { img: 'fit-preceo', text: ['40~50대 예비 대표님'] },
-  { img: 'fit-online-biz', text: ['온라인 비즈니스를', '시작하고 싶은 분'] },
-  { img: 'fit-outsourcing-cost', text: ['외주개발 비용이', '부담되는 분'] },
-  { img: 'fit-own-experience', text: ['내 경험을 서비스로', '만들고 싶은 분'] },
-  { img: 'fit-learn-ai-alone', text: ['AI를 혼자 배우기', '어려웠던 분'] },
-];
-
 const REVIEWS = [
   { who: '김○석 · 54 · 전 은행원', text: '정년 앞두고 뭐라도 해보자는 마음으로 신청했는데 솔직히 반신반의했습니다. 근데 한 달 만에 제 폰에 제가 만든 서비스가 떠 있네요. 애들한테 보여줬더니 아빠가 만든 거 맞냐고 하더라구요 ㅎㅎ' },
   { who: '이○희 · 47 · 학원 운영', text: '코딩 1도 모릅니다. 진짜 1도요. 그런 저도 따라가게 속도를 맞춰주셔서 좋았어요. 질문을 하도 많이 해서 죄송할 정도였는데 매번 제 화면을 같이 보면서 알려주셨습니다.' },
@@ -78,10 +69,10 @@ const REVIEWS = [
 ];
 
 const STATS = [
-  ['정원', '15명'],
+  ['정원', '최대 15명'],
   ['1회 수업', '3시간'],
-  ['완성 기간', '2~4주'],
-  ['오프라인 실습 비중', '100%'],
+  ['완성 기간', '4주'],
+  ['강의 장소', '강남 인근'],
 ];
 
 // hot = 민트로 강조되는 칩
@@ -96,21 +87,12 @@ const NEW_FLOW = [
 // 줄바꿈 배열을 <br/>로 이어 붙임
 const lines = (arr) => arr.map((t, i) => (i === 0 ? t : [<br key={i} />, t]));
 
-const COURSES = {
-  A: {
-    name: 'A. 빠른 완성 코스',
-    old: '900,000원',
-    now: '720,000원',
-    meta: '하루 3시간 · 총 6회 · 2주 과정',
-    days: [7, 9, 10, 14, 16, 17],
-  },
-  B: {
-    name: 'B. 여유로운 완성 코스',
-    old: '1,200,000원',
-    now: '960,000원',
-    meta: '하루 3시간 · 총 8회 · 4주 과정',
-    days: [7, 9, 14, 16, 21, 22, 28, 30],
-  },
+// B코스만 진행
+const COURSE_B = {
+  old: '1,200,000원',
+  now: '960,000원',
+  meta: '하루 3시간 · 총 8회 · 4주 과정',
+  days: [7, 9, 14, 16, 21, 22, 28, 30],
 };
 
 // 2026년 9월 캘린더 — 9/1이 화요일(일=0 기준 index 2)
@@ -141,18 +123,10 @@ const JSON_LD = {
       hasCourseInstance: [
         {
           '@type': 'CourseInstance',
-          name: 'A. 빠른 완성 코스',
-          courseMode: 'Onsite',
-          courseWorkload: 'PT18H',
-          description: '하루 3시간 · 총 6회 · 월/수/목 · 2주 완성',
-          offers: { '@type': 'Offer', price: '720000', priceCurrency: 'KRW', availability: 'https://schema.org/LimitedAvailability' },
-        },
-        {
-          '@type': 'CourseInstance',
-          name: 'B. 여유로운 완성 코스',
+          name: 'AI로 내 온라인 서비스 직접 만들기',
           courseMode: 'Onsite',
           courseWorkload: 'PT24H',
-          description: '하루 3시간 · 총 8회 · 월/목 · 4주 완성',
+          description: '하루 3시간 · 총 8회 · 4주 완성',
           offers: { '@type': 'Offer', price: '960000', priceCurrency: 'KRW', availability: 'https://schema.org/LimitedAvailability' },
         },
       ],
@@ -166,9 +140,6 @@ export default function Page() {
   const bodyRef = useRef(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [step, setStep] = useState(1);
-  const [courseKey, setCourseKey] = useState(null);
-  const [info, setInfo] = useState({ name: '', age: '', phone: '' });
-  const [leadId, setLeadId] = useState(null);
   const [errs, setErrs] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [showBar, setShowBar] = useState(false);
@@ -180,20 +151,14 @@ export default function Page() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const course = courseKey ? COURSES[courseKey] : null;
-
   const openModal = (location) => {
     track('상담신청클릭', { location });
     track('신청1진입');
-    setCourseKey(null);
-    setInfo({ name: '', age: '', phone: '' });
-    setLeadId(null);
     setErrs({});
     setStep(1);
     setModalOpen(true);
   };
   const closeModal = () => setModalOpen(false);
-  const goto = (n) => setStep(n);
 
   // <dialog>가 기본 제공하던 동작 재현: 배경 스크롤 잠금 · ESC로 닫기 · 첫 포커스
   useEffect(() => {
@@ -224,14 +189,6 @@ export default function Page() {
     }
   };
 
-  const [toastOn, setToastOn] = useState(false);
-  const toastTimerRef = useRef(null);
-  const showCalendarToast = () => {
-    setToastOn(true);
-    clearTimeout(toastTimerRef.current);
-    toastTimerRef.current = setTimeout(() => setToastOn(false), 2000);
-  };
-
   useEffect(() => {
     if (bodyRef.current) bodyRef.current.scrollTop = 0;
   }, [step]);
@@ -254,17 +211,19 @@ export default function Page() {
     return () => io.disconnect();
   }, []);
 
-  const onSubmitInfo = async (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const f = e.target;
     const name = f.name.value.trim();
     const age = f.age.value.trim();
     const phone = f.phone.value.trim();
+    const times = [...f.querySelectorAll('input[name=time]:checked')].map((i) => i.value);
 
     const next = {
       name: !name,
       age: !/^\d{1,3}$/.test(age),
       phone: !/^01[016789][-\s]?\d{3,4}[-\s]?\d{4}$/.test(phone),
+      time: times.length === 0,
     };
     setErrs(next);
     if (Object.values(next).some(Boolean)) return;
@@ -278,47 +237,17 @@ export default function Page() {
       });
       if (!res.ok) throw new Error('submit failed');
       const { id } = await res.json();
-      setLeadId(id);
-      setInfo({ name, age, phone });
-      track('신청2진입', { name, phone, age });
-      setStep(2);
-    } catch {
-      setErrs({ ...next, submit: true });
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const onSubmitSchedule = async (e) => {
-    e.preventDefault();
-    const f = e.target;
-    const times = [...f.querySelectorAll('input[name=time]:checked')].map((i) => i.value);
-
-    if (times.length === 0) {
-      setErrs((prev) => ({ ...prev, time: true }));
-      return;
-    }
-
-    setSubmitting(true);
-    try {
-      const res = await fetch(`/api/leads/${leadId}`, {
+      const res2 = await fetch(`/api/leads/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ course: courseKey, times }),
+        body: JSON.stringify({ course: 'B', times }),
       });
-      if (!res.ok) throw new Error('submit failed');
-      setErrs({});
-      const TIME_CODE = { 오전반: 'mo', 오후반: 'af', 저녁반: 'ni' };
-      track('신청완료', {
-        name: info.name,
-        phone: info.phone,
-        age: info.age,
-        type: courseKey === 'A' ? 'a' : 'b',
-        time: times.map((t) => TIME_CODE[t]).join(','),
-      });
+      if (!res2.ok) throw new Error('submit failed');
+      const TIME_CODE = { 오전반: 'mo', 오후반: 'af', 심야반: 'ni' };
+      track('신청완료', { name, phone, age, type: 'b', time: times.map((t) => TIME_CODE[t]).join(',') });
       setStep(5);
     } catch {
-      setErrs({ time: false, submit: true });
+      setErrs({ ...next, submit: true });
     } finally {
       setSubmitting(false);
     }
@@ -335,7 +264,13 @@ export default function Page() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.png" alt="세컨드커리어랩" />
           </a>
-          <button className="btn btn-primary" onClick={() => openModal('up')}>상담 신청하기</button>
+          <nav className="gnb" aria-label="섹션 이동">
+            <a href="#rewards">얻는것</a>
+            <a href="#price">비용</a>
+            <a href="#curriculum">커리큘럼</a>
+            <a href="#info">강의정보</a>
+          </nav>
+          <button className="btn btn-primary" onClick={() => openModal('up')}>첫 강의 무료신청</button>
         </div>
       </header>
 
@@ -343,30 +278,15 @@ export default function Page() {
         {/* 2. 첫 화면 */}
         <section className="hero" id="top">
           <div className="wrap hero-inner">
-            <p><span className="hero-over"><b>40·50대</b> 대표님들을 위한</span></p>
+            <p><span className="hero-over">결제는 <b>첫강의 듣고 나서</b> 하시면 돼요!</span></p>
             <h1>
               AI로 내 온라인 서비스<br />
               <span className="grad">직접 만들어보세요</span>
             </h1>
-            <p className="hero-sub">
-              IT 지식도, 비싼 외주도 필요 없습니다.<br />
-              기획·디자인·바이브코딩까지, 전문가와 함께 완성하는<br />
-              <strong>오프라인 실전 클래스.</strong>
-            </p>
+            <p className="pay-note">40·50대 대표님들을 위한</p>
+            <p className="hero-sub">전문가와 함께 완성하는 오프라인 실전 클래스.</p>
           </div>
         </section>
-
-        {/* 핵심 스펙 바 */}
-        <div className="stats">
-          <div className="wrap">
-            {STATS.map(([label, value]) => (
-              <div className="stat" key={label}>
-                <span>{label}</span>
-                <b>{value}</b>
-              </div>
-            ))}
-          </div>
-        </div>
 
         {/* 3. 이런 고민 있으셨나요? */}
         <section className="pain center">
@@ -460,7 +380,7 @@ export default function Page() {
         </section>
 
         {/* 7. 수료 후 3가지 */}
-        <section className="reward">
+        <section className="reward" id="rewards">
           <div className="wrap reveal">
             <div className="reward-head">
               <div>
@@ -488,7 +408,7 @@ export default function Page() {
         </section>
 
         {/* 8. 커리큘럼 */}
-        <section className="curr center">
+        <section className="curr center" id="curriculum">
           <div className="wrap reveal">
             <span className="eyebrow">커리큘럼</span>
             <h2><mark>기획부터 오픈 이후까지</mark></h2>
@@ -503,22 +423,6 @@ export default function Page() {
                 </div>
               ))}
             </div>
-          </div>
-        </section>
-
-        {/* 9. 이런 분에게 추천합니다 */}
-        <section className="fit center">
-          <div className="wrap reveal">
-            <span className="eyebrow">이런 분에게 추천합니다</span>
-            <h2>이 클래스가 꼭 맞는 분</h2>
-            <ul className="fit-grid stagger">
-              {FITS.map((f) => (
-                <li key={f.img}>
-                  <Image src={`${IMG}/${f.img}.png`} alt="" width={460} height={460} />
-                  <p>{lines(f.text)}</p>
-                </li>
-              ))}
-            </ul>
           </div>
         </section>
 
@@ -548,6 +452,57 @@ export default function Page() {
           </div>
         </section>
 
+        {/* 핵심 스펙 바 */}
+        <div className="stats" id="info">
+          <div className="wrap">
+            {STATS.map(([label, value]) => (
+              <div className="stat" key={label}>
+                <span>{label}</span>
+                <b>{value}</b>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 9.7 강의 일정 · 가격 (B코스만 진행) */}
+        <section className="info center" id="price">
+          <div className="wrap reveal">
+            <span className="eyebrow">강의 정보</span>
+            <h2>강의 일정과 가격</h2>
+            <div className="info-grid stagger">
+              <div className="info-card">
+                <h3>강의 진행 예정일</h3>
+                <div className="calendar">
+                  <p className="cal-title">2026년 9월</p>
+                  <div className="cal-grid">
+                    {WEEKDAYS.map((w) => <span key={w} className="cal-dow">{w}</span>)}
+                    {Array.from({ length: SEPT_FIRST_WEEKDAY }).map((_, i) => <span key={`b${i}`} />)}
+                    {Array.from({ length: SEPT_DAYS }, (_, i) => i + 1).map((d) => (
+                      <span key={d} className={`cal-day${COURSE_B.days.includes(d) ? ' on' : ''}`}>{d}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="info-card">
+                <h3>강의 가격</h3>
+                <div className="price-box">
+                  <p className="p-old">{COURSE_B.old}</p>
+                  <p className="p-now">{COURSE_B.now}<span className="p-badge">20% 할인</span></p>
+                  <p className="p-meta">{COURSE_B.meta}</p>
+                </div>
+              </div>
+              <div className="info-card wide">
+                <h3>강의 준비물</h3>
+                <p className="supply">💻 노트북 한 대</p>
+                <p className="supply-wit">코딩 실력은 안 챙겨오셔도 됩니다.<br />그건 AI가 가져오거든요.</p>
+              </div>
+            </div>
+            <p className="punch">
+              <span className="grad"><em className="dots">결제는</em> 첫강의 듣고 나서 하시면 돼요!</span>
+            </p>
+          </div>
+        </section>
+
         {/* 10. 최종 CTA */}
         <section className="cta center">
           <div className="wrap reveal">
@@ -558,9 +513,8 @@ export default function Page() {
               내 머릿속 아이디어를 실제 서비스로 만들어보세요.
             </p>
             <button className="btn-pill" onClick={() => openModal('bottom')}>
-              <span className="grad">상담 신청하기</span>
+              <span className="grad">첫 강의 무료신청</span>
             </button>
-            <p className="cta-note">상담 신청은 결제가 아닙니다 · 24시간 내 연락드립니다.</p>
           </div>
         </section>
       </main>
@@ -576,7 +530,7 @@ export default function Page() {
 
       {/* 모바일 하단 고정 CTA */}
       <div className={`mobile-cta${showBar ? ' show' : ''}`}>
-        <button className="btn btn-primary" onClick={() => openModal('flo')}>상담 신청하기 · 최대 15명</button>
+        <button className="btn btn-primary" onClick={() => openModal('flo')}>첫 강의 무료신청 · 최대 15명</button>
       </div>
 
       {/* 상담 신청 팝업 */}
@@ -589,121 +543,25 @@ export default function Page() {
               <div className="modal-top-bar">
                 <button type="button" className="modal-close-x" onClick={closeModal} aria-label="닫기">×</button>
               </div>
-              <p className="modal-step-label">STEP 1 · 정보 입력</p>
-              <h3>상담을 위해 몇 가지만 알려주세요</h3>
-              <form onSubmit={onSubmitInfo} noValidate>
+              <h3>첫 강의 신청을 위해 몇 가지만 알려주세요</h3>
+              <form onSubmit={onSubmit} noValidate>
                 <div className="form-field">
                   <label htmlFor="fName">이름</label>
-                  <input type="text" id="fName" name="name" autoComplete="name" defaultValue={info.name} required />
+                  <input type="text" id="fName" name="name" autoComplete="name" required />
                   {errs.name && <p className="f-error">이름을 입력해주세요.</p>}
                 </div>
                 <div className="form-field">
                   <label htmlFor="fAge">나이</label>
                   <div className="input-suffix">
-                    <input type="text" id="fAge" name="age" inputMode="numeric" placeholder="50" defaultValue={info.age} required />
+                    <input type="text" id="fAge" name="age" inputMode="numeric" placeholder="50" required />
                     <span className="suffix">세</span>
                   </div>
                   {errs.age && <p className="f-error">나이를 정확히 입력해주세요.</p>}
                 </div>
                 <div className="form-field">
                   <label htmlFor="fPhone">휴대폰 번호</label>
-                  <input type="tel" id="fPhone" name="phone" autoComplete="tel" inputMode="numeric" placeholder="01012345678" defaultValue={info.phone} required />
+                  <input type="tel" id="fPhone" name="phone" autoComplete="tel" inputMode="numeric" placeholder="01012345678" required />
                   {errs.phone && <p className="f-error">휴대폰 번호를 정확히 입력해주세요.</p>}
-                </div>
-                <p className="consent-note">신청 시 개인정보 수집 및 이용에 동의한 것으로 간주합니다. 상담 및 안내 목적으로만 사용되며, 그 외의 용도로는 사용하지 않습니다.</p>
-                {errs.submit && <p className="f-error">일시적인 오류가 발생했습니다. 다시 시도해주세요.</p>}
-                <div className="modal-actions">
-                  <button type="submit" className="btn btn-primary" disabled={submitting}>{submitting ? '처리 중…' : '상담신청'}</button>
-                </div>
-              </form>
-            </div>
-          )}
-
-          {step === 2 && (
-            <div>
-              <div className="modal-top-bar">
-                <button type="button" className="modal-close-x" onClick={closeModal} aria-label="닫기">×</button>
-              </div>
-              <p className="modal-step-label">STEP 2 · 코스 선택</p>
-              <p className="modal-lead modal-lead-lg">원활한 상담을 위해 몇 가지만 더 여쭤볼게요</p>
-              <h3>어떤 일정이 더 잘 맞으시나요?</h3>
-              {['A', 'B'].map((k) => {
-                const c = COURSES[k];
-                return (
-                  <button
-                    key={k}
-                    className="course-card"
-                    onClick={() => {
-                      track('신청3진입', { name: info.name, phone: info.phone, age: info.age, type: k === 'A' ? 'a' : 'b' });
-                      setCourseKey(k);
-                      setStep(3);
-                    }}
-                  >
-                    <span className="c-name">{c.name}</span>
-                    <p className="c-meta">
-                      하루 3시간 · <span className="c-count">{k === 'A' ? '총 6회' : '총 8회'}</span> · {k === 'A' ? '월/수/목' : '월/목'}
-                    </p>
-                    <span className="c-big">{k === 'A' ? '2주 만에 완성' : '4주 만에 완성'}</span>
-                    <p className="c-desc">
-                      {k === 'A'
-                        ? '짧은 기간 동안 집중해서 서비스를 완성하고 싶은 분께 추천합니다.'
-                        : '조금 더 여유 있게 배우고 실습하고 싶은 분께 추천합니다.'}
-                    </p>
-                    <span className="c-go">{k}코스 선택 →</span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-
-          {step === 3 && course && (
-            <div>
-              <div className="modal-top-bar">
-                <button type="button" className="modal-back" onClick={() => goto(2)}>← 이전</button>
-                <button type="button" className="modal-close-x" onClick={closeModal} aria-label="닫기">×</button>
-              </div>
-              <p className="modal-step-label">STEP 3 · 가격 확인</p>
-              <div className="price-box">
-                <p className="p-name">{course.name}</p>
-                <p className="p-old">{course.old}</p>
-                <p className="p-now">{course.now}<span className="p-badge">20% 할인</span></p>
-                <p className="p-meta">{course.meta}</p>
-                <p className="p-note">결제는 상담 이후 진행돼요</p>
-              </div>
-              <div className="modal-actions">
-                <button
-                  className="btn btn-primary"
-                  onClick={() => {
-                    track('신청4진입', { name: info.name, phone: info.phone, age: info.age, type: courseKey === 'A' ? 'a' : 'b' });
-                    goto(4);
-                  }}
-                >다음</button>
-              </div>
-            </div>
-          )}
-
-          {step === 4 && course && (
-            <div>
-              <div className="modal-top-bar">
-                <button type="button" className="modal-back" onClick={() => goto(3)}>← 이전</button>
-                <button type="button" className="modal-close-x" onClick={closeModal} aria-label="닫기">×</button>
-              </div>
-              <p className="modal-step-label">STEP 4 · 일정 선택</p>
-              <h3>강의 진행 예정일을 확인해주세요</h3>
-              <form onSubmit={onSubmitSchedule} noValidate>
-                <div className="form-field">
-                  <span className="f-label">강의 진행 예정일</span>
-                  <p className="cal-dates">{course.days.map((d) => `9/${d}(${WEEKDAYS[(SEPT_FIRST_WEEKDAY + d - 1) % 7]})`).join(', ')}</p>
-                  <div className="calendar" onClick={showCalendarToast} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && showCalendarToast()}>
-                    <p className="cal-title">2026년 9월</p>
-                    <div className="cal-grid">
-                      {WEEKDAYS.map((w) => <span key={w} className="cal-dow">{w}</span>)}
-                      {Array.from({ length: SEPT_FIRST_WEEKDAY }).map((_, i) => <span key={`b${i}`} />)}
-                      {Array.from({ length: SEPT_DAYS }, (_, i) => i + 1).map((d) => (
-                        <span key={d} className={`cal-day${course.days.includes(d) ? ' on' : ''}`}>{d}</span>
-                      ))}
-                    </div>
-                  </div>
                 </div>
                 <div className="form-field">
                   <span className="f-label">
@@ -712,12 +570,13 @@ export default function Page() {
                   <p className="f-hint-strong">가능한 시간대를 모두 선택해 주세요.</p>
                   <label className="time-opt"><input type="checkbox" name="time" value="오전반" />오전반<span className="t-range">09:00 ~ 12:00</span></label>
                   <label className="time-opt"><input type="checkbox" name="time" value="오후반" />오후반<span className="t-range">14:00 ~ 17:00</span></label>
-                  <label className="time-opt"><input type="checkbox" name="time" value="저녁반" />저녁반<span className="t-range">19:00 ~ 22:00</span></label>
+                  <label className="time-opt"><input type="checkbox" name="time" value="심야반" />심야반<span className="t-range">19:00 ~ 22:00</span></label>
                   {errs.time && <p className="f-error">시간대를 하나 이상 선택해주세요.</p>}
-                  {errs.submit && <p className="f-error">일시적인 오류가 발생했습니다. 다시 시도해주세요.</p>}
                 </div>
+                <p className="consent-note">신청 시 개인정보 수집 및 이용에 동의한 것으로 간주합니다. 상담 및 안내 목적으로만 사용되며, 그 외의 용도로는 사용하지 않습니다.</p>
+                {errs.submit && <p className="f-error">일시적인 오류가 발생했습니다. 다시 시도해주세요.</p>}
                 <div className="modal-actions">
-                  <button type="submit" className="btn btn-primary" disabled={submitting}>{submitting ? '처리 중…' : '완료'}</button>
+                  <button type="submit" className="btn btn-primary" disabled={submitting}>{submitting ? '처리 중…' : '첫 강의 무료신청'}</button>
                 </div>
               </form>
             </div>
@@ -727,8 +586,8 @@ export default function Page() {
             <div>
               <div className="done-box">
                 <div className="d-ico">✓</div>
-                <h3>상담 신청이 완료되었습니다.</h3>
-                <p>담당자가 신청 내용을 확인한 후<br /><strong>24시간 이내 입력하신 휴대폰 번호로<br />연락드리겠습니다.</strong></p>
+                <h3>첫 강의 신청이 완료되었습니다.</h3>
+                <p><strong>강의 장소 및 추가 정보는<br />휴대폰 번호로 안내드리겠습니다.</strong></p>
               </div>
               <div className="modal-actions">
                 <button className="btn btn-primary" onClick={closeModal}>확인</button>
@@ -736,7 +595,6 @@ export default function Page() {
             </div>
           )}
         </div>
-        {toastOn && <div className="toast">강의 일정은 변경할 수 없습니다.</div>}
       </div>
       </div>
       )}
