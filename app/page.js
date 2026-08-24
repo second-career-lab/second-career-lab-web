@@ -465,7 +465,7 @@ export default function Page() {
         </div>
 
         {/* 9.7 강의 일정 · 가격 (B코스만 진행) */}
-        <section className="info center" id="price">
+        <section className="info center">
           <div className="wrap reveal">
             <span className="eyebrow">강의 정보</span>
             <h2>강의 일정과 가격</h2>
@@ -483,7 +483,7 @@ export default function Page() {
                   </div>
                 </div>
               </div>
-              <div className="info-card">
+              <div className="info-card" id="price">
                 <h3>강의 가격</h3>
                 <div className="price-box">
                   <p className="p-old">{COURSE_B.old}</p>
