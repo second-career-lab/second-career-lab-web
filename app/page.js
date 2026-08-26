@@ -72,8 +72,52 @@ const STATS = [
   ['정원', '최대 15명'],
   ['1회 수업', '3시간'],
   ['완성 기간', '4주'],
-  ['강의 장소', '강남 인근'],
+  ['강의 장소', '3호선 교대역 인근'],
 ];
+
+// 강의 장소 — 카카오맵 퍼가기 (교대역 현민빌딩)
+const KAKAO_MAP = { timestamp: '1787733490512', key: '2hsu2qz5jcn7' };
+function KakaoMap() {
+  const box = useRef(null);
+  useEffect(() => {
+    // 로더가 document.write로 2단계 스크립트(Lander)를 붙이는데 동적 로딩에선 무시되므로 직접 로드
+    if (!document.querySelector('script[data-roughmap]')) {
+      const s = document.createElement('script');
+      s.src = 'https://ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js';
+      s.dataset.roughmap = '1';
+      s.onload = () => {
+        const rm = window.daum.roughmap;
+        if (rm.Lander) return;
+        const s2 = document.createElement('script');
+        s2.src = `${rm.url_protocal}//t1.kakaocdn.net/kakaomapweb/roughmap/place/${rm.phase}/${rm.cdn}/roughmapLander.js`;
+        document.body.appendChild(s2);
+      };
+      document.body.appendChild(s);
+    }
+    // Lander 준비될 때까지 폴링 후 렌더 (onload 타이밍 레이스 회피)
+    let tries = 0;
+    const t = setInterval(() => {
+      const el = document.getElementById(`daumRoughmapContainer${KAKAO_MAP.timestamp}`);
+      if (window.daum?.roughmap?.Lander && el) {
+        if (!el.hasChildNodes()) {
+          new window.daum.roughmap.Lander({
+            timestamp: KAKAO_MAP.timestamp,
+            key: KAKAO_MAP.key,
+            mapWidth: String(box.current?.clientWidth || 640),
+            mapHeight: '320',
+          }).render();
+        }
+        clearInterval(t);
+      } else if (++tries > 50) clearInterval(t);
+    }, 200);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <div className="map-box" ref={box}>
+      <div id={`daumRoughmapContainer${KAKAO_MAP.timestamp}`} className="root_daum_roughmap root_daum_roughmap_landing" />
+    </div>
+  );
+}
 
 // hot = 민트로 강조되는 칩
 const OLD_FLOW = [{ t: '아이디어' }, { t: '개발사' }, { t: '수천만 원' }, { t: '수개월 개발' }];
@@ -470,6 +514,21 @@ export default function Page() {
             <span className="eyebrow">강의 정보</span>
             <h2>강의 일정과 가격</h2>
             <div className="info-grid stagger">
+              <div className="info-card wide">
+                <h3>강의 장소</h3>
+                <p className="place-name">3호선 교대역 인근 · 세영빌딩 2층</p>
+                <p className="place-addr">서울 서초구 서초중앙로20길 35 세영빌딩 2층</p>
+                <KakaoMap />
+                <a
+                  className="place-link"
+                  href="https://naver.me/58NbQ9qg"
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => track('지도클릭', { app: '네이버' })}
+                >
+                  네이버지도로 보기 →
+                </a>
+              </div>
               <div className="info-card">
                 <h3>강의 진행 예정일</h3>
                 <div className="calendar">
