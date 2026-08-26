@@ -4,12 +4,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 const COURSE_LABEL = { A: 'A. 빠른 완성 코스', B: 'B. 여유로운 완성 코스' };
-const STATUSES = ['대기', '완료'];
+const STATUSES = ['대기', '부재중', '완료'];
 
 export default function LeadsTable({ leads }) {
   const router = useRouter();
   const [pendingId, setPendingId] = useState(null);
   const [savingMemoId, setSavingMemoId] = useState(null);
+  const [memoView, setMemoView] = useState(null);
 
   const changeStatus = async (id, status) => {
     setPendingId(id);
@@ -34,12 +35,12 @@ export default function LeadsTable({ leads }) {
     router.refresh();
   };
 
-  const saveMemo = async (id, memo) => {
+  const saveField = async (id, field, value) => {
     setSavingMemoId(id);
     await fetch(`/api/admin/leads/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ memo }),
+      body: JSON.stringify({ [field]: value }),
     });
     setSavingMemoId(null);
     router.refresh();
@@ -62,6 +63,7 @@ export default function LeadsTable({ leads }) {
             <th>코스</th>
             <th>선호시간대</th>
             <th>상태</th>
+            <th>최종결정</th>
             <th>메모</th>
           </tr>
         </thead>
@@ -97,6 +99,19 @@ export default function LeadsTable({ leads }) {
                 </select>
               </td>
               <td>
+                <input
+                  type="text"
+                  className="admin-decision-input"
+                  defaultValue={l.final_decision || ''}
+                  placeholder="최종결정 입력"
+                  disabled={savingMemoId === l.id}
+                  onBlur={(e) => {
+                    const value = e.target.value;
+                    if (value !== (l.final_decision || '')) saveField(l.id, 'final_decision', value);
+                  }}
+                />
+              </td>
+              <td>
                 <textarea
                   className="admin-memo"
                   defaultValue={l.memo || ''}
@@ -104,15 +119,31 @@ export default function LeadsTable({ leads }) {
                   disabled={savingMemoId === l.id}
                   onBlur={(e) => {
                     const value = e.target.value;
-                    if (value !== (l.memo || '')) saveMemo(l.id, value);
+                    if (value !== (l.memo || '')) saveField(l.id, 'memo', value);
                   }}
                 />
-                {savingMemoId === l.id && <p className="admin-memo-saving">저장 중…</p>}
+                <div className="admin-memo-actions">
+                  <button type="button" className="admin-memo-view-btn" onClick={() => setMemoView(l)}>
+                    전체보기
+                  </button>
+                  {savingMemoId === l.id && <span className="admin-memo-saving">저장 중…</span>}
+                </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      {memoView && (
+        <div className="admin-memo-modal-overlay" onClick={() => setMemoView(null)}>
+          <div className="admin-memo-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="admin-memo-modal-head">
+              <strong>{memoView.name} / {memoView.phone} 메모</strong>
+              <button type="button" className="admin-memo-view-btn" onClick={() => setMemoView(null)}>닫기</button>
+            </div>
+            <div className="admin-memo-modal-body">{memoView.memo || '(메모 없음)'}</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

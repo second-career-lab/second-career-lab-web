@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { getSupabaseAdmin } from '../../../../../lib/supabase-admin';
 import { isValidSession, ADMIN_COOKIE_NAME } from '../../../../../lib/admin-auth';
 
-const STATUSES = ['대기', '완료'];
+const STATUSES = ['대기', '부재중', '완료'];
 const MEMO_MAX = 5000;
 
 export async function PATCH(req, { params }) {
@@ -25,6 +25,9 @@ export async function PATCH(req, { params }) {
   }
   if (body.memo !== undefined) {
     update.memo = String(body.memo).slice(0, MEMO_MAX);
+  }
+  if (body.final_decision !== undefined) {
+    update.final_decision = String(body.final_decision).slice(0, 500);
   }
   if (body.deleted === true) {
     update.deleted_at = new Date().toISOString();
