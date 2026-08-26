@@ -22,6 +22,18 @@ export default function LeadsTable({ leads }) {
     router.refresh();
   };
 
+  const deleteLead = async (l) => {
+    if (!window.confirm(`'${l.name} / ${l.phone}' 신청 내역을 삭제할까요?`)) return;
+    setPendingId(l.id);
+    await fetch(`/api/admin/leads/${l.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ deleted: true }),
+    });
+    setPendingId(null);
+    router.refresh();
+  };
+
   const saveMemo = async (id, memo) => {
     setSavingMemoId(id);
     await fetch(`/api/admin/leads/${id}`, {
@@ -42,6 +54,7 @@ export default function LeadsTable({ leads }) {
       <table className="admin-table">
         <thead>
           <tr>
+            <th>삭제</th>
             <th>신청일시</th>
             <th>이름</th>
             <th>휴대폰번호</th>
@@ -55,6 +68,16 @@ export default function LeadsTable({ leads }) {
         <tbody>
           {leads.map((l) => (
             <tr key={l.id}>
+              <td>
+                <button
+                  type="button"
+                  className="admin-delete-btn"
+                  disabled={pendingId === l.id}
+                  onClick={() => deleteLead(l)}
+                >
+                  삭제
+                </button>
+              </td>
               <td>{new Date(l.created_at).toLocaleString('ko-KR')}</td>
               <td>{l.name}</td>
               <td>{l.phone}</td>

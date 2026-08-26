@@ -26,6 +26,9 @@ export async function PATCH(req, { params }) {
   if (body.memo !== undefined) {
     update.memo = String(body.memo).slice(0, MEMO_MAX);
   }
+  if (body.deleted === true) {
+    update.deleted_at = new Date().toISOString();
+  }
   if (Object.keys(update).length === 0) {
     return NextResponse.json({ error: 'nothing to update' }, { status: 400 });
   }

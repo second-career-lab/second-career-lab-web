@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '../../../../lib/supabase-admin';
+import { notifyDiscord } from '../../../../lib/notify-discord';
 
 const COURSES = ['A', 'B'];
 const TIMES = ['오전반', '오후반', '심야반'];
@@ -14,11 +15,14 @@ export async function PATCH(req, { params }) {
     return NextResponse.json({ error: 'invalid input' }, { status: 400 });
   }
 
-  const { error } = await getSupabaseAdmin()
+  const { data, error } = await getSupabaseAdmin()
     .from('leads')
     .update({ course, times, updated_at: new Date().toISOString() })
-    .eq('id', id);
+    .eq('id', id)
+    .select('name, age, phone')
+    .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  await notifyDiscord({ ...data, times });
   return NextResponse.json({ ok: true });
 }
