@@ -14,11 +14,12 @@ export default function LeadsTable({ leads }) {
 
   const changeStatus = async (id, status) => {
     setPendingId(id);
-    await fetch(`/api/admin/leads/${id}`, {
+    const res = await fetch(`/api/admin/leads/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status }),
     });
+    if (!res.ok) window.alert('상태 변경에 실패했습니다. 다시 시도해주세요.');
     setPendingId(null);
     router.refresh();
   };
