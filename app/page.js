@@ -189,10 +189,8 @@ export default function Page() {
   const [step, setStep] = useState(1);
   const [errs, setErrs] = useState({});
   const [submitting, setSubmitting] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
 
   const openModal = (location) => {
-    setMenuOpen(false);
     track('상담신청클릭', { location });
     track('신청1진입');
     setErrs({});
@@ -299,31 +297,27 @@ export default function Page() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
 
-      {/* 1. 상단 고정 헤더 — 모바일: 로고 + 무료 버튼 + 햄버거 */}
+      {/* 1. 상단 고정 헤더 — 모바일: 로고+버튼 1줄, 섹션 칩 1줄 */}
       <header>
         <div className="header-inner">
           <a className="logo" href="#top">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.png" alt="세컨드커리어랩" />
           </a>
-          <nav className={`gnb${menuOpen ? ' open' : ''}`} aria-label="섹션 이동">
-            <a href="#rewards" onClick={() => { setMenuOpen(false); track('상단바클릭', { menu: '얻는것' }); }}>얻는것</a>
-            <a href="#price" onClick={() => { setMenuOpen(false); track('상단바클릭', { menu: '비용' }); }}>비용</a>
-            <a href="#curriculum" onClick={() => { setMenuOpen(false); track('상단바클릭', { menu: '커리큘럼' }); }}>커리큘럼</a>
-            <a href="#info" onClick={() => { setMenuOpen(false); track('상단바클릭', { menu: '강의정보' }); }}>강의정보</a>
+          <nav className="gnb" aria-label="섹션 이동">
+            <a href="#rewards" onClick={() => track('상단바클릭', { menu: '얻는것' })}>얻는것</a>
+            <a href="#price" onClick={() => track('상단바클릭', { menu: '비용' })}>비용</a>
+            <a href="#curriculum" onClick={() => track('상단바클릭', { menu: '커리큘럼' })}>커리큘럼</a>
+            <a href="#info" onClick={() => track('상단바클릭', { menu: '강의정보' })}>강의정보</a>
           </nav>
-          <div className="header-actions">
-            <button className="btn btn-primary" onClick={() => openModal('up')}>1강 무료로 먼저 듣기</button>
-            <button
-              className="hamburger"
-              aria-label="메뉴 열기"
-              aria-expanded={menuOpen}
-              onClick={() => setMenuOpen((v) => !v)}
-            >
-              <span /><span /><span />
-            </button>
-          </div>
+          <button className="btn btn-primary" onClick={() => openModal('up')}>1강 무료로 먼저 듣기</button>
         </div>
+        <nav className="chip-nav" aria-label="섹션 이동">
+          <a href="#rewards" onClick={() => track('상단바클릭', { menu: '얻는것' })}>얻는것</a>
+          <a href="#price" onClick={() => track('상단바클릭', { menu: '비용' })}>비용</a>
+          <a href="#curriculum" onClick={() => track('상단바클릭', { menu: '커리큘럼' })}>커리큘럼</a>
+          <a href="#info" onClick={() => track('상단바클릭', { menu: '강의정보' })}>강의정보</a>
+        </nav>
       </header>
 
       <main>

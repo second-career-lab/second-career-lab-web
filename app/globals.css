@@ -104,15 +104,8 @@ header{
   padding:6px 2px;
 }
 .gnb a:hover{color:var(--primary)}
-.header-actions{display:flex;align-items:center;gap:8px}
-/* 햄버거 — 모바일 전용 */
-.hamburger{
-  display:none;
-  width:48px;height:48px;
-  flex-direction:column;align-items:center;justify-content:center;gap:5px;
-  background:transparent;border:none;cursor:pointer;
-}
-.hamburger span{display:block;width:22px;height:2.5px;border-radius:2px;background:var(--ink)}
+/* 섹션 칩 내비 — 모바일 전용, 헤더 2번째 줄 */
+.chip-nav{display:none}
 /* 고정 헤더에 가려지지 않게 앵커 이동 여백 확보 */
 #rewards,#curriculum,#price,#info{scroll-margin-top:84px}
 
@@ -561,25 +554,35 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
 @media (max-width:640px){
   body{font-size:18px}
   .wrap{padding:0 18px}
-  /* 헤더 60px — 로고 + 1강 무료 버튼 + 햄버거, 메뉴는 드롭다운으로 */
-  .header-inner{height:60px;padding:0 8px 0 14px}
+  /* 헤더: 로고+무료 버튼 1줄(60px) + 섹션 칩 1줄 */
+  .header-inner{height:60px;padding:0 14px}
   .logo img{height:22px}
-  .header-inner .btn{font-size:14px;padding:11px 14px;border-radius:999px}
-  .hamburger{display:flex}
+  .header-inner .btn{font-size:14px;padding:13px 16px;border-radius:999px}
   .gnb{display:none}
-  .gnb.open{
-    display:flex;flex-direction:column;gap:0;
-    position:fixed;top:60px;left:0;right:0;
-    background:var(--paper);border-bottom:1px solid var(--line);
-    box-shadow:0 12px 24px rgba(20,50,46,.12);
-    padding:6px 0;
+  .chip-nav{
+    display:flex;gap:8px;
+    padding:0 14px 10px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
   }
-  .gnb.open a{font-size:16px;font-weight:700;padding:14px 22px}
+  .chip-nav::-webkit-scrollbar{display:none}
+  .chip-nav a{
+    flex:none;
+    font-size:14px;font-weight:700;color:var(--ink-soft);
+    text-decoration:none;
+    padding:11px 16px;
+    border:1px solid var(--line);border-radius:999px;
+    background:#fff;
+  }
+  .chip-nav a:active{border-color:var(--primary);color:var(--primary)}
+  /* 헤더가 2줄이 된 만큼 앵커 여백 보정 */
+  #rewards,#curriculum,#price,#info{scroll-margin-top:124px}
   /* 히어로 배경을 모바일 전용 3D 일러스트로 교체 — 높이를 줄여 첫 화면에 CTA까지 노출 */
   .hero{
     background:url('/images/hero-mobile.png') center bottom/cover no-repeat,#DCEEEC;
     min-height:148vw;
-    padding:88px 0 0;
+    padding:126px 0 0;
   }
   /* 스펙 바 → 다크그린 4분할 카드 */
   .stats{padding:20px 0}
