@@ -243,8 +243,6 @@ mark{
 .info .map-box{margin-top:clamp(14px,1.8vw,22px);border-radius:14px;overflow:hidden}
 .info .map-box .phone{display:none}
 .info .place-link{display:inline-block;margin-top:14px;font-size:clamp(14px,1.6vw,16px);font-weight:700;color:var(--primary)}
-.info .supply{font-size:clamp(22px,2.6vw,30px);font-weight:800}
-.info .supply-wit{margin-top:8px;font-size:clamp(15px,1.7vw,20px);color:var(--ink-soft)}
 /* 일정 카드 — 이미지(캘린더)보다 텍스트 먼저 */
 .sched-lines{margin-bottom:14px;font-size:clamp(16px,1.8vw,20px);line-height:1.55;color:var(--ink-soft)}
 .sched-lines b{color:var(--ink);font-weight:800}
@@ -264,6 +262,7 @@ mark{
   font-size:clamp(15px,1.6vw,18px);color:var(--ink-soft);
 }
 .includes li::before{content:'✓';color:var(--primary);font-weight:800;margin-right:10px}
+.price-cta{margin-top:20px;width:100%;max-width:340px}
 /* 모바일 1열에선 예정일 → 장소 → 가격 순 (2번째 카드=예정일을 맨 앞으로) */
 @media (max-width:860px){.info-grid{grid-template-columns:1fr}.info-grid > :nth-child(2){order:-1}}
 
@@ -335,13 +334,14 @@ mark{
   -webkit-text-emphasis-position:over;
 }
 
-/* ── 5. 왜 40·50인가 ── */
-.why{background:var(--tint)}
-.why .icard{padding:clamp(14px,1.8vw,30px);gap:clamp(12px,2vw,28px)}
-.why .icard img{
-  width:100%;height:clamp(150px,16vw,232px);
-  border-radius:16px;object-fit:cover;
+/* ── 5. 40·50대 맞춤 수업 방식 ── */
+.why{background:var(--paper)}
+.method-card{align-items:flex-start;text-align:left;gap:clamp(8px,1.2vw,14px)}
+.method-card h3{
+  font-family:var(--display);font-weight:700;
+  font-size:clamp(20px,2.2vw,28px);color:var(--primary-deep);
 }
+.method-card p{font-size:clamp(16px,1.7vw,21px)}
 
 /* ── 6. 오프라인 차별점 ── */
 /* 블러 원 3개 — 디자인의 blur ellipse 색을 radial로 근사
@@ -548,10 +548,6 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
 /* ── 반응형 ── */
 @media (max-width:860px){
   .card-grid-3{grid-template-columns:1fr}
-  /* 경험 카드는 모바일에서 이미지 상단 / 카피 하단 세로 배치 */
-  .why .icard{flex-direction:column;padding:0;gap:0;overflow:hidden;text-align:center}
-  .why .icard img{width:100%;flex:none;height:auto;aspect-ratio:338/242;border-radius:0;object-fit:cover}
-  .why .icard p{padding:20px 16px;font-size:20px;line-height:1.5}
   .reward-head{flex-direction:column;align-items:center;text-align:center}
   .reward-mascot{align-self:center;width:clamp(150px,42vw,240px);margin:0 auto}
   /* 라벨은 좌측 세로줄, 우측 한 칸에 텍스트(상단)·이미지(하단) 순서로 쌓임 */
@@ -579,11 +575,11 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
     padding:6px 0;
   }
   .gnb.open a{font-size:16px;font-weight:700;padding:14px 22px}
-  /* 히어로 배경을 모바일 전용 3D 일러스트로 교체 — 이미지(9:16) 전체가 보이도록 섹션 높이 고정, 텍스트는 상단 여백에 배치 */
+  /* 히어로 배경을 모바일 전용 3D 일러스트로 교체 — 높이를 줄여 첫 화면에 CTA까지 노출 */
   .hero{
     background:url('/images/hero-mobile.png') center bottom/cover no-repeat,#DCEEEC;
-    min-height:178vw;
-    padding:96px 0 0;
+    min-height:148vw;
+    padding:88px 0 0;
   }
   /* 스펙 바 → 다크그린 4분할 카드 */
   .stats{padding:20px 0}

@@ -12,19 +12,19 @@ const PAINS = [
   { img: 'card-developer-concern', text: '개발자 없이 어디서부터 시작할지 몰랐다면' },
 ];
 
-// 5. 왜 40·50인가 — 경험 3카드
-const EXPERIENCES = [
-  { img: 'experience-construction', text: ['건축 현장 30년,', '반복되는 불편을 누구보다', '잘 아는 분'] },
-  { img: 'experience-hospital', text: ['병원 근무 20년,', '환자의 불편을 가까이서', '지켜본 분'] },
-  { img: 'experience-education', text: ['자녀를 대학까지 키우며', '현실적인 교육 문제를', '겪어본 분'] },
+// 5. 40·50대 맞춤 수업 방식 3카드
+const METHODS = [
+  { title: 'IT 용어부터 설명합니다', desc: 'AI와 코딩이 처음인 분을 기준으로 진행합니다.' },
+  { title: '혼자 막히게 두지 않습니다', desc: '기획·디자인·개발 담당자가 옆에서 바로 도와드립니다.' },
+  { title: '내 아이디어로 실습합니다', desc: '정해진 예제가 아니라 실제 만들고 싶은 사업으로 진행합니다.' },
 ];
 
 // 6. 오프라인 차별점 — 체크리스트
 const POINTS = [
-  { lead: '최대 15명 소수 정예로 ', bold: '밀착케어' },
-  { lead: '내 사업 아이템으로 ', bold: '직접 실습' },
-  { lead: '막히는 부분 ', bold: '현장에서 해결' },
-  { lead: '실제 서비스 ', bold: '제작 및 배포까지' },
+  { lead: '강사 3명이 최대 15명을 ', bold: '함께 코칭' },
+  { lead: '준비된 예제가 아닌 ', bold: '내 아이디어로 실습' },
+  { lead: '막히는 지점에서 ', bold: '바로 질문하고 수정' },
+  { lead: '4주 뒤 실제로 실행되는 ', bold: '결과물 완성' },
 ];
 
 // 7. 4주 후 남는 3가지
@@ -42,8 +42,8 @@ const REWARDS = [
   },
   {
     label: '세번째', no: '03', img: 'reward-03-strategy',
-    title: '스타트업 기초 전략',
-    lead: '아이디어 검증부터 운영까지 ', bold: '스타트업 전략도 함께 배웁니다.',
+    title: '사업 검증 계획',
+    lead: '누구에게 보여주고 어떤 반응을 확인할지 ', bold: '정리한 실행 계획입니다.',
   },
 ];
 
@@ -57,10 +57,10 @@ const COACHES = [
 
 // 8. 커리큘럼
 const CURRICULUM = [
-  { part: 'PART 1', step: '기획', title: '내 사업 아이디어 정리', desc: '누구를 위한 어떤 서비스인지 정리합니다.', result: '시장 · 타깃 · 문제 · 솔루션 · 회원 유형 · 메뉴 · 주요 프로세스' },
-  { part: 'PART 2', step: '디자인', title: '브랜드와 화면 설계', desc: '이름, 분위기, 주요 화면을 직접 구성합니다.', result: '내 서비스의 무드보드' },
-  { part: 'PART 3', step: '바이브 코딩', title: 'AI로 실제 기능 제작', desc: '기획과 디자인을 바탕으로 작동하는 웹·앱을 만듭니다.', result: '다른 사람도 접속할 수 있는 나의 서비스' },
-  { part: 'PART 4', step: '오픈', title: '테스트와 오픈', desc: '다른 사람에게 보여주고 수정한 뒤 공개합니다.', result: '아이디어 검증 방법' },
+  { part: '1주차', step: '기획', title: '내 사업 아이디어 정리', desc: '누구를 위한 어떤 서비스인지 정리합니다.', result: '시장 · 타깃 · 문제 · 솔루션 · 회원 유형 · 메뉴 · 주요 프로세스' },
+  { part: '2주차', step: '디자인', title: '브랜드와 화면 설계', desc: '이름, 분위기, 주요 화면을 직접 구성합니다.', result: '내 서비스의 무드보드' },
+  { part: '3주차', step: '제작', title: 'AI로 실제 기능 제작', desc: '기획과 디자인을 바탕으로 작동하는 웹·앱을 만듭니다.', result: '다른 사람도 접속할 수 있는 나의 서비스' },
+  { part: '4주차', step: '오픈', title: '테스트와 오픈', desc: '다른 사람에게 보여주고 수정한 뒤 공개합니다.', result: '아이디어 검증 방법' },
 ];
 
 // 사전 수업 참여자 이야기 — 핵심 3개, 만든 결과 표시
@@ -87,7 +87,7 @@ const FAQS = [
   ['앱스토어 출시까지 포함되나요?', '기본 과정은 웹 서비스 제작과 배포까지입니다. 앱스토어 출시가 필요한 경우 상담 때 별도로 안내드립니다.'],
   ['수업을 놓치면 어떻게 하나요?', '신청 시 가능한 시간대를 미리 조율하고, 빠진 부분은 다음 수업에서 따라잡을 수 있도록 도와드립니다.'],
   ['1강 무료 수강 후 반드시 결제해야 하나요?', '아니요. 첫 강의를 들어보고 계속할지 결정하시면 됩니다. 결제는 그다음입니다.'],
-  ['개인 노트북은 어떤 사양이 필요한가요?', '최근 몇 년 내 구매한 노트북이면 충분합니다. 인터넷 브라우저가 원활히 동작하면 됩니다.'],
+  ['개인 노트북은 어떤 사양이 필요한가요?', '최근 몇 년 내 구매한 노트북이면 충분합니다. 수업 전 필요한 프로그램 설치를 안내드립니다.'],
 ];
 
 // 강의 장소 — 카카오맵 퍼가기 (교대역 현민빌딩)
@@ -133,9 +133,6 @@ function KakaoMap() {
     </div>
   );
 }
-
-// 줄바꿈 배열을 <br/>로 이어 붙임
-const lines = (arr) => arr.map((t, i) => (i === 0 ? t : [<br key={i} />, t]));
 
 // B코스만 진행
 const COURSE_B = {
@@ -334,7 +331,7 @@ export default function Page() {
         {/* TODO: 키비주얼을 1:1 코칭 실사 이미지로 교체 (hero-bg.png / hero-mobile.png) */}
         <section className="hero" id="top">
           <div className="wrap hero-inner">
-            <p><span className="hero-over">40·50대 예비 대표님을 위한 오프라인 실습</span></p>
+            <p><span className="hero-over"><b>교대역 9월 7일 개강</b><br className="br-m" /> 40·50대 예비 대표님을 위한 오프라인 실습</span></p>
             <h1>
               아이디어만 가져오세요.<br />
               <span className="grad">4주 동안 내 사업의 웹·앱을<br className="br-m" /> 직접 만듭니다.</span>
@@ -371,48 +368,12 @@ export default function Page() {
               ))}
             </div>
             <p className="punch">
-              <span className="grad"><em className="dots">그래서</em> 직접 만들 수 있게 도와드립니다.</span>
+              <span className="grad">세컨드커리어랩에서는 내 아이디어를 가지고<br />옆에서 함께 만들며 배웁니다.</span>
             </p>
           </div>
         </section>
 
-        {/* 5. 왜 40·50인가? */}
-        <section className="why center">
-          <div className="wrap reveal">
-            <span className="eyebrow">왜 <em className="dots">40·50</em>인가?</span>
-            <h2>이제 아이디어를 개발하는<br />장벽은 낮아졌습니다.</h2>
-            <p className="sec-sub">
-              대신, ‘무엇을 만들지’ 아는 경험이 더 중요해졌습니다.<br />
-              <mark><b>당신이 쌓아온 경험이 곧 하나의 서비스가 됩니다.</b></mark>
-            </p>
-            <div className="card-grid-3 stagger">
-              {EXPERIENCES.map((e) => (
-                <div className="icard" key={e.img}>
-                  <Image src={`${IMG}/${e.img}.png`} alt="" width={700} height={501} />
-                  <p>{lines(e.text)}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* 6. 오프라인으로 합니다 */}
-        <section className="offline center">
-          <div className="wrap reveal">
-            <span className="eyebrow">온라인 강의와 가장 다른 점</span>
-            <h2><span className="grad">바로 옆에서 함께 만든다는 것</span></h2>
-            <ul className="check-list stagger">
-              {POINTS.map((p) => (
-                <li key={p.bold}>
-                  <span className="chk" aria-hidden="true">✓</span>
-                  <span>{p.lead}<b>{p.bold}</b></span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-
-        {/* 7. 4주 후 남는 3가지 */}
+        {/* 4. 4주 후 남는 3가지 */}
         <section className="reward" id="rewards">
           <div className="wrap reveal">
             <div className="reward-head">
@@ -458,11 +419,43 @@ export default function Page() {
           </div>
         </section>
 
+        {/* 7.7 40·50대 맞춤 수업 방식 */}
+        <section className="why center">
+          <div className="wrap reveal">
+            <span className="eyebrow">수업 방식</span>
+            <h2>40·50대가 끝까지 만들 수 있도록<br />수업 방식을 다르게 설계했습니다</h2>
+            <div className="card-grid-3 stagger">
+              {METHODS.map((m) => (
+                <div className="icard method-card" key={m.title}>
+                  <h3>{m.title}</h3>
+                  <p>{m.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 7.8 오프라인 차별점 체크리스트 */}
+        <section className="offline center">
+          <div className="wrap reveal">
+            <span className="eyebrow">온라인 강의와 가장 다른 점</span>
+            <h2><span className="grad">바로 옆에서 함께 만든다는 것</span></h2>
+            <ul className="check-list stagger">
+              {POINTS.map((p) => (
+                <li key={p.bold}>
+                  <span className="chk" aria-hidden="true">✓</span>
+                  <span>{p.lead}<b>{p.bold}</b></span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
         {/* 8. 커리큘럼 */}
         <section className="curr center" id="curriculum">
           <div className="wrap reveal">
             <span className="eyebrow">커리큘럼</span>
-            <h2><mark>기획부터 오픈 이후까지</mark></h2>
+            <h2><mark>4주 동안 이렇게 완성합니다</mark></h2>
             <div className="curr-card stagger">
               {CURRICULUM.map((c) => (
                 <div className="crow" key={c.part}>
@@ -542,16 +535,12 @@ export default function Page() {
                 </p>
                 <div className="price-box">
                   <p className="p-price">4주 총 96만원</p>
-                  <p className="p-meta">총 8회 · 24시간</p>
+                  <p className="p-meta">총 8회 · 24시간 · 회당 12만원</p>
                 </div>
                 <ul className="includes">
                   {INCLUDES.map((t) => <li key={t}>{t}</li>)}
                 </ul>
-              </div>
-              <div className="info-card wide">
-                <h3>강의 준비물</h3>
-                <p className="supply">💻 노트북 한 대</p>
-                <p className="supply-wit">코딩 실력은 안 챙겨오셔도 됩니다.<br />그건 AI가 가져오거든요.</p>
+                <button className="btn btn-primary price-cta" onClick={() => openModal('price')}>1강 무료로 먼저 듣기</button>
               </div>
             </div>
             <p className="punch">
