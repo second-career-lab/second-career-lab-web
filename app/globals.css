@@ -206,17 +206,6 @@ mark{
 }
 .hero-sub strong{font-weight:700;color:inherit}
 
-/* ── 결제 안내 문구 — hero-sub와 같은 크기 ── */
-.pay-note{
-  margin-top:clamp(18px,2.8vw,32px);
-  font-weight:700;
-  font-size:clamp(17px,1.9vw,24px);
-  line-height:1.5;
-  color:var(--ink);
-}
-/* 히어로에서는 아래 문구와 붙임 */
-.pay-note + .hero-sub{margin-top:0}
-
 /* ── 강의 일정 · 가격 ── */
 .info{background:var(--tint)}
 .info-grid{
@@ -242,6 +231,25 @@ mark{
 .info .place-link{display:inline-block;margin-top:14px;font-size:clamp(14px,1.6vw,16px);font-weight:700;color:var(--primary)}
 .info .supply{font-size:clamp(22px,2.6vw,30px);font-weight:800}
 .info .supply-wit{margin-top:8px;font-size:clamp(15px,1.7vw,20px);color:var(--ink-soft)}
+/* 일정 카드 — 이미지(캘린더)보다 텍스트 먼저 */
+.sched-lines{margin-bottom:14px;font-size:clamp(16px,1.8vw,20px);line-height:1.55;color:var(--ink-soft)}
+.sched-lines b{color:var(--ink);font-weight:800}
+/* 가격 카드 — 무료 1강 먼저, 가격은 강조 축소 */
+.free-first{
+  background:var(--tint);border-radius:12px;
+  padding:14px 18px;margin-bottom:16px;
+  font-size:clamp(15px,1.7vw,19px);line-height:1.55;color:var(--ink-soft);
+}
+.free-first b{color:var(--primary-deep);font-weight:800}
+.p-price{font-family:var(--display);font-size:clamp(22px,2.4vw,30px);font-weight:700;color:var(--ink)}
+.includes{
+  list-style:none;
+  margin:16px auto 0;max-width:420px;
+  display:flex;flex-direction:column;gap:8px;
+  text-align:left;
+  font-size:clamp(15px,1.6vw,18px);color:var(--ink-soft);
+}
+.includes li::before{content:'✓';color:var(--primary);font-weight:800;margin-right:10px}
 /* 모바일 1열에선 예정일 → 장소 → 가격 순 (2번째 카드=예정일을 맨 앞으로) */
 @media (max-width:860px){.info-grid{grid-template-columns:1fr}.info-grid > :nth-child(2){order:-1}}
 
@@ -258,17 +266,16 @@ mark{
 .stats .stat b{
   display:block;margin-top:2px;
   font-family:var(--display);font-weight:700;
-  font-size:clamp(26px,3.4vw,40px);line-height:1.3;
+  font-size:clamp(20px,2.4vw,32px);line-height:1.3;
   color:#fff;
 }
 
 /* ── 카드 그리드 공통 ── */
-.card-grid-4,.card-grid-3{
+.card-grid-3{
   margin-top:clamp(32px,4.5vw,60px);
   display:grid;gap:clamp(12px,2.2vw,28px);
+  grid-template-columns:repeat(3,1fr);
 }
-.card-grid-4{grid-template-columns:repeat(4,1fr)}
-.card-grid-3{grid-template-columns:repeat(3,1fr)}
 .icard{
   background:#fff;border-radius:20px;
   box-shadow:var(--card-shadow);
@@ -284,8 +291,21 @@ mark{
 }
 .icard p b{font-weight:700;color:var(--ink)}
 
-/* ── 3. 고민 ── */
+/* ── 3. 고민 — 1열 리스트 ── */
 .pain{background:var(--tint)}
+.pain-list{
+  margin:clamp(32px,4.5vw,60px) auto 0;
+  max-width:720px;
+  display:flex;flex-direction:column;gap:clamp(10px,1.6vw,18px);
+}
+.prow{
+  display:flex;align-items:center;gap:clamp(14px,2vw,24px);
+  background:#fff;border-radius:16px;box-shadow:var(--card-shadow);
+  padding:clamp(12px,1.6vw,18px) clamp(16px,2.2vw,28px);
+  text-align:left;
+}
+.prow img{width:clamp(56px,7vw,84px);height:auto;flex:none}
+.prow p{font-size:clamp(17px,1.8vw,22px);line-height:1.45;font-weight:600;color:var(--ink-soft)}
 .punch{
   margin-top:clamp(32px,5vw,72px);
   font-family:var(--display);font-weight:700;
@@ -299,47 +319,6 @@ mark{
   -webkit-text-emphasis:dot #185B9D;
   text-emphasis-position:over;
   -webkit-text-emphasis-position:over;
-}
-
-/* ── 4. 개발 방식의 변화 ── */
-.shift{background:var(--paper)}
-.flow-box{
-  position:relative;
-  margin-top:clamp(24px,3.2vw,44px);
-  border-radius:20px;
-  padding:clamp(44px,4.6vw,64px) clamp(14px,2.4vw,34px) clamp(20px,2.6vw,36px);
-}
-.flow-old{background:#F3F3F3;box-shadow:var(--card-shadow)}
-.flow-new{background:#fff;border:2px solid var(--teal);box-shadow:var(--card-shadow)}
-/* 라벨은 박스 윗변에 붙는 탭 형태 */
-.flow-tag{
-  position:absolute;top:0;left:clamp(14px,2.4vw,37px);
-  background:var(--teal);color:#fff;
-  border-radius:0 0 12px 12px;
-  padding:clamp(5px,.7vw,10px) clamp(10px,1.2vw,16px);
-  font-size:clamp(14px,1.2vw,18px);font-weight:600;
-}
-.flow-new .flow-tag{top:-2px;font-weight:700}
-.flow{
-  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
-  gap:clamp(6px,1vw,14px);
-}
-.flow .step{
-  border-radius:999px;
-  padding:clamp(7px,1.3vw,20px) clamp(12px,1.8vw,26px);
-  font-size:clamp(17px,2vw,30px);font-weight:400;
-  line-height:19px;
-  white-space:nowrap;
-}
-.flow-old .step{background:#C8C9C9;color:#3D4343}
-.flow-new .step{background:var(--teal);color:#FAFBFB}
-.flow-new .step.hot{background:var(--mint);color:#3D4343;font-weight:700}
-.flow .arw{font-size:clamp(16px,1.4vw,18px)}
-.flow-old .arw{color:#C7C9C9}
-.flow-new .arw{color:#A0D0CC}
-.flow-mascot{
-  display:block;margin:0 auto;
-  width:clamp(104px,18.2vw,247px);height:auto;
 }
 
 /* ── 5. 왜 40·50인가 ── */
@@ -360,13 +339,24 @@ mark{
     radial-gradient(390px 390px at 87% 67%, rgba(71,53,161,.13), transparent 70%),
     var(--paper);
 }
-.pill{
-  display:inline-block;
-  border-radius:999px;
-  padding:5px 20px;
-  background:linear-gradient(56deg,var(--g1),var(--g2));
-  color:#fff;font-family:var(--display);font-weight:600;
-  font-size:clamp(14px,1.2vw,18px);
+.check-list{
+  margin:clamp(32px,4.5vw,60px) auto 0;
+  max-width:640px;
+  list-style:none;
+  display:flex;flex-direction:column;gap:clamp(10px,1.4vw,16px);
+}
+.check-list li{
+  display:flex;align-items:center;gap:14px;
+  background:#fff;border-radius:14px;box-shadow:var(--card-shadow);
+  padding:clamp(14px,1.8vw,20px) clamp(16px,2.2vw,26px);
+  font-size:clamp(17px,1.9vw,24px);font-weight:500;color:var(--ink-soft);
+  text-align:left;
+}
+.check-list li b{font-weight:700;color:var(--ink)}
+.check-list .chk{
+  flex:none;width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--mint);color:var(--primary-deep);font-weight:800;
 }
 
 /* ── 7. 수료 후 3가지 ── */
@@ -452,21 +442,26 @@ mark{
 .cbody p b{font-weight:700;color:var(--ink)}
 
 
-/* ── 9.5 수강생 후기 ── */
-.reviews{background:var(--paper);overflow:hidden}
-.rv-rows{margin-top:clamp(32px,4.5vw,60px);display:grid;gap:clamp(16px,2vw,26px)}
-.rv-marquee{
-  overflow:hidden;
-  -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
-  mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+/* ── 7.5 강사 소개 ── */
+.coach{background:var(--tint)}
+.coach-card h3{font-family:var(--display);font-size:clamp(19px,2vw,26px);font-weight:700}
+.coach-card h3 span{font-weight:600;color:var(--primary)}
+.coach-card p{font-size:clamp(16px,1.6vw,20px)}
+.coach-avatar{
+  width:clamp(84px,9vw,120px);height:clamp(84px,9vw,120px);border-radius:50%;
+  background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-size:clamp(30px,3.4vw,44px);font-weight:700;
 }
-.rv-track{display:flex;width:max-content;animation:rv-scroll 55s linear infinite}
-.rv-marquee.rev .rv-track{animation-direction:reverse}
-.rv-marquee:hover .rv-track{animation-play-state:paused}
-.rv-group{display:flex;gap:clamp(16px,2vw,26px);padding-right:clamp(16px,2vw,26px)}
-@keyframes rv-scroll{to{transform:translateX(-50%)}}
+
+/* ── 9.5 사전 수업 참여자 이야기 — 세로 1열 ── */
+.reviews{background:var(--paper)}
+.rv-list{
+  margin:clamp(32px,4.5vw,60px) auto 0;
+  max-width:680px;
+  display:flex;flex-direction:column;gap:clamp(14px,1.8vw,22px);
+}
 .rv-card{
-  width:min(460px,84vw);
   margin:0;
   background:var(--white);
   border:1px solid var(--line);
@@ -474,11 +469,26 @@ mark{
   padding:clamp(18px,2vw,26px) clamp(20px,2.2vw,28px);
   text-align:left;
   box-shadow:var(--card-shadow);
-  display:flex;flex-direction:column;justify-content:space-between;
 }
 .rv-card blockquote{margin:0;font-size:clamp(17px,1.7vw,22px);line-height:1.6;color:var(--ink-soft)}
-.rv-card figcaption{margin-top:14px;font-size:clamp(13px,1.2vw,15px);font-weight:600;color:var(--primary)}
-@media (prefers-reduced-motion:reduce){.rv-track{animation:none}}
+.rv-card figcaption{margin-top:14px;font-size:clamp(14px,1.3vw,16px);font-weight:600;color:var(--primary)}
+.rv-card .rv-result{display:block;margin-top:2px;font-weight:700;color:var(--primary-deep)}
+
+/* ── 9.9 FAQ ── */
+.faq{background:var(--tint)}
+.faq-list{margin:clamp(28px,4vw,52px) auto 0;max-width:760px;text-align:left}
+.faq-item{border-bottom:1px solid var(--line)}
+.faq-item summary{
+  cursor:pointer;list-style:none;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:clamp(16px,2vw,22px) 4px;
+  min-height:48px;
+  font-size:clamp(16px,1.8vw,20px);font-weight:700;
+}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{content:'+';font-size:24px;line-height:1;color:var(--primary);flex:none}
+.faq-item[open] summary::after{content:'−'}
+.faq-item p{padding:0 4px clamp(16px,2vw,22px);font-size:clamp(15px,1.6vw,18px);line-height:1.6;color:var(--ink-soft)}
 
 /* ── 10. 최종 CTA ── */
 .cta{background:var(--primary-dark)}
@@ -523,7 +533,6 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
 
 /* ── 반응형 ── */
 @media (max-width:860px){
-  .card-grid-4{grid-template-columns:repeat(2,1fr)}
   .card-grid-3{grid-template-columns:1fr}
   /* 경험 카드는 모바일에서 이미지 상단 / 카피 하단 세로 배치 */
   .why .icard{flex-direction:column;padding:0;gap:0;overflow:hidden;text-align:center}
@@ -542,12 +551,13 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
 @media (max-width:640px){
   body{font-size:18px}
   .wrap{padding:0 18px}
-  .header-inner{height:64px;padding:0 18px}
-  .logo img{height:24px}
+  /* 헤더 60px, 메뉴 글자 키우고 터치 영역 48px 확보 */
+  .header-inner{height:60px;padding:0 12px}
+  .logo img{height:22px}
   /* 상단 바의 상담 신청 버튼은 앱에서 제거 */
   .header-inner .btn{display:none}
-  .gnb{gap:12px}
-  .gnb a{font-size:13px}
+  .gnb{gap:2px}
+  .gnb a{font-size:14px;font-weight:700;padding:14px 7px}
   /* 히어로 배경을 모바일 전용 3D 일러스트로 교체 — 이미지(9:16) 전체가 보이도록 섹션 높이 고정, 텍스트는 상단 여백에 배치 */
   .hero{
     background:url('/images/hero-mobile.png') center bottom/cover no-repeat,#DCEEEC;
@@ -560,18 +570,11 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
   .stats .stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:16px 8px}
   .stats .stat + .stat{border-left:1px solid rgba(255,255,255,.2)}
   .stats .stat span{font-size:13px;font-weight:700}
-  .stats .stat b{margin-top:8px;font-size:22px}
+  .stats .stat b{margin-top:8px;font-size:18px}
   /* 하단 punch 문구를 섹션 타이틀과 같은 크기로 */
   .punch{font-size:clamp(30px,5.4vw,60px)}
-  /* 칩은 카드 좌우 여백 20px만 남기고 full 폭으로 */
-  .flow-box{padding-left:20px;padding-right:20px}
-  .flow{flex-direction:column;gap:12px}
-  .flow .arw{transform:rotate(90deg)}
-  .flow .step{width:100%;padding:20px 26px;font-size:20px}
   .br-m{display:inline}
   .br-d{display:none}
-  /* POINT 라벨 축소 */
-  .pill{font-size:12px;padding:4px 16px}
   /* 커리큘럼: PART별 개별 카드로 분리 */
   .curr-card{background:transparent;box-shadow:none;overflow:visible;display:flex;flex-direction:column;gap:16px}
   .crow{grid-template-columns:1fr;background:#fff;border-radius:20px;box-shadow:var(--card-shadow);overflow:hidden}
@@ -666,29 +669,7 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
 }
 
 .price-box{text-align:center;padding:8px 0 4px}
-.price-box .p-name{font-size:19px;font-weight:800}
-.price-box .p-old{
-  margin-top:18px;
-  font-size:20px;color:#9AA8A5;text-decoration:line-through;
-}
-.price-box .p-now{
-  font-family:var(--display);
-  font-size:44px;font-weight:700;color:var(--primary-deep);
-  line-height:1.2;margin-top:4px;
-}
-.price-box .p-badge{
-  display:inline-block;margin-left:10px;vertical-align:middle;
-  background:rgba(20,125,114,.1);color:var(--primary);
-  font-family:var(--sans);font-size:15px;font-weight:800;
-  border-radius:999px;padding:4px 14px;
-}
-.price-box .p-meta{margin-top:14px;font-weight:700;color:var(--ink-soft)}
-.price-box .p-note{
-  margin-top:22px;padding:16px 20px;
-  background:var(--tint);border-radius:12px;
-  font-size:15.5px;color:var(--ink-soft);
-}
-.price-box .p-note strong{color:var(--primary-deep)}
+.price-box .p-meta{margin-top:6px;font-weight:700;color:var(--ink-soft)}
 
 .form-field{margin-bottom:22px}
 .form-field label,.form-field .f-label{

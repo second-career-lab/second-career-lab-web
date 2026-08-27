@@ -5,12 +5,11 @@ import { useEffect, useRef, useState } from 'react';
 
 const IMG = '/images/landing';
 
-// 3. 고민 4카드
+// 3. 고민 — 1열 리스트 3개
 const PAINS = [
-  { img: 'card-cost-concern', text: ['외주개발 비용이', '너무 부담된다.'] },
-  { img: 'card-developer-concern', text: ['개발자를 구하기도', '어렵고 비싸다.'] },
-  { img: 'card-ai-confusion', text: ['AI, 어디서부터 할지', '모르겠다.'] },
-  { img: 'card-tutorial-fail', text: ['유튜브를 따라 해도', '잘 안 만들어진다.'] },
+  { img: 'card-cost-concern', text: '아이디어는 있지만 외주비가 부담스러웠다면' },
+  { img: 'card-tutorial-fail', text: '온라인 AI 강의를 따라가다 중간에 막혔다면' },
+  { img: 'card-developer-concern', text: '개발자 없이 어디서부터 시작할지 몰랐다면' },
 ];
 
 // 5. 왜 40·50인가 — 경험 3카드
@@ -20,25 +19,26 @@ const EXPERIENCES = [
   { img: 'experience-education', text: ['자녀를 대학까지 키우며', '현실적인 교육 문제를', '겪어본 분'] },
 ];
 
-// 6. 오프라인 차별점 4포인트
+// 6. 오프라인 차별점 — 체크리스트
 const POINTS = [
-  { img: 'point-small-group', head: ['최대 ', '15명', ' 소수'], mid: '정예로', tail: '밀착케어' },
-  { img: 'point-hands-on', head: ['내 사업 아이템으로'], tail: '직접 실습' },
-  { img: 'point-onsite-help', head: ['막히는 부분'], tail: '현장에서 해결' },
-  { img: 'point-deploy', head: ['실제 서비스'], tail: '제작 및 배포까지' },
+  { lead: '최대 15명 소수 정예로 ', bold: '밀착케어' },
+  { lead: '내 사업 아이템으로 ', bold: '직접 실습' },
+  { lead: '막히는 부분 ', bold: '현장에서 해결' },
+  { lead: '실제 서비스 ', bold: '제작 및 배포까지' },
 ];
 
-// 7. 수료 후 3가지
+// 7. 4주 후 남는 3가지
+// TODO: 이미지는 모델 사진 대신 실제 제작 화면(로그인·예약·결제 화면 등)으로 교체 필요
 const REWARDS = [
   {
     label: '첫번째', no: '01', img: 'reward-01-service',
-    title: '실제 서비스 결과물',
-    lead: '내 사업 아이디어를 ', bold: '직접 서비스 형태로 만들어봅니다.',
+    title: '직접 실행되는 웹·앱 첫 버전',
+    lead: '다른 사람에게 보여주고 ', bold: '사용해볼 수 있는 결과물입니다.',
   },
   {
     label: '두번째', no: '02', img: 'reward-02-skill',
-    title: '스스로 만드는 능력',
-    lead: '다음 아이디어가 생겨도 ', bold: '직접 수정하고 다시 만들 수 있습니다.',
+    title: '스스로 수정하는 능력',
+    lead: 'AI에게 원하는 내용을 요청하고 ', bold: '화면과 기능을 바꾸는 방법을 배웁니다.',
   },
   {
     label: '세번째', no: '03', img: 'reward-03-strategy',
@@ -47,32 +47,47 @@ const REWARDS = [
   },
 ];
 
+// 강사 소개
+// TODO: 실제 얼굴 사진 + 검증 가능한 경력(회사명·연차·출시 서비스) 추가
+const COACHES = [
+  { name: '민아', role: '프로덕트 디자이너', desc: '실제 웹·앱 서비스의 브랜드와 화면 설계를 도와드립니다.' },
+  { name: '진형', role: '개발자', desc: 'AI 코딩으로 기능을 만들고 오류를 해결하는 과정을 함께합니다.' },
+  { name: '기획 담당', role: '', desc: '아이디어를 고객이 사용할 수 있는 사업 구조로 정리합니다.' },
+];
+
 // 8. 커리큘럼
 const CURRICULUM = [
-  { part: 'PART 1', step: '기획', title: '무엇을 만들지 명확하게 정리', desc: '시장 · 타깃 · 문제 · 솔루션 · 회원 유형 · 메뉴 · 주요 프로세스' },
-  { part: 'PART 2', step: '디자인', title: 'AI에게 원하는 화면을 정확하게 요청하는 방법', desc: '화면 구성 · 레이아웃 · 컬러 · 톤&매너 · 컴포넌트' },
-  { part: 'PART 3', step: '바이브 코딩', title: '기획과 디자인을 바탕으로 실제 서비스 제작', desc: '다른 사람도 접속할 수 있도록 ', descBold: '배포까지 진행합니다.' },
-  { part: 'PART 4', step: '오픈 이후', title: '만들고 끝이 아닙니다.', desc: '오픈 후 어떻게 아이디어를 검증할지도 함께 배웁니다.' },
+  { part: 'PART 1', step: '기획', title: '내 사업 아이디어 정리', desc: '누구를 위한 어떤 서비스인지 정리합니다.', result: '시장 · 타깃 · 문제 · 솔루션 · 회원 유형 · 메뉴 · 주요 프로세스' },
+  { part: 'PART 2', step: '디자인', title: '브랜드와 화면 설계', desc: '이름, 분위기, 주요 화면을 직접 구성합니다.', result: '내 서비스의 무드보드' },
+  { part: 'PART 3', step: '바이브 코딩', title: 'AI로 실제 기능 제작', desc: '기획과 디자인을 바탕으로 작동하는 웹·앱을 만듭니다.', result: '다른 사람도 접속할 수 있는 나의 서비스' },
+  { part: 'PART 4', step: '오픈', title: '테스트와 오픈', desc: '다른 사람에게 보여주고 수정한 뒤 공개합니다.', result: '아이디어 검증 방법' },
 ];
 
+// 사전 수업 참여자 이야기 — 핵심 3개, 만든 결과 표시
 const REVIEWS = [
-  { who: '김○석 · 54 · 전 은행원', text: '정년 앞두고 뭐라도 해보자는 마음으로 신청했는데 솔직히 반신반의했습니다. 근데 한 달 만에 제 폰에 제가 만든 서비스가 떠 있네요. 애들한테 보여줬더니 아빠가 만든 거 맞냐고 하더라구요 ㅎㅎ' },
-  { who: '이○희 · 47 · 학원 운영', text: '코딩 1도 모릅니다. 진짜 1도요. 그런 저도 따라가게 속도를 맞춰주셔서 좋았어요. 질문을 하도 많이 해서 죄송할 정도였는데 매번 제 화면을 같이 보면서 알려주셨습니다.' },
-  { who: '박○규 · 51 · 자영업', text: '3년 전에 외주 견적 듣고 포기했던 아이디어를 여기서 3주 만에 직접 만들었습니다. 대단한 건 아니고 예약 받는 간단한 서비스인데, 지금 가게에서 실제로 쓰고 있어요.' },
-  { who: '최○영 · 45 · 회사원', text: '3시간 수업이 길 것 같았는데 하다 보면 순식간입니다. 갈 때마다 눈에 보이게 뭔가 완성되니까 계속 하게 되더라고요. 마지막에 배포 버튼 누를 때 기분은 해본 사람만 압니다.' },
-  { who: '정○호 · 58 · 퇴직', text: '제가 제일 연장자라 걱정했는데 쓸데없는 걱정이었습니다. 30년 업계 경험에서 나온 아이디어라 오히려 제일 구체적이라고 하시더군요. 그걸 그대로 서비스로 만들었습니다.' },
-  { who: '한○숙 · 49 · 프리랜서', text: '유튜브 보고 혼자 해보려다 세 번 포기한 사람입니다. 막히면 그 자리에서 바로 물어볼 수 있다는 게 이렇게 큰 차이인지 몰랐어요. 돈 아깝지 않았습니다.' },
-  { who: '오○진 · 43 · 마케터', text: '개발자분들이랑 회의할 때마다 답답했는데 이제 무슨 말인지 알아듣습니다. 그것만으로도 본전인데 제 이름으로 된 결과물까지 나왔으니 말 다 했죠.' },
-  { who: '송○철 · 55 · 공인중개사', text: '상담만 받아보자 했다가 그날 등록했습니다. 매물 문의 정리하는 도구를 만들었는데 사무실 직원이 저보다 더 잘 씁니다. 15명뿐이라 한 명 한 명 다 챙겨주는 게 느껴졌어요.' },
-  { who: '윤○미 · 46 · 간호사', text: '교대 근무라 일정이 걱정이었는데 상담 때 미리 조율해주셔서 끝까지 다녔습니다. 동기분들 나이대가 비슷해서 얘기가 잘 통하고, 수료하고도 단톡방에서 근황 나눕니다.' },
-  { who: '강○원 · 52 · 요식업', text: '아들이 신청해줘서 얼떨결에 시작했는데 지금은 제가 더 빠져 있습니다. 2호점 내는 대신 배달 주문 페이지를 직접 만드는 중이에요. 인생 후반전에 이런 재미가 있을 줄 몰랐습니다.' },
+  { who: '박○규 · 51 · 자영업', result: '예약 접수 서비스', text: '3년 전에 외주 견적 듣고 포기했던 아이디어를 여기서 3주 만에 직접 만들었습니다. 지금 가게에서 실제로 쓰고 있어요.' },
+  { who: '송○철 · 55 · 공인중개사', result: '매물 문의 정리 도구', text: '상담만 받아보자 했다가 그날 등록했습니다. 사무실 직원이 저보다 더 잘 씁니다. 15명뿐이라 한 명 한 명 다 챙겨주는 게 느껴졌어요.' },
+  { who: '강○원 · 52 · 요식업', result: '배달 주문 페이지', text: '아들이 신청해줘서 얼떨결에 시작했는데 지금은 제가 더 빠져 있습니다. 2호점 내는 대신 배달 주문 페이지를 직접 만드는 중이에요.' },
 ];
 
+// 히어로 바로 아래 핵심 정보 요약
 const STATS = [
+  ['개강', '9월 7일'],
+  ['수업', '총 8회 · 회당 3시간'],
+  ['장소', '교대역 오프라인'],
   ['정원', '최대 15명'],
-  ['1회 수업', '3시간'],
-  ['완성 기간', '4주'],
-  ['강의 장소', '3호선 교대역 인근'],
+];
+
+// FAQ — 답변은 페이지 사실 기반 초안, 확정 전 검토 필요
+const FAQS = [
+  ['컴퓨터를 잘 다루지 못해도 가능한가요?', '네. 문서 작성과 인터넷 검색 정도만 할 수 있으면 충분합니다. 필요한 도구 설치부터 하나씩 같이 진행합니다.'],
+  ['코딩을 전혀 몰라도 되나요?', '네. 코드는 AI가 작성하고, 우리는 AI에게 정확하게 요청하는 방법을 배웁니다. 코딩 경험은 필요 없습니다.'],
+  ['아이디어가 구체적이지 않아도 되나요?', '괜찮습니다. 1주 차 기획 과정에서 아이디어를 서비스 구조로 함께 정리합니다.'],
+  ['4주 안에 어디까지 만들 수 있나요?', '다른 사람이 접속해서 사용할 수 있는 웹·앱 첫 버전까지 만들고 공개하는 것이 목표입니다.'],
+  ['앱스토어 출시까지 포함되나요?', '기본 과정은 웹 서비스 제작과 배포까지입니다. 앱스토어 출시가 필요한 경우 상담 때 별도로 안내드립니다.'],
+  ['수업을 놓치면 어떻게 하나요?', '신청 시 가능한 시간대를 미리 조율하고, 빠진 부분은 다음 수업에서 따라잡을 수 있도록 도와드립니다.'],
+  ['1강 무료 수강 후 반드시 결제해야 하나요?', '아니요. 첫 강의를 들어보고 계속할지 결정하시면 됩니다. 결제는 그다음입니다.'],
+  ['개인 노트북은 어떤 사양이 필요한가요?', '최근 몇 년 내 구매한 노트북이면 충분합니다. 인터넷 브라우저가 원활히 동작하면 됩니다.'],
 ];
 
 // 강의 장소 — 카카오맵 퍼가기 (교대역 현민빌딩)
@@ -119,25 +134,16 @@ function KakaoMap() {
   );
 }
 
-// hot = 민트로 강조되는 칩
-const OLD_FLOW = [{ t: '아이디어' }, { t: '개발사' }, { t: '수천만 원' }, { t: '수개월 개발' }];
-const NEW_FLOW = [
-  { t: '아이디어' },
-  { t: 'AI에게 요청' },
-  { t: '직접 제작', hot: true },
-  { t: '빠르게 검증', hot: true },
-];
-
 // 줄바꿈 배열을 <br/>로 이어 붙임
 const lines = (arr) => arr.map((t, i) => (i === 0 ? t : [<br key={i} />, t]));
 
 // B코스만 진행
 const COURSE_B = {
-  old: '1,200,000원',
-  now: '960,000원',
-  meta: '하루 3시간 · 총 8회 · 4주 과정',
   days: [7, 9, 14, 16, 21, 22, 28, 30],
 };
+
+// 가격 포함 내용
+const INCLUDES = ['기획·디자인·개발 현직자 코칭', '수업용 템플릿과 실습 자료', '내 아이디어 기반 웹·앱 제작', '결과물 점검과 수정 피드백'];
 
 // 2026년 9월 캘린더 — 9/1이 화요일(일=0 기준 index 2)
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
@@ -320,65 +326,46 @@ export default function Page() {
 
       <main>
         {/* 2. 첫 화면 */}
+        {/* TODO: 키비주얼을 1:1 코칭 실사 이미지로 교체 (hero-bg.png / hero-mobile.png) */}
         <section className="hero" id="top">
           <div className="wrap hero-inner">
-            <p><span className="hero-over">결제는 <b>첫강의 듣고 나서</b> 하시면 돼요!</span></p>
+            <p><span className="hero-over">40·50대 예비 대표님을 위한 오프라인 실습</span></p>
             <h1>
-              AI로 내 온라인 서비스<br />
-              <span className="grad">직접 만들어보세요</span>
+              아이디어만 가져오세요.<br />
+              <span className="grad">4주 동안 내 사업의 웹·앱을<br className="br-m" /> 직접 만듭니다.</span>
             </h1>
-            <p className="pay-note">40·50대 대표님들을 위한</p>
-            <p className="hero-sub">전문가와 함께 완성하는 오프라인 실전 클래스.</p>
+            <p className="hero-sub">AI 코딩이 처음이어도 괜찮습니다.<br />기획자·디자이너·개발자가 옆에서 처음부터 함께합니다.</p>
           </div>
         </section>
+
+        {/* 2.5 핵심 정보 요약 — 히어로 바로 아래 한 번만 */}
+        <div className="stats">
+          <div className="wrap">
+            {STATS.map(([label, value]) => (
+              <div className="stat" key={label}>
+                <span>{label}</span>
+                <b>{value}</b>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* 3. 이런 고민 있으셨나요? */}
         <section className="pain center">
           <div className="wrap reveal">
             <span className="eyebrow">이런 고민 있으셨나요?</span>
-            <h2>아이디어는 있는데,<br />만드는 단계에서 막혔다면</h2>
-            <div className="card-grid-4 stagger">
+            <h2>이 중 하나라도<br />내 이야기라면</h2>
+            <div className="pain-list stagger">
               {PAINS.map((p) => (
-                <div className="icard" key={p.img}>
+                <div className="prow" key={p.img}>
                   <Image src={`${IMG}/${p.img}.png`} alt="" width={520} height={520} />
-                  <p>{lines(p.text)}</p>
+                  <p>{p.text}</p>
                 </div>
               ))}
             </div>
             <p className="punch">
               <span className="grad"><em className="dots">그래서</em> 직접 만들 수 있게 도와드립니다.</span>
             </p>
-          </div>
-        </section>
-
-        {/* 4. 지금은 개발 방식이 달라졌습니다 */}
-        <section className="shift center">
-          <div className="wrap reveal">
-            <span className="eyebrow">지금은 개발 방식이 달라졌습니다</span>
-            <h2>개발자가 아니어도<br /><mark>서비스를 만들 수 있는 시대</mark>입니다.</h2>
-            <div className="flow-box flow-old">
-              <span className="flow-tag">예전에는</span>
-              <div className="flow">
-                {OLD_FLOW.map((s, i) => (
-                  <span key={s.t} style={{ display: 'contents' }}>
-                    {i > 0 && <span className="arw" aria-hidden="true">→</span>}
-                    <span className="step">{s.t}</span>
-                  </span>
-                ))}
-              </div>
-            </div>
-            <Image className="flow-mascot" src={`${IMG}/shift-mascot.png`} alt="" width={560} height={373} />
-            <div className="flow-box flow-new">
-              <span className="flow-tag">지금은</span>
-              <div className="flow">
-                {NEW_FLOW.map((s, i) => (
-                  <span key={s.t} style={{ display: 'contents' }}>
-                    {i > 0 && <span className="arw" aria-hidden="true">→</span>}
-                    <span className={`step${s.hot ? ' hot' : ''}`}>{s.t}</span>
-                  </span>
-                ))}
-              </div>
-            </div>
           </div>
         </section>
 
@@ -405,31 +392,26 @@ export default function Page() {
         {/* 6. 오프라인으로 합니다 */}
         <section className="offline center">
           <div className="wrap reveal">
-            <span className="eyebrow">온라인이 아니라 오프라인으로 합니다</span>
-            <h2>보고 끝나는 강의가 아닙니다.<br /><span className="grad">옆에서 함께 만듭니다.</span></h2>
-            <div className="card-grid-4 stagger">
-              {POINTS.map((p, i) => (
-                <div className="icard" key={p.img}>
-                  <span className="pill">POINT {i + 1}</span>
-                  <Image src={`${IMG}/${p.img}.png`} alt="" width={440} height={440} />
-                  <p>
-                    {p.head.map((t, j) => (j === 1 ? <b key={j}>{t}</b> : t))}
-                    {p.mid ? <>{' '}<br className="br-m" />{p.mid}{' '}<br className="br-d" /></> : <br />}
-                    <b>{p.tail}</b>
-                  </p>
-                </div>
+            <span className="eyebrow">온라인 강의와 가장 다른 점</span>
+            <h2><span className="grad">바로 옆에서 함께 만든다는 것</span></h2>
+            <ul className="check-list stagger">
+              {POINTS.map((p) => (
+                <li key={p.bold}>
+                  <span className="chk" aria-hidden="true">✓</span>
+                  <span>{p.lead}<b>{p.bold}</b></span>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </section>
 
-        {/* 7. 수료 후 3가지 */}
+        {/* 7. 4주 후 남는 3가지 */}
         <section className="reward" id="rewards">
           <div className="wrap reveal">
             <div className="reward-head">
               <div>
                 <span className="eyebrow">수료 후</span>
-                <h2>이 과정을 마친 뒤<br />3가지를 가져갑니다</h2>
+                <h2>4주 후,<br />이 3가지가 남습니다</h2>
               </div>
               <Image className="reward-mascot" src={`${IMG}/reward-mascot.png`} alt="" width={452} height={320} />
             </div>
@@ -451,6 +433,24 @@ export default function Page() {
           </div>
         </section>
 
+        {/* 7.5 강사 소개 */}
+        <section className="coach center">
+          <div className="wrap reveal">
+            <span className="eyebrow">함께하는 사람들</span>
+            <h2>기획자·디자이너·개발자가<br />처음부터 함께합니다</h2>
+            <div className="card-grid-3 stagger">
+              {COACHES.map((c) => (
+                <div className="icard coach-card" key={c.name}>
+                  {/* TODO: 실제 얼굴 사진으로 교체 */}
+                  <div className="coach-avatar" aria-hidden="true">{c.name[0]}</div>
+                  <h3>{c.name}{c.role && <span> · {c.role}</span>}</h3>
+                  <p>{c.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* 8. 커리큘럼 */}
         <section className="curr center" id="curriculum">
           <div className="wrap reveal">
@@ -462,7 +462,7 @@ export default function Page() {
                   <div className="cpart"><b>{c.part}</b><span>{c.step}</span></div>
                   <div className="cbody">
                     <h3>{c.title}</h3>
-                    <p>{c.desc}{c.descBold && <b>{c.descBold}</b>}</p>
+                    <p>{c.desc}<br /><b>결과물: {c.result}</b></p>
                   </div>
                 </div>
               ))}
@@ -470,46 +470,27 @@ export default function Page() {
           </div>
         </section>
 
-        {/* 9.5 수강생 후기 */}
+        {/* 9.5 사전 수업 참여자 이야기 — 세로 1열 3개 */}
         <section className="reviews center">
           <div className="wrap reveal">
-            <span className="eyebrow">수강생 후기</span>
+            <span className="eyebrow">사전 수업 참여자 이야기</span>
             <h2>먼저 해본 분들의 이야기</h2>
-          </div>
-          <div className="rv-rows reveal">
-            {[REVIEWS.slice(0, 5), REVIEWS.slice(5)].map((row, i) => (
-              <div className={`rv-marquee${i % 2 ? ' rev' : ''}`} key={i}>
-                <div className="rv-track">
-                  {[0, 1].map((copy) => (
-                    <div className="rv-group" key={copy} aria-hidden={copy === 1}>
-                      {row.map((r) => (
-                        <figure className="rv-card" key={r.who}>
-                          <blockquote>{r.text}</blockquote>
-                          <figcaption>{r.who}</figcaption>
-                        </figure>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
+            <div className="rv-list stagger">
+              {REVIEWS.map((r) => (
+                <figure className="rv-card" key={r.who}>
+                  <blockquote>{r.text}</blockquote>
+                  <figcaption>
+                    {r.who}
+                    <span className="rv-result">완성 결과: {r.result}</span>
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* 핵심 스펙 바 */}
-        <div className="stats" id="info">
-          <div className="wrap">
-            {STATS.map(([label, value]) => (
-              <div className="stat" key={label}>
-                <span>{label}</span>
-                <b>{value}</b>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* 9.7 강의 일정 · 가격 (B코스만 진행) */}
-        <section className="info center">
+        <section className="info center" id="info">
           <div className="wrap reveal">
             <span className="eyebrow">강의 정보</span>
             <h2>강의 일정과 가격</h2>
@@ -531,6 +512,10 @@ export default function Page() {
               </div>
               <div className="info-card">
                 <h3>강의 진행 예정일</h3>
+                <p className="sched-lines">
+                  <b>9월 7일 첫 수업</b><br />
+                  총 8회 · 회당 3시간
+                </p>
                 <div className="calendar">
                   <p className="cal-title">2026년 9월</p>
                   <div className="cal-grid">
@@ -544,11 +529,17 @@ export default function Page() {
               </div>
               <div className="info-card" id="price">
                 <h3>강의 가격</h3>
+                <p className="free-first">
+                  <b>먼저 1강을 무료로 들어보세요.</b><br />
+                  계속할지 결정한 뒤 결제하시면 됩니다.
+                </p>
                 <div className="price-box">
-                  <p className="p-old">{COURSE_B.old}</p>
-                  <p className="p-now">{COURSE_B.now}<span className="p-badge">20% 할인</span></p>
-                  <p className="p-meta">{COURSE_B.meta}</p>
+                  <p className="p-price">4주 총 96만원</p>
+                  <p className="p-meta">총 8회 · 24시간</p>
                 </div>
+                <ul className="includes">
+                  {INCLUDES.map((t) => <li key={t}>{t}</li>)}
+                </ul>
               </div>
               <div className="info-card wide">
                 <h3>강의 준비물</h3>
@@ -562,14 +553,29 @@ export default function Page() {
           </div>
         </section>
 
+        {/* 9.9 FAQ */}
+        <section className="faq center" id="faq">
+          <div className="wrap reveal">
+            <span className="eyebrow">자주 묻는 질문</span>
+            <h2>신청 전에 궁금한 것들</h2>
+            <div className="faq-list stagger">
+              {FAQS.map(([q, a]) => (
+                <details className="faq-item" key={q}>
+                  <summary>{q}</summary>
+                  <p>{a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* 10. 최종 CTA */}
         <section className="cta center">
           <div className="wrap reveal">
-            <span className="eyebrow">세컨드커리어랩의 목표</span>
-            <h2>내 아이디어를 직접 만들고<br />검증하는 사람이 되는 것</h2>
+            <h2>9월 7일, 내 아이디어의<br />첫 화면을 만들어보세요</h2>
             <p className="cta-sub">
-              그래서, <b>최대 15명만</b> 모집합니다.<br />
-              내 머릿속 아이디어를 실제 서비스로 만들어보세요.
+              1강을 무료로 듣고<br />
+              <b>계속할지는 그다음에 결정하시면 됩니다.</b>
             </p>
             <button className="btn-pill" onClick={() => openModal('bottom')}>
               <span className="grad">첫 강의 무료신청</span>
