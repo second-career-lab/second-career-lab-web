@@ -561,6 +561,7 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
   .gnb{display:none}
   .chip-nav{
     display:flex;gap:8px;
+    justify-content:safe center; /* 넘치면 start로 폴백돼 첫 칩이 잘리지 않음 */
     padding:0 14px 10px;
     overflow-x:auto;
     -webkit-overflow-scrolling:touch;
