@@ -19,7 +19,7 @@ export async function PATCH(req, { params }) {
     .from('leads')
     .update({ course, times, updated_at: new Date().toISOString() })
     .eq('id', id)
-    .select('name, age, phone')
+    .select('name, age, phone, idea')
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

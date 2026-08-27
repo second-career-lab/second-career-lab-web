@@ -6,6 +6,7 @@ export async function POST(req) {
   const name = String(body.name || '').trim();
   const phone = String(body.phone || '').trim();
   const age = Number(body.age);
+  const idea = String(body.idea || '').trim().slice(0, 200) || null;
 
   const valid =
     name &&
@@ -20,7 +21,7 @@ export async function POST(req) {
 
   const { data, error } = await getSupabaseAdmin()
     .from('leads')
-    .insert({ name, phone, age })
+    .insert({ name, phone, age, idea })
     .select('id')
     .single();
 

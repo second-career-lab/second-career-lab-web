@@ -63,6 +63,7 @@ export default function LeadsTable({ leads }) {
             <th>나이</th>
             <th>코스</th>
             <th>선호시간대</th>
+            <th>아이디어</th>
             <th>상태</th>
             <th>최종결정</th>
             <th>메모</th>
@@ -87,6 +88,7 @@ export default function LeadsTable({ leads }) {
               <td>{l.age}세</td>
               <td>{l.course ? COURSE_LABEL[l.course] : '-'}</td>
               <td>{l.times?.length ? l.times.join(', ') : '-'}</td>
+              <td style={{ whiteSpace: 'pre-wrap', maxWidth: 220 }}>{l.idea || '-'}</td>
               <td>
                 <select
                   className="admin-status-select"

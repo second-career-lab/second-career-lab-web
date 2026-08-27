@@ -192,16 +192,10 @@ export default function Page() {
   const [step, setStep] = useState(1);
   const [errs, setErrs] = useState({});
   const [submitting, setSubmitting] = useState(false);
-  const [showBar, setShowBar] = useState(false);
-
-  // 모바일 하단 CTA 노출
-  useEffect(() => {
-    const onScroll = () => setShowBar(window.scrollY > 600);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const openModal = (location) => {
+    setMenuOpen(false);
     track('상담신청클릭', { location });
     track('신청1진입');
     setErrs({});
@@ -267,6 +261,7 @@ export default function Page() {
     const name = f.name.value.trim();
     const age = f.age.value.trim();
     const phone = f.phone.value.trim();
+    const idea = f.idea.value.trim();
     const times = [...f.querySelectorAll('input[name=time]:checked')].map((i) => i.value);
 
     const next = {
@@ -283,7 +278,7 @@ export default function Page() {
       const res = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, age: Number(age), phone }),
+        body: JSON.stringify({ name, age: Number(age), phone, idea }),
       });
       if (!res.ok) throw new Error('submit failed');
       const { id } = await res.json();
@@ -307,20 +302,30 @@ export default function Page() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
 
-      {/* 1. 상단 고정 헤더 */}
-      <header className={showBar ? 'tucked' : ''}>
+      {/* 1. 상단 고정 헤더 — 모바일: 로고 + 무료 버튼 + 햄버거 */}
+      <header>
         <div className="header-inner">
           <a className="logo" href="#top">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.png" alt="세컨드커리어랩" />
           </a>
-          <nav className="gnb" aria-label="섹션 이동">
-            <a href="#rewards" onClick={() => track('상단바클릭', { menu: '얻는것' })}>얻는것</a>
-            <a href="#price" onClick={() => track('상단바클릭', { menu: '비용' })}>비용</a>
-            <a href="#curriculum" onClick={() => track('상단바클릭', { menu: '커리큘럼' })}>커리큘럼</a>
-            <a href="#info" onClick={() => track('상단바클릭', { menu: '강의정보' })}>강의정보</a>
+          <nav className={`gnb${menuOpen ? ' open' : ''}`} aria-label="섹션 이동">
+            <a href="#rewards" onClick={() => { setMenuOpen(false); track('상단바클릭', { menu: '얻는것' }); }}>얻는것</a>
+            <a href="#price" onClick={() => { setMenuOpen(false); track('상단바클릭', { menu: '비용' }); }}>비용</a>
+            <a href="#curriculum" onClick={() => { setMenuOpen(false); track('상단바클릭', { menu: '커리큘럼' }); }}>커리큘럼</a>
+            <a href="#info" onClick={() => { setMenuOpen(false); track('상단바클릭', { menu: '강의정보' }); }}>강의정보</a>
           </nav>
-          <button className="btn btn-primary" onClick={() => openModal('up')}>첫 강의 무료신청</button>
+          <div className="header-actions">
+            <button className="btn btn-primary" onClick={() => openModal('up')}>1강 무료로 먼저 듣기</button>
+            <button
+              className="hamburger"
+              aria-label="메뉴 열기"
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((v) => !v)}
+            >
+              <span /><span /><span />
+            </button>
+          </div>
         </div>
       </header>
 
@@ -335,6 +340,8 @@ export default function Page() {
               <span className="grad">4주 동안 내 사업의 웹·앱을<br className="br-m" /> 직접 만듭니다.</span>
             </h1>
             <p className="hero-sub">AI 코딩이 처음이어도 괜찮습니다.<br />기획자·디자이너·개발자가 옆에서 처음부터 함께합니다.</p>
+            <button className="btn btn-primary hero-cta" onClick={() => openModal('hero')}>1강 무료로 먼저 듣기</button>
+            <p className="hero-note">수업을 들어본 뒤 등록 여부를 결정하세요.</p>
           </div>
         </section>
 
@@ -578,8 +585,9 @@ export default function Page() {
               <b>계속할지는 그다음에 결정하시면 됩니다.</b>
             </p>
             <button className="btn-pill" onClick={() => openModal('bottom')}>
-              <span className="grad">첫 강의 무료신청</span>
+              <span className="grad">1강 무료로 먼저 듣기</span>
             </button>
+            <p className="cta-note">신청 후 10분 전화로 수업 진행 방식과 준비사항을 안내드립니다.</p>
           </div>
         </section>
       </main>
@@ -593,9 +601,9 @@ export default function Page() {
         </p>
       </footer>
 
-      {/* 모바일 하단 고정 CTA */}
-      <div className={`mobile-cta${showBar ? ' show' : ''}`}>
-        <button className="btn btn-primary" onClick={() => openModal('flo')}>첫 강의 무료 신청</button>
+      {/* 모바일 하단 고정 CTA — 상시 노출 */}
+      <div className="mobile-cta show">
+        <button className="btn btn-primary" onClick={() => openModal('flo')}>1강 무료로 먼저 듣기</button>
       </div>
 
       {/* 상담 신청 팝업 */}
@@ -608,7 +616,8 @@ export default function Page() {
               <div className="modal-top-bar">
                 <button type="button" className="modal-close-x" onClick={closeModal} aria-label="닫기">×</button>
               </div>
-              <h3>첫 강의 신청을 위해 몇 가지만 알려주세요</h3>
+              <h3>1강 무료 수강 신청</h3>
+              <p className="modal-lead">신청 후 수업 적합성 확인을 위해 약 10분간 전화드립니다.</p>
               <form onSubmit={onSubmit} noValidate>
                 <div className="form-field">
                   <label htmlFor="fName">이름</label>
@@ -629,6 +638,10 @@ export default function Page() {
                   {errs.phone && <p className="f-error">휴대폰 번호를 정확히 입력해주세요.</p>}
                 </div>
                 <div className="form-field">
+                  <label htmlFor="fIdea">만들고 싶은 아이디어 한 줄 <span style={{ color: 'var(--ink-soft)', fontWeight: 500, fontSize: 14 }}>선택</span></label>
+                  <input type="text" id="fIdea" name="idea" maxLength={200} placeholder="예: 우리 가게 예약 접수 서비스" />
+                </div>
+                <div className="form-field">
                   <span className="f-label">
                     선호 시간대 <span style={{ color: 'var(--primary)', fontSize: 14 }}>복수 선택 가능</span>
                   </span>
@@ -641,7 +654,7 @@ export default function Page() {
                 <p className="consent-note">신청 시 개인정보 수집 및 이용에 동의한 것으로 간주합니다. 상담 및 안내 목적으로만 사용되며, 그 외의 용도로는 사용하지 않습니다.</p>
                 {errs.submit && <p className="f-error">일시적인 오류가 발생했습니다. 다시 시도해주세요.</p>}
                 <div className="modal-actions">
-                  <button type="submit" className="btn btn-primary" disabled={submitting}>{submitting ? '처리 중…' : '첫 강의 무료신청'}</button>
+                  <button type="submit" className="btn btn-primary" disabled={submitting}>{submitting ? '처리 중…' : '1강 무료로 먼저 듣기'}</button>
                 </div>
               </form>
             </div>
@@ -651,8 +664,8 @@ export default function Page() {
             <div>
               <div className="done-box">
                 <div className="d-ico">✓</div>
-                <h3>첫 강의 신청이 완료되었습니다.</h3>
-                <p><strong>강의 장소 및 추가 정보는<br />휴대폰 번호로 안내드리겠습니다.</strong></p>
+                <h3>1강 무료 수강 신청이 완료되었습니다.</h3>
+                <p><strong>수업 진행 방식과 준비사항 안내를 위해<br />약 10분간 전화드리겠습니다.</strong></p>
               </div>
               <div className="modal-actions">
                 <button className="btn btn-primary" onClick={closeModal}>확인</button>

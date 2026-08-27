@@ -86,14 +86,7 @@ header{
   background:rgba(250,251,251,.92);
   backdrop-filter:blur(10px);
   border-bottom:1px solid var(--line);
-  transition:transform .3s ease;
 }
-/* 하단 고정 CTA가 뜨는 구간에서는 상단바를 숨김 — CTA가 둘 다 보이지 않게.
-   ≤640은 상단바 버튼이 없으므로(내비만 있음) 항상 sticky 유지 */
-@media (min-width:641px) and (max-width:860px){
-  header.tucked{transform:translateY(-100%)}
-}
-@media (prefers-reduced-motion:reduce){header{transition:none}}
 .header-inner{
   max-width:1200px;margin:0 auto;padding:0 24px;
   height:71px;
@@ -111,6 +104,15 @@ header{
   padding:6px 2px;
 }
 .gnb a:hover{color:var(--primary)}
+.header-actions{display:flex;align-items:center;gap:8px}
+/* 햄버거 — 모바일 전용 */
+.hamburger{
+  display:none;
+  width:48px;height:48px;
+  flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  background:transparent;border:none;cursor:pointer;
+}
+.hamburger span{display:block;width:22px;height:2.5px;border-radius:2px;background:var(--ink)}
 /* 고정 헤더에 가려지지 않게 앵커 이동 여백 확보 */
 #rewards,#curriculum,#price,#info{scroll-margin-top:84px}
 
@@ -205,6 +207,18 @@ mark{
   color:var(--ink-soft);
 }
 .hero-sub strong{font-weight:700;color:inherit}
+/* 히어로 CTA — 첫 화면 안에서 바로 신청 */
+.hero-cta{
+  margin-top:clamp(22px,3vw,40px);
+  font-size:clamp(18px,2vw,22px);
+  padding:16px 44px;
+  border-radius:999px;
+}
+.hero-note{
+  margin-top:10px;
+  font-size:clamp(14px,1.5vw,17px);
+  color:var(--ink-soft);
+}
 
 /* ── 강의 일정 · 가격 ── */
 .info{background:var(--tint)}
@@ -551,13 +565,20 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
 @media (max-width:640px){
   body{font-size:18px}
   .wrap{padding:0 18px}
-  /* 헤더 60px, 메뉴 글자 키우고 터치 영역 48px 확보 */
-  .header-inner{height:60px;padding:0 12px}
+  /* 헤더 60px — 로고 + 1강 무료 버튼 + 햄버거, 메뉴는 드롭다운으로 */
+  .header-inner{height:60px;padding:0 8px 0 14px}
   .logo img{height:22px}
-  /* 상단 바의 상담 신청 버튼은 앱에서 제거 */
-  .header-inner .btn{display:none}
-  .gnb{gap:2px}
-  .gnb a{font-size:14px;font-weight:700;padding:14px 7px}
+  .header-inner .btn{font-size:14px;padding:11px 14px;border-radius:999px}
+  .hamburger{display:flex}
+  .gnb{display:none}
+  .gnb.open{
+    display:flex;flex-direction:column;gap:0;
+    position:fixed;top:60px;left:0;right:0;
+    background:var(--paper);border-bottom:1px solid var(--line);
+    box-shadow:0 12px 24px rgba(20,50,46,.12);
+    padding:6px 0;
+  }
+  .gnb.open a{font-size:16px;font-weight:700;padding:14px 22px}
   /* 히어로 배경을 모바일 전용 3D 일러스트로 교체 — 이미지(9:16) 전체가 보이도록 섹션 높이 고정, 텍스트는 상단 여백에 배치 */
   .hero{
     background:url('/images/hero-mobile.png') center bottom/cover no-repeat,#DCEEEC;
