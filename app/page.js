@@ -344,8 +344,8 @@ export default function Page() {
           </a>
           <nav className="gnb" aria-label="섹션 이동">
             <a href="#rewards" onClick={() => track('상단바클릭', { menu: '얻는것' })}>얻는것</a>
-            <a href="#price" onClick={() => track('상단바클릭', { menu: '비용' })}>비용</a>
             <a href="#curriculum" onClick={() => track('상단바클릭', { menu: '커리큘럼' })}>커리큘럼</a>
+            <a href="#price" onClick={() => track('상단바클릭', { menu: '비용' })}>비용</a>
             <a href="#info" onClick={() => track('상단바클릭', { menu: '강의정보' })}>강의정보</a>
           </nav>
           {process.env.NODE_ENV !== 'production' && (
