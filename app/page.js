@@ -1,7 +1,9 @@
 'use client';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { CLASSES, COURSE_B } from '../lib/course';
 
 const IMG = '/images/landing';
 
@@ -72,7 +74,7 @@ const STATS = [
   ['정원', '최대 15명'],
   ['1회 수업', '3시간'],
   ['완성 기간', '4주'],
-  ['강의 장소', '3호선 교대역 인근'],
+  ['강의 장소', '3호선 교대역'],
 ];
 
 // 강의 장소 — 카카오맵 퍼가기 (교대역 현민빌딩)
@@ -131,14 +133,6 @@ const NEW_FLOW = [
 // 줄바꿈 배열을 <br/>로 이어 붙임
 const lines = (arr) => arr.map((t, i) => (i === 0 ? t : [<br key={i} />, t]));
 
-// B코스만 진행
-const COURSE_B = {
-  old: '1,200,000원',
-  now: '960,000원',
-  meta: '하루 3시간 · 총 8회 · 4주 과정',
-  days: [7, 9, 14, 16, 21, 22, 28, 30],
-};
-
 // 2026년 9월 캘린더 — 9/1이 화요일(일=0 기준 index 2)
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 const SEPT_FIRST_WEEKDAY = 2;
@@ -146,7 +140,9 @@ const SEPT_DAYS = 30;
 
 const SITE = 'https://www.secondcareerlab.kr';
 
-const track = (name, props) => window.amplitude?.track(name, props);
+// AB 테스트 — A: 기존(main), B: 다크 히어로 리뉴얼. 배정은 layout의 인라인 스크립트(window.__AB)가 페인트 전에 수행
+let VARIANT = 'A';
+const track = (name, props) => window.amplitude?.track(name, { ...props, variant: VARIANT });
 
 const JSON_LD = {
   '@context': 'https://schema.org',
@@ -179,6 +175,7 @@ const JSON_LD = {
 };
 
 export default function Page() {
+  const router = useRouter();
   // 세션 리플레이(rrweb)가 top layer의 <dialog>를 안정적으로 녹화하지 못해 일반 div 오버레이로 구현
   const dialogRef = useRef(null);
   const bodyRef = useRef(null);
@@ -187,10 +184,43 @@ export default function Page() {
   const [errs, setErrs] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [showBar, setShowBar] = useState(false);
+  const [inHero, setInHero] = useState(true);
+  const [variant, setVariant] = useState('A');
+  const [selectedClass, setSelectedClass] = useState(null);
+  const heroRef = useRef(null);
 
-  // 모바일 하단 CTA 노출
+  // AB 배정값 반영 + 실험 노출 이벤트 (amplitude 로드 대기)
   useEffect(() => {
-    const onScroll = () => setShowBar(window.scrollY > 600);
+    const v = window.__AB === 'B' ? 'B' : 'A';
+    VARIANT = v;
+    setVariant(v);
+    let tries = 0;
+    const t = setInterval(() => {
+      if (window.amplitude) {
+        track('실험노출');
+        clearInterval(t);
+      } else if (++tries > 50) clearInterval(t);
+    }, 200);
+    return () => clearInterval(t);
+  }, []);
+
+  // 로컬 확인용 AB 전환
+  const toggleVariant = () => {
+    const next = variant === 'A' ? 'B' : 'A';
+    try { localStorage.setItem('ab_variant', next); } catch { /* 시크릿 모드 등 */ }
+    window.__AB = next;
+    VARIANT = next;
+    document.documentElement.classList.toggle('vb', next === 'B');
+    setVariant(next);
+  };
+
+  // 모바일 하단 CTA 노출 + 히어로 구간에서 상단바 다크 전환
+  useEffect(() => {
+    const onScroll = () => {
+      setShowBar(window.scrollY > 600);
+      setInHero(window.scrollY < (heroRef.current?.offsetHeight || 600) - 64);
+    };
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -199,7 +229,9 @@ export default function Page() {
     track('상담신청클릭', { location });
     track('신청1진입');
     setErrs({});
-    setStep(1);
+    setSelectedClass(null);
+    // B안은 바텀시트 반 선택(step 0)부터 시작
+    setStep(variant === 'B' ? 0 : 1);
     setModalOpen(true);
   };
   const closeModal = () => setModalOpen(false);
@@ -302,11 +334,13 @@ export default function Page() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
 
       {/* 1. 상단 고정 헤더 */}
-      <header className={showBar ? 'tucked' : ''}>
+      <header className={`${showBar ? 'tucked ' : ''}${inHero ? 'on-hero' : ''}`}>
         <div className="header-inner">
           <a className="logo" href="#top">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="세컨드커리어랩" />
+            <img className="logo-light" src="/logo.png" alt="세컨드커리어랩" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="logo-dark" src="/images/logo-dark.png" alt="세컨드커리어랩" />
           </a>
           <nav className="gnb" aria-label="섹션 이동">
             <a href="#rewards" onClick={() => track('상단바클릭', { menu: '얻는것' })}>얻는것</a>
@@ -314,21 +348,30 @@ export default function Page() {
             <a href="#curriculum" onClick={() => track('상단바클릭', { menu: '커리큘럼' })}>커리큘럼</a>
             <a href="#info" onClick={() => track('상단바클릭', { menu: '강의정보' })}>강의정보</a>
           </nav>
+          {process.env.NODE_ENV !== 'production' && (
+            <button className="ab-toggle" onClick={toggleVariant}>{variant}안</button>
+          )}
           <button className="btn btn-primary" onClick={() => openModal('up')}>첫 강의 무료신청</button>
         </div>
       </header>
 
       <main>
         {/* 2. 첫 화면 */}
-        <section className="hero" id="top">
+        <section className="hero" id="top" ref={heroRef}>
           <div className="wrap hero-inner">
-            <p><span className="hero-over">결제는 <b>첫강의 듣고 나서</b> 하시면 돼요!</span></p>
+            <p className="hero-over-p"><span className="hero-over">결제는 <b>첫강의 듣고 나서</b> 하시면 돼요!</span></p>
+            <p className="hero-badge"><b>1강 들어보고</b> 결제하세요</p>
             <h1>
               AI로 내 온라인 서비스<br />
               <span className="grad">직접 만들어보세요</span>
             </h1>
             <p className="pay-note">40·50대 대표님들을 위한</p>
             <p className="hero-sub">전문가와 함께 완성하는 오프라인 실전 클래스.</p>
+            <button className="hero-cta" onClick={() => openModal('hero')}>
+              강의 일정 보기
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/icons/arrow-up-right.svg" alt="" />
+            </button>
           </div>
         </section>
 
@@ -544,11 +587,19 @@ export default function Page() {
               </div>
               <div className="info-card" id="price">
                 <h3>강의 가격</h3>
-                <div className="price-box">
-                  <p className="p-old">{COURSE_B.old}</p>
-                  <p className="p-now">{COURSE_B.now}<span className="p-badge">20% 할인</span></p>
-                  <p className="p-meta">{COURSE_B.meta}</p>
-                </div>
+                {variant === 'B' ? (
+                  <div className="price-box">
+                    <p className="pb-off"><b>20%</b><s>￦{COURSE_B.old}</s></p>
+                    <p className="pb-now">￦{COURSE_B.now.replace('원', '')}</p>
+                    <p className="pb-meta">{COURSE_B.meta}</p>
+                  </div>
+                ) : (
+                  <div className="price-box">
+                    <p className="p-old">{COURSE_B.old}</p>
+                    <p className="p-now">{COURSE_B.now}<span className="p-badge">20% 할인</span></p>
+                    <p className="p-meta">{COURSE_B.meta}</p>
+                  </div>
+                )}
               </div>
               <div className="info-card wide">
                 <h3>강의 준비물</h3>
@@ -572,7 +623,7 @@ export default function Page() {
               내 머릿속 아이디어를 실제 서비스로 만들어보세요.
             </p>
             <button className="btn-pill" onClick={() => openModal('bottom')}>
-              <span className="grad">첫 강의 무료신청</span>
+              <span className="grad">강의 일정 보기</span>
             </button>
           </div>
         </section>
@@ -587,16 +638,64 @@ export default function Page() {
         </p>
       </footer>
 
-      {/* 모바일 하단 고정 CTA */}
+      {/* 모바일 하단 고정 CTA — A: 무료신청 버튼 / B: 가격 + 강의 일정 보기 */}
       <div className={`mobile-cta${showBar ? ' show' : ''}`}>
-        <button className="btn btn-primary" onClick={() => openModal('flo')}>첫 강의 무료 신청</button>
+        {variant === 'B' ? (
+          <>
+            <div className="mc-price">
+              <p className="mc-off"><b>20%</b><s>￦{COURSE_B.old.replace('원', '')}</s></p>
+              <p className="mc-now">￦{COURSE_B.now.replace('원', '')}</p>
+            </div>
+            <button className="mc-btn" onClick={() => openModal('flo')}>강의 일정 보기</button>
+          </>
+        ) : (
+          <button className="btn btn-primary" onClick={() => openModal('flo')}>첫 강의 무료 신청</button>
+        )}
       </div>
 
-      {/* 상담 신청 팝업 */}
+      {/* 상담 신청 팝업 — B안은 바텀시트로 렌더 */}
       {modalOpen && (
-      <div className="modal-overlay">
-      <div className="modal-box" role="dialog" aria-modal="true" aria-label="상담 신청" ref={dialogRef} onKeyDown={trapFocus}>
+      <div className={`modal-overlay${variant === 'B' ? ' as-sheet' : ''}`}>
+      <div className={`modal-box${variant === 'B' ? ' sheet' : ''}`} role="dialog" aria-modal="true" aria-label="상담 신청" ref={dialogRef} onKeyDown={trapFocus}>
         <div className="modal-body" ref={bodyRef}>
+          {step === 0 && (
+            <div>
+              <div className="modal-top-bar sheet-head">
+                <h3>반을 선택하세요</h3>
+                <button type="button" className="modal-close-x" onClick={closeModal} aria-label="닫기">×</button>
+              </div>
+              {CLASSES.map((c) => (
+                <button
+                  type="button"
+                  key={c.id}
+                  role="radio"
+                  aria-checked={selectedClass === c.id}
+                  className={`class-opt${selectedClass === c.id ? ' sel' : ''}`}
+                  onClick={() => setSelectedClass(c.id)}
+                >
+                  <span className="co-radio" aria-hidden="true" />
+                  <span className="co-name">{c.id}반</span>
+                  <span className="co-body">
+                    <span className="co-line"><b>{c.time}</b> · {c.open}</span>
+                    <span className="co-meta">{c.meta}</span>
+                  </span>
+                </button>
+              ))}
+              <div className="sf-row">
+                <p className="mc-off"><b>20%</b><s>￦{COURSE_B.old.replace('원', '')}</s></p>
+                <p className="mc-now">￦{COURSE_B.now.replace('원', '')}</p>
+              </div>
+              <button
+                className="mc-btn sheet-cta"
+                disabled={!selectedClass}
+                onClick={() => { track('반선택', { class: selectedClass }); router.push(`/apply?class=${selectedClass}`); }}
+              >
+                선택한 반으로 신청하기
+              </button>
+              <p className="sheet-note"><b>1회차 무료</b> · 듣고 나서 결정하세요</p>
+            </div>
+          )}
+
           {step === 1 && (
             <div>
               <div className="modal-top-bar">

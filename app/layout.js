@@ -33,8 +33,14 @@ export const viewport = { themeColor: '#147D72' };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       <head>
+        {/* AB 배정 — 페인트 전에 실행해 B안 스타일(html.vb) 깜빡임 방지 */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var v=localStorage.getItem('ab_variant');if(v!=='A'&&v!=='B'){v=Math.random()<.5?'A':'B';localStorage.setItem('ab_variant',v)}if(v==='B')document.documentElement.classList.add('vb');window.__AB=v}catch(e){window.__AB='A'}})();`,
+          }}
+        />
         {/* 히어로에 즉시 필요한 웨이트만 선로딩 */}
         <link rel="preload" href="/fonts/Pretendard-400.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <link rel="preload" href="/fonts/Pretendard-900.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />

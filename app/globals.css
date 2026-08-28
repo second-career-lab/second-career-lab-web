@@ -62,6 +62,7 @@ img{max-width:100%}
   box-shadow:0 4px 14px rgba(20,125,114,.28);
 }
 .btn-primary:hover{background:var(--primary-deep);transform:translateY(-2px);box-shadow:0 8px 20px rgba(20,125,114,.32)}
+.btn:disabled{opacity:.5;cursor:default;transform:none}
 .btn:focus-visible{outline:3px solid var(--primary);outline-offset:3px}
 
 /* 알약형 CTA */
@@ -86,7 +87,7 @@ header{
   background:rgba(250,251,251,.92);
   backdrop-filter:blur(10px);
   border-bottom:1px solid var(--line);
-  transition:transform .3s ease;
+  transition:transform .3s ease,background-color .3s ease,border-color .3s ease;
 }
 /* 하단 고정 CTA가 뜨는 구간에서는 상단바를 숨김 — CTA가 둘 다 보이지 않게.
    ≤640은 상단바 버튼이 없으므로(내비만 있음) 항상 sticky 유지 */
@@ -101,6 +102,8 @@ header{
 }
 .logo{display:flex;align-items:center}
 .logo img{height:34px;width:auto;display:block}
+/* 다크 로고는 검은 배경(header.on-hero, B안)에서만 노출 */
+.logo .logo-dark{display:none}
 .header-inner .btn{font-size:17px;padding:11px 24px;border-radius:999px;background:linear-gradient(90deg,var(--g1),var(--g2))}
 .header-inner .btn:hover{background:linear-gradient(90deg,var(--g1),var(--g2));filter:brightness(1.08)}
 /* 상단 내비게이션 */
@@ -113,6 +116,12 @@ header{
 .gnb a:hover{color:var(--primary)}
 /* 고정 헤더에 가려지지 않게 앵커 이동 여백 확보 */
 #rewards,#curriculum,#price,#info{scroll-margin-top:84px}
+/* 로컬 AB 전환 버튼 (개발 환경에서만 렌더) */
+.ab-toggle{
+  padding:4px 12px;border-radius:8px;border:1.5px solid var(--line);
+  background:#fff;font-family:var(--sans);font-weight:800;font-size:13px;
+  color:var(--ink);cursor:pointer;
+}
 
 /* ── 섹션 공통 ── */
 section{padding:clamp(60px,8vw,120px) 0}
@@ -205,6 +214,8 @@ mark{
   color:var(--ink-soft);
 }
 .hero-sub strong{font-weight:700;color:inherit}
+/* 모바일 전용 요소 (다크 히어로 배지·CTA) — 데스크톱에선 숨김 */
+.hero-badge,.hero-cta{display:none}
 
 /* ── 결제 안내 문구 — hero-sub와 같은 크기 ── */
 .pay-note{
@@ -303,6 +314,8 @@ mark{
 
 /* ── 4. 개발 방식의 변화 ── */
 .shift{background:var(--paper)}
+/* B안에서는 이 섹션 제거 (A안=main 유지를 위해 CSS로만 숨김) */
+html.vb .shift{display:none}
 .flow-box{
   position:relative;
   margin-top:clamp(24px,3.2vw,44px);
@@ -344,6 +357,8 @@ mark{
 
 /* ── 5. 왜 40·50인가 ── */
 .why{background:var(--tint)}
+/* B안은 페이퍼 톤 배경 */
+html.vb .why{background:var(--paper)}
 .why .icard{padding:clamp(14px,1.8vw,30px);gap:clamp(12px,2vw,28px)}
 .why .icard img{
   width:100%;height:clamp(150px,16vw,232px);
@@ -454,6 +469,8 @@ mark{
 
 /* ── 9.5 수강생 후기 ── */
 .reviews{background:var(--paper);overflow:hidden}
+/* B안은 틴트 배경 */
+html.vb .reviews{background:var(--tint)}
 .rv-rows{margin-top:clamp(32px,4.5vw,60px);display:grid;gap:clamp(16px,2vw,26px)}
 .rv-marquee{
   overflow:hidden;
@@ -503,7 +520,7 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
 .footer-links a:hover{color:var(--ink-soft)}
 .footer-divider{margin:0 8px}
 
-/* ── 모바일 하단 고정 CTA ── */
+/* ── 모바일 하단 고정 CTA — A안: 무료신청 버튼 ── */
 .mobile-cta{
   position:fixed;left:0;right:0;bottom:0;z-index:90;
   padding:12px 16px calc(12px + env(safe-area-inset-bottom));
@@ -515,6 +532,28 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
 }
 .mobile-cta.show{transform:none}
 .mobile-cta .btn{width:100%;font-size:19px;padding:17px 20px}
+/* B안: 가격 + 강의 일정 보기 */
+html.vb .mobile-cta{
+  display:flex;align-items:center;justify-content:center;gap:15px;
+  padding:8px 20px calc(8px + env(safe-area-inset-bottom));
+  background:#fff;border-top:none;
+  box-shadow:0 -4px 14px rgba(44,64,62,.08);
+}
+.mc-price p{line-height:1.2}
+.mc-off{display:flex;gap:6px;align-items:center;font-size:16px;font-weight:700;letter-spacing:-.03em}
+.mc-off b{color:#EF0B18}
+.mc-off s{color:#ACACAC;font-weight:400}
+.mc-now{margin-top:3px;font-size:22px;font-weight:700;color:#18181B;letter-spacing:-.04em}
+.mc-btn{
+  /* 가격 블록 옆 남는 폭을 버튼이 채움 — 우측 빈 공간 방지 */
+  flex:1;
+  border:none;cursor:pointer;
+  background:linear-gradient(85deg,var(--g1),var(--g2));
+  border-radius:999px;
+  padding:14px 30px;
+  font-family:var(--display);font-weight:600;font-size:20px;letter-spacing:-.03em;line-height:1.2;
+  color:#fff;text-decoration:none;text-align:center;
+}
 @media (min-width:861px){.mobile-cta{display:none}}
 @media (prefers-reduced-motion:reduce){.mobile-cta{transition:none}}
 
@@ -548,12 +587,54 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
   .header-inner .btn{display:none}
   .gnb{gap:12px}
   .gnb a{font-size:13px}
-  /* 히어로 배경을 모바일 전용 3D 일러스트로 교체 — 이미지(9:16) 전체가 보이도록 섹션 높이 고정, 텍스트는 상단 여백에 배치 */
+  /* A안 히어로 — 모바일 전용 3D 일러스트, 이미지(9:16) 전체가 보이도록 섹션 높이 고정 */
   .hero{
     background:url('/images/hero-mobile.png') center bottom/cover no-repeat,#DCEEEC;
     min-height:178vw;
     padding:96px 0 0;
   }
+  /* A안 하단 고정 CTA — 그라데이션 알약 버튼 */
+  .mobile-cta .btn{
+    background:linear-gradient(83deg,var(--g1),var(--g2));
+    border-radius:999px;
+    font-family:var(--display);font-weight:600;
+    font-size:clamp(20px,6.9vw,26px);padding:16px 10px;
+  }
+  /* ── B안(html.vb) — 다크 히어로 리뉴얼 ── */
+  /* 히어로 구간에서는 상단바 다크 전환 */
+  html.vb header.on-hero{background:rgba(29,29,29,.92);border-bottom-color:transparent}
+  html.vb header.on-hero .gnb a{color:#fff}
+  html.vb header.on-hero .logo-light{display:none}
+  html.vb header.on-hero .logo-dark{display:block}
+  /* 다크 히어로 — 하단 실사(40% 투명도 포함)를 luminosity 블렌드로 깔고 상단은 다크로 페이드 */
+  html.vb .hero{
+    background:
+      linear-gradient(180deg,#1d1d1d 46%,rgba(29,29,29,0) 55%),
+      url('/images/hero-mobile-dark.png') center bottom/100% auto no-repeat,
+      #1d1d1d;
+    background-blend-mode:normal,luminosity,normal;
+    padding:108px 0 0;
+  }
+  html.vb .hero-over-p{display:none}
+  html.vb .hero-badge{
+    display:inline-block;
+    border:1px solid rgba(0,212,190,.6);
+    border-radius:999px;
+    padding:5px 20px;
+    font-size:17px;line-height:1.4;font-weight:500;color:#00D4BE;
+  }
+  html.vb .hero h1{font-size:clamp(30px,10.25vw,40px);line-height:1.08;letter-spacing:-.017em;color:#fff}
+  html.vb .hero h1 .grad{background:none;color:#00D4BE;-webkit-text-fill-color:#00D4BE}
+  html.vb .hero .pay-note,html.vb .hero .hero-sub{color:rgba(255,255,255,.8)}
+  html.vb .hero-cta{
+    display:inline-flex;align-items:center;gap:6px;
+    margin-top:32px;height:50px;padding:0 26px 0 29px;
+    border:none;cursor:pointer;
+    background:linear-gradient(90deg,#6A11CB,#2575FC 50%,#31D7B8);
+    border-radius:999px;
+    font-family:var(--display);font-weight:600;font-size:clamp(20px,6.4vw,25px);color:#fff;
+  }
+  html.vb .hero-cta img{width:15px;height:15px;transform:rotate(45deg)}
   /* 스펙 바 → 다크그린 4분할 카드 */
   .stats{padding:20px 0}
   .stats .wrap{grid-template-columns:repeat(2,1fr);gap:12px;padding:0 20px}
@@ -585,13 +666,6 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
   .cbody{padding:22px 20px}
   .cbody h3{font-size:22px;line-height:30px}
   .cbody p{margin-top:8px;font-size:20px;line-height:26px}
-  /* 하단 고정 CTA를 그라데이션 알약 버튼으로 */
-  .mobile-cta .btn{
-    background:linear-gradient(83deg,var(--g1),var(--g2));
-    border-radius:999px;
-    font-family:var(--display);font-weight:600;
-    font-size:clamp(20px,6.9vw,26px);padding:16px 10px;
-  }
 }
 
 /* ── 팝업 ── (세션 리플레이 녹화를 위해 <dialog> 대신 div 오버레이) */
@@ -609,6 +683,62 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
   box-shadow:0 24px 80px rgba(10,40,36,.35);
   overflow:hidden;
 }
+/* ── B안 바텀시트 ── */
+.modal-overlay.as-sheet{align-items:flex-end}
+.modal-box.sheet{
+  width:100%;max-width:560px;
+  border-radius:22px 22px 0 0;
+  max-height:calc(100dvh - 60px);
+  animation:sheetUp .28s ease;
+}
+@keyframes sheetUp{from{transform:translateY(45%);opacity:.5}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.modal-box.sheet{animation:none}}
+.modal-box.sheet .modal-body{
+  padding:24px 20px calc(24px + env(safe-area-inset-bottom));
+  max-height:calc(100dvh - 60px);
+}
+/* 타이틀과 닫기 버튼을 한 줄에 — 상단 빈 공간 제거 */
+.modal-top-bar.sheet-head{justify-content:space-between;text-align:left;margin-bottom:16px}
+.modal-body .sheet-head h3{margin-bottom:0}
+/* 반 선택 카드 */
+.class-opt{
+  display:flex;gap:14px;align-items:center;width:100%;
+  text-align:left;
+  background:var(--paper);
+  border:1.5px solid var(--line);border-radius:16px;
+  padding:14px 16px;margin-bottom:10px;
+  font-family:var(--sans);cursor:pointer;
+  transition:border-color .15s ease,background .15s ease;
+}
+.class-opt.sel{border-color:var(--primary);background:var(--tint)}
+.class-opt:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
+.class-opt .co-radio{
+  flex:none;width:22px;height:22px;border-radius:50%;
+  border:2px solid var(--line);background:#fff;
+  display:inline-flex;align-items:center;justify-content:center;
+  transition:border-color .15s ease;
+}
+.class-opt.sel .co-radio{border-color:var(--primary)}
+.class-opt.sel .co-radio::after{content:'';width:12px;height:12px;border-radius:50%;background:var(--primary)}
+.class-opt .co-name{
+  flex:none;
+  font-family:var(--display);font-weight:700;
+  font-size:clamp(21px,5.6vw,26px);color:var(--ink);
+}
+.class-opt .co-body{display:flex;flex-direction:column;gap:2px;min-width:0}
+.class-opt .co-line{font-size:clamp(16px,4.4vw,20px);color:var(--ink)}
+.class-opt .co-line b{font-weight:600}
+.class-opt .co-meta{font-size:clamp(13px,3.6vw,16px);color:var(--ink-soft)}
+/* 시트 하단 — 한 줄 가격 + 풀폭 CTA */
+.sf-row{display:flex;gap:16px;align-items:center;justify-content:center;margin-top:14px}
+.sf-row .mc-now{margin-top:0}
+.mc-btn.sheet-cta{width:100%;margin-top:14px;padding:16px 30px}
+.mc-btn:disabled{opacity:.5;cursor:default}
+.sheet-note{
+  margin-top:10px;text-align:center;
+  font-size:14px;font-weight:400;letter-spacing:-.04em;color:var(--ink);
+}
+.sheet-note b{font-weight:700}
 .modal-body{padding:40px 36px 32px;overflow-y:auto;max-height:calc(100dvh - 48px)}
 .modal-top-bar{display:flex;align-items:center;justify-content:flex-end;margin-bottom:8px}
 .modal-close-x{
@@ -683,6 +813,19 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
   border-radius:999px;padding:4px 14px;
 }
 .price-box .p-meta{margin-top:14px;font-weight:700;color:var(--ink-soft)}
+/* B안 가격 블록 — 20% + 취소선 한 줄, 큰 금액, 메타 (가격 카드·바텀시트 공용) */
+.pb-off{
+  display:flex;gap:10px;align-items:center;justify-content:center;
+  margin-top:-10px;font-size:20px;font-weight:700;line-height:1.2;
+}
+.pb-off b{color:#EF0B18}
+.pb-off s{color:#9AA8A5;font-weight:400}
+.pb-now{
+  margin-top:4px;
+  font-family:var(--display);font-weight:700;
+  font-size:30px;line-height:1.35;color:#18181B;
+}
+.pb-meta{font-size:18px;font-weight:500;color:var(--ink-soft)}
 .price-box .p-note{
   margin-top:22px;padding:16px 20px;
   background:var(--tint);border-radius:12px;
@@ -761,6 +904,56 @@ footer{padding:36px 0 110px;text-align:center;font-size:16px;color:#9AA8A5}
 }
 .modal-actions .btn{width:100%}
 
+
+/* ── 신청 페이지 (B안 /apply) ── */
+.apply-page{min-height:100dvh;background:var(--paper);padding-bottom:150px}
+.apply-top{
+  position:sticky;top:0;z-index:10;
+  display:flex;align-items:center;height:52px;padding:0 8px;
+  background:rgba(250,251,251,.92);backdrop-filter:blur(10px);
+}
+.apply-back{
+  border:none;background:none;cursor:pointer;
+  font-size:30px;line-height:1;padding:4px 14px;color:var(--ink);
+}
+.apply-wrap{max-width:560px;margin:0 auto;padding:0 20px}
+.apply-title{
+  font-family:var(--display);font-weight:700;
+  font-size:24px;line-height:1.35;letter-spacing:-.02em;margin-top:4px;
+}
+.sel-card{
+  margin-top:16px;padding:16px 18px;
+  background:#fff;border:2px solid var(--primary);border-radius:16px;
+}
+.sel-card .sc-head{font-size:18px;line-height:1.4}
+.sel-card .sc-head b{font-weight:700}
+.sel-card .sc-row{margin-top:8px;font-size:15px;color:var(--ink-soft)}
+.other-btn{
+  width:100%;margin-top:10px;padding:12px;
+  background:#fff;border:1.5px solid var(--line);border-radius:12px;
+  font-family:var(--sans);font-size:15px;font-weight:600;color:var(--ink-soft);
+  cursor:pointer;
+}
+.other-btn:hover{border-color:var(--primary);color:var(--primary)}
+.apply-wrap .class-opt{margin-top:10px;margin-bottom:0}
+.apply-price{margin-top:20px}
+.apply-note-box{
+  margin-top:18px;padding:16px 18px;
+  background:var(--tint);border-radius:12px;
+}
+.apply-note-box .anb-title{font-size:16px;font-weight:800;color:var(--primary-deep)}
+.apply-note-box .anb-desc{margin-top:6px;font-size:14.5px;line-height:1.55;color:var(--ink-soft)}
+.apply-page form{margin-top:24px}
+.apply-page .form-field input{font-size:17px}
+.f-help{font-size:13.5px;color:var(--ink-soft);margin-top:6px}
+.apply-cta-bar{
+  position:fixed;left:0;right:0;bottom:0;z-index:90;
+  background:#fff;box-shadow:0 -4px 14px rgba(44,64,62,.08);
+  padding:10px 20px calc(10px + env(safe-area-inset-bottom));
+}
+.apply-cta-bar .sheet-cta{margin-top:0}
+.apply-cta-bar .sheet-note{margin-top:8px}
+@media (min-width:561px){.apply-cta-bar{padding-left:calc(50vw - 260px);padding-right:calc(50vw - 260px)}}
 
 /* ── 어드민 ── */
 .admin-login-wrap{
