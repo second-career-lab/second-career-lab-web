@@ -384,6 +384,33 @@ html.vb .why{background:var(--paper)}
   font-size:clamp(14px,1.2vw,18px);
 }
 
+/* ── 6.5 강사 소개 ── */
+.team{background:var(--tint)}
+.tcard{
+  background:#fff;border-radius:20px;
+  box-shadow:var(--card-shadow);
+  padding:30px 20px;
+  display:flex;flex-direction:column;
+  text-align:left;
+}
+.tcard > img{width:138px;height:138px;border-radius:50%;margin:0 auto 28px;object-fit:cover}
+.t-name{font-size:20px;font-weight:500;line-height:1.2;letter-spacing:-.03em;color:var(--ink)}
+.t-name b{font-weight:700}
+.t-role{color:var(--teal)}
+.t-head{
+  margin-top:20px;
+  font-family:var(--display);font-weight:700;letter-spacing:0;
+  font-size:26px;line-height:34px;
+  color:var(--ink);
+}
+.t-bio{margin-top:25px;font-size:17px;line-height:1.5;color:var(--ink)}
+.t-line{margin-top:20px;height:1px;background:var(--ink);opacity:.2}
+.t-career{
+  margin-top:22px;display:flex;gap:25px;
+  font-size:17px;line-height:1.5;color:var(--ink);opacity:.4;
+}
+.t-career span{flex:none}
+
 /* ── 7. 수료 후 3가지 ── */
 .reward{background:var(--primary-dark)}
 .reward h2{color:#fff}

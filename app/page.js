@@ -30,6 +30,31 @@ const POINTS = [
   { img: 'point-deploy', head: ['실제 서비스'], tail: '제작 및 배포까지' },
 ];
 
+// 6.5 강사 소개
+const INSTRUCTORS = [
+  {
+    img: 'instructor-kimjinhyeong',
+    name: '김진형', role: '가르쳐온 개발자',
+    head: '어디서 막히는지 아는 사람이 옆에 있습니다',
+    bio: ['회로 설계에서 시작해 컴퓨터과학을 공부하며 소프트웨어까지 왔고, 오래 가르쳐왔습니다.', '화면이 멈춰 선 자리에서 왜 멈췄는지까지 같이 짚어드립니다.'],
+    career: ['코딩·사고력 교육 강사', '비대면 진료 서비스 앱 개발·배포'],
+  },
+  {
+    img: 'instructor-kimbongsu',
+    name: '김봉수', role: '서비스 기획 10년차',
+    head: '먼저 창업해보고, 먼저 실패해본 사람입니다',
+    bio: ['10년 동안 여러 서비스의 전략을 처음부터 설계해왔습니다. 대표님 머릿속 아이디어를 4주 안에 만들 수 있는 크기로 같이 줄여드립니다.'],
+    career: ['프리랜서 서비스 전략 기획 10년', '스타트업 창업·운영', '성균관대학교 경제학과 졸업'],
+  },
+  {
+    img: 'instructor-jomina',
+    name: '조민아', role: '프로덕트 디자인 8년차',
+    head: '보기 좋은 화면이 아니라, 팔리는 화면을 만듭니다',
+    bio: ['8년 동안 여러 분야의 웹과 앱을 만들었습니다. 머릿속 화면을 AI가 알아듣는 말로 바꾸는 법, 그걸 대표님이 직접 하시게 해드립니다.'],
+    career: ['웹·앱 프로덕트 디자인 8년 (이커머스·데이팅·음악·헬스케어) / 디자인 시스템 구축, UX 기획·UI 설계'],
+  },
+];
+
 // 7. 수료 후 3가지
 const REWARDS = [
   {
@@ -460,6 +485,26 @@ export default function Page() {
                     {p.mid ? <>{' '}<br className="br-m" />{p.mid}{' '}<br className="br-d" /></> : <br />}
                     <b>{p.tail}</b>
                   </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 6.5 강사 소개 */}
+        <section className="team center">
+          <div className="wrap reveal">
+            <span className="eyebrow">강사 소개</span>
+            <h2>기획자·디자이너·개발자가<br className="br-m" /> 4주를 함께합니다</h2>
+            <div className="card-grid-3 stagger">
+              {INSTRUCTORS.map((t) => (
+                <div className="tcard" key={t.name}>
+                  <Image src={`${IMG}/${t.img}.png`} alt={`${t.name} 강사`} width={138} height={138} />
+                  <p className="t-name">{t.name} <b>· <span className="t-role">{t.role}</span></b></p>
+                  <h3 className="t-head">{t.head}</h3>
+                  <p className="t-bio">{lines(t.bio)}</p>
+                  <div className="t-line" />
+                  <div className="t-career"><span>약력</span><p>{lines(t.career)}</p></div>
                 </div>
               ))}
             </div>
